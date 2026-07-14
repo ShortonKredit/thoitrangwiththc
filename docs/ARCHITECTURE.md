@@ -59,6 +59,8 @@ shoes / bottom / top / dress / accessories
 
 For the future PNG path, `character.layer_order` includes `base_outfit`; the path can be supplied later through `character.layers` without changing wardrobe state logic.
 
+MVP note: shoes remain an architectural/future layer concept, but shoes and other foot-dependent items are deferred and should not appear as empty MVP UI categories.
+
 ## Rendering modes
 
 ### procedural

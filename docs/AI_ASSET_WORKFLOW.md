@@ -1,26 +1,27 @@
 # AI Asset Workflow
 
-## Phase 1 — Master anchor
+## Phase 1 - MVP Anchor
 
-Generate 3–4 original female fashion-character candidates using the locked character brief. Select exactly one as the master reference.
+Use the selected Keri three-quarter-body candidate as the MVP proof anchor. Do not continue full-body leg extension during MVP.
 
-The anchor must be front-facing, non-chibi, neutral pose, arms slightly separated, original and family-friendly.
+The anchor must remain front-facing, non-chibi, everyday-fashion, original/provenance-safe, and family-friendly.
 
-## Phase 2 — Proof pack
+## Phase 2 - Three-Quarter-Body Proof Pack
 
 Create only:
 
 - 2 hairstyles
 - 2 tops
-- 2 bottoms
-- 1 dress
-- 2 shoes
+- 2 short bottoms
+- 1 short dress
 - 2 accessories
 - 1 background
 
+Do not generate shoes, socks, full-length trousers, full-length dresses, or any foot-dependent item for MVP.
+
 Do not generate the full pack until these assets align correctly in Godot.
 
-## Phase 3 — Normalization
+## Phase 3 - Normalization
 
 AI output is source material, not final game content. For every asset:
 
@@ -33,10 +34,10 @@ AI output is source material, not final game content. For every asset:
 7. export PNG and thumbnail;
 8. verify in-game.
 
-## Prompt skeleton
+## Prompt Skeleton
 
 ```text
-Original 2D stylized fashion-game asset for the supplied master female character reference. Everyday modern fashion, front view, same fixed pose, same body proportions, same camera, same clean linework and soft cel shading. Create only [ITEM], aligned exactly to the reference body. Transparent background, no text, no logo, no extra person, no duplicate limbs, no copyrighted character, full 1024x1536 canvas.
+Original 2D stylized fashion-game asset for the supplied three-quarter-body Keri reference. Everyday modern fashion, front view, same fixed pose, same body proportions, same camera, same clean linework and soft cel shading. Create only [ITEM], aligned exactly to the reference body and supported three-quarter-body crop. Transparent background, no text, no logo, no extra person, no duplicate limbs, no copyrighted character, shared 948x1920 Keri MVP proof canvas.
 ```
 
 Reference-image consistency is required, but manual alignment remains part of the workflow.

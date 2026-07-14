@@ -8,6 +8,18 @@
 - All files share the same body position and origin.
 - Thumbnail: 256 × 256 px, cropped for readability.
 
+## MVP Keri Three-Quarter-Body Exception
+
+For the Phase 2B three-quarter-body Keri integration proof, use the existing Keri canvas as the proof anchor:
+
+- Keri MVP proof canvas: **948 × 1920 px**.
+- All Keri proof layers must share this canvas and origin.
+- Do not extend the canvas or add missing feet for MVP.
+- Supported MVP items must fit the three-quarter-body crop.
+- Shoes, socks, full-length trousers, full-length dresses, and foot-dependent items are deferred/post-MVP.
+
+The older `1024 × 1536` target remains a general future-production reference, but it is not a reason to restart leg-extension work during MVP.
+
 ## Thumbnail metadata
 
 Wardrobe items may later declare:
@@ -62,10 +74,10 @@ Use lowercase snake_case and stable IDs. Do not encode display text in filenames
 ## AI output acceptance checklist
 
 - Same pose and camera as the master character.
-- Correct 1024×1536 canvas after normalization.
+- Correct shared canvas after normalization; for Keri MVP proof this is 948×1920.
 - Transparent background and clean alpha edges.
 - No duplicated limbs or accidental body parts.
-- Item aligns with shoulder, waist, hip, knee and foot anchors.
+- Item aligns with the supported three-quarter-body anchors.
 - Style, line thickness, shading and lighting match the anchor.
 - No logo, copyrighted character, trademark or franchise-specific motif.
 - Front/back sections are separated when they cross body foreground layers.

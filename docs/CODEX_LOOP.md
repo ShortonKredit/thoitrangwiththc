@@ -29,15 +29,28 @@ Work in an engineering loop: inspect -> make a small change -> run python tools/
 
 ## Current Phase Boundary
 
-- Phase 0, Phase 1, and Phase 1.1 are complete.
-- Phase 1.2 is the documentation/engineering-loop rebaseline.
-- Phase 2A starts only when the user explicitly asks for Keri asset/license audit.
-- Do not import Keri, generate AI assets, create a proof pack, or start web hardening during Phase 1.2.
+- Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete.
+- The full-body leg-extension path is deferred/post-MVP.
+- The next implementation milestone is Phase 2B - Three-Quarter-Body Integration Proof.
+- Do not continue generative leg extension, donor-leg compositing, shoes, full-length garments, or full-body canvas work for MVP unless the owner explicitly starts a post-MVP full-body milestone.
+
+## Phase Start Checklist
+
+Before every new phase:
+
+1. Read `AGENTS.md`, `docs/CURRENT_STATE.md`, `docs/PHASE_STATUS.md`, `docs/ROADMAP.md`, and any phase-specific decision docs.
+2. Check `git status --short`, `git log --oneline -5`, and `git remote -v`.
+3. Confirm the working tree is clean or that all existing changes are known and in-scope.
+4. Run the baseline project check before implementation when the phase changes behavior or assets.
+5. Execute only the explicit phase scope.
+6. Run validation again after changes.
+7. Review the diff for source/asset drift, hard-coded counts, build artifacts, and secrets.
+8. Do not commit or push unless the user explicitly asks.
 
 ## Recommended Next Milestones
 
 1. Phase 2A - Keri asset and license audit.
-2. Phase 2B - full-body leg extension proof.
-3. Phase 2C - face replacement proof.
-4. Phase 2D - tiny wardrobe proof pack.
-5. Phase 3+ - content expansion and web hardening after the proof gate passes.
+2. Phase 2B - three-quarter-body integration proof.
+3. Phase 2C - face and hair layering proof.
+4. Phase 2D - MVP wardrobe proof pack.
+5. Phase 3 - product integration and web release.

@@ -20,3 +20,12 @@
 | Random creates invalid combination | High | generic slot/tag compatibility; lock-aware selection |
 | UI overflows at small window sizes | Medium | desktop-first minimum; test 1280x720 and 1440x900 |
 | Face photo accidentally uploaded | Critical | no backend/API; future network inspection and privacy test |
+| Keri lower legs and feet missing | Medium | Deferred out of MVP; verify three-quarter crop hides the missing lower body intentionally |
+| Keri license/provenance overstated | High | Preserve Konett attribution, LunaLucid/Namastaii provenance, and exact license-version caveats from `docs/asset_audits/keri/` |
+| Keri treated as final anchor too early | High | Phase 2A decision is conditional only; require later visual and owner acceptance gates |
+| Three-quarter crop looks like a broken asset | High | Visual QA the lower framing in Godot and web; adjust viewport/crop before content expansion |
+| Unsupported long item exceeds MVP crop | High | Keep full-length trousers, full-length dresses, socks, and shoes out of MVP catalog/UI; test every imported item |
+| Shoes category appears empty in MVP UI | Medium | Hide/defer unsupported categories instead of showing blank categories; manually inspect category list |
+| Old save contains deferred category/item | High | Sanitize saves against current catalog and disabled categories; smoke-test legacy save migration |
+| Random selects unsupported item | High | Filter random candidates by enabled MVP categories/items; smoke-test random with locks |
+| Roadmap drift reopens full-body work | Medium | Start phases from `PHASE_STATUS.md`, `ROADMAP.md`, and `MVP_SCOPE_DECISION.md`; diff-review prompts/docs |

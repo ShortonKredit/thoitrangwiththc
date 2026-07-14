@@ -49,6 +49,8 @@ Automated checks do not prove:
 - skin tone or anatomy quality;
 - hair front/back visual order;
 - face mask quality;
+- whether the three-quarter-body crop looks intentional;
+- whether unsupported full-length items visually exceed the MVP crop;
 - thumbnail crop/readability;
 - browser canvas/download behavior;
 - hover/pressed visual feel.
@@ -73,6 +75,8 @@ Run in Godot and verify:
 14. Close and reopen; saved outfit is restored or safely sanitized.
 15. Save PNG excludes wardrobe controls.
 
+For the three-quarter-body MVP proof, adjust the category expectation to the supported MVP categories only. Shoes and other deferred categories must not appear as empty UI categories.
+
 ## Visual QA Checklist
 
 Check these by eye after UI or asset work:
@@ -84,13 +88,33 @@ Check these by eye after UI or asset work:
 - item area behavior when a category has few items;
 - base outfit coverage at all valid clothing states;
 - outfit overlap and layer order;
-- shoulder, waist, hip, knee, ankle, and foot alignment for PNG assets;
+- shared canvas and origin for all imported proof layers;
+- shoulder, waist, hip, and supported lower-crop alignment for three-quarter-body PNG assets;
+- lower crop edge looks intentional and does not expose an abrupt broken asset edge;
 - skin tone consistency;
-- leg anatomy and proportions;
 - hair back/front separation;
 - face mask shape, placement, and edge quality;
+- no shoes, socks, long trousers, full-length dresses, or foot-dependent items in MVP UI/content;
+- no item extends beyond the supported three-quarter-body display region;
 - thumbnail clarity at final UI size;
 - no text overflow at target window sizes.
+
+## Three-Quarter-Body MVP Checks
+
+After Phase 2B/2D asset work, verify:
+
+1. All Keri proof layers use the same canvas and origin.
+2. The character crop reads as intentional three-quarter-body framing.
+3. The lower crop does not reveal a hard broken edge or unfinished leg extension.
+4. Shoes do not appear as an empty category.
+5. Full-length garments and foot-dependent items are absent from the MVP catalog/UI.
+6. Tops and short bottoms render correctly on the Keri body.
+7. Short dresses replace top/bottom according to compatibility rules.
+8. The base outfit is always present and not hidden by invalid states.
+9. Random does not select disabled/deferred categories or unsupported items.
+10. Old saves containing shoes or deferred categories sanitize without crash.
+11. Undo, redo, reset, and local save still work after proof-pack import.
+12. Web export displays the same intentional three-quarter-body crop.
 
 ## Web Local Test
 

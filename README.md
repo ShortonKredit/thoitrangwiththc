@@ -14,7 +14,7 @@ The repository is past the initial foundation and UI audit milestones:
 - `DollView` owns a permanent `base_outfit` so the character remains modest even when top, bottom, and dress are all none.
 - Optional `thumbnail_path` and `accessible_name` metadata are supported with text fallback.
 - Web export scripts and Netlify configuration exist, but full browser QA is deferred to a web-focused phase.
-- Phase 2 art proof work has not started.
+- Phase 2A Keri audit is complete; MVP art proof work is now scoped to a three-quarter-body integration path.
 
 No login, backend, database, account system, API upload, ads, gacha, chat, or leaderboard exists.
 
@@ -61,7 +61,7 @@ Open `http://localhost:8000`, then check browser Console/Network. See `docs/TEST
 ## Add Wardrobe Content
 
 - Placeholder/testing content: add metadata to `data/catalog.json`; item count remains data-driven.
-- Real PNG content: use 1024x1536 transparent full-canvas PNGs aligned to the same body anchor.
+- Real MVP PNG content: use a shared transparent canvas and origin aligned to the selected three-quarter-body anchor.
 - Keep `display_name` even when thumbnails exist.
 - Use `thumbnail_path` only when a real thumbnail asset is present.
 - Do not add item-specific rendering branches to UI code.

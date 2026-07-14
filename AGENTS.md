@@ -24,6 +24,7 @@
 11. Do not use copyrighted Winx, Barbie, or other proprietary characters/assets.
 12. Do not commit or push unless the user explicitly requests it.
 13. Do not start the next phase or milestone on your own.
+14. For the MVP, full-body leg extension, shoes, socks, full-length trousers, full-length dresses, and foot-dependent items are out of scope unless the user explicitly starts a later post-MVP milestone.
 
 ## Long-Lived Invariants
 

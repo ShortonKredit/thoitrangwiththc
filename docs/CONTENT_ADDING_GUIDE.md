@@ -33,11 +33,14 @@ Example:
 
 Requirements:
 
-- Full 1024×1536 transparent canvas.
+- Full shared transparent canvas.
+- For the Keri three-quarter-body MVP proof, use 948×1920 and the same origin as the Keri anchor.
 - Same body template and position.
 - Asset path uses `res://`.
 - File ID matches catalog ID.
 - Use front/back layers when needed.
+- Keep MVP items inside the supported three-quarter-body crop.
+- Do not add shoes, socks, full-length trousers, full-length dresses, or foot-dependent items for MVP.
 
 ## Do not
 
@@ -45,3 +48,4 @@ Requirements:
 - Change the body pose for one outfit.
 - Mix unrelated AI art styles.
 - Store user photos in the asset folder.
+- Add unsupported deferred categories as empty MVP UI categories.

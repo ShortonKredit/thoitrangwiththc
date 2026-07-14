@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Baseline: Phase 0, Phase 1, and Phase 1.1 are complete. Phase 1.2 is the current documentation rebaseline and engineering-loop alignment phase.
+Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete. A later MVP-scope decision superseded the full-body leg-extension proof path; the next proof phase is three-quarter-body Keri integration.
 
 ## Current Architecture
 
@@ -65,18 +65,37 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 ## Not Yet Fully Visually Verified
 
 - Final layer alignment and body coverage with real PNG assets.
-- Skin tone, leg anatomy, face style, hair front/back separation, and face mask quality.
+- Three-quarter-body crop intent, lower-edge cleanliness, face style, hair front/back separation, and face mask quality.
 - Thumbnail readability and crop quality.
 - Browser rendering across Chrome, Edge, and Firefox after export.
 - Small viewport behavior beyond the captured Phase 1 screenshots.
 
 ## Asset Direction
 
-The asset direction is not locked. Keri is only a candidate reference for a future proof phase, not an official dependency, not imported content, and not a required art source.
+The asset direction is not locked. Keri is a candidate for a three-quarter-body MVP integration proof, not an official dependency, not imported content, and not a final art anchor.
 
 ## Phase Boundary
 
-- Phase 2 has not started.
-- No Keri download/import has been performed in this phase.
+- Phase 2A is complete as a documentation-only Keri asset/license audit.
+- Phase 2B has not started and is now scoped as a three-quarter-body integration proof.
+- Full-body leg extension is deferred/post-MVP.
+- No Keri asset has been imported into Godot.
 - No AI asset generation has been performed in this phase.
 - No backend, database, login, API, or CI work has been added.
+
+## Phase 2A Audit Result
+
+- Decision: CONDITIONAL GO TO PHASE 2B.
+- Audit docs: `docs/asset_audits/keri/`.
+- Later MVP decision: GO TO THREE-QUARTER-BODY MVP INTEGRATION.
+- Keri remains a proof candidate, not a final character anchor.
+- Main finding: the body candidate has usable upper body and thighs; missing lower legs, ankles, and feet are no longer MVP blockers because the MVP crop is three-quarter-body.
+- Bottom finding: short bottoms and short dresses are MVP-appropriate; shoes, socks, full-length trousers, and full-length dresses are deferred.
+- License finding: Konett attribution is required; LunaLucid/Namastaii template provenance should be retained; template README license version remains unspecified by available template evidence.
+
+## MVP Scope
+
+- MVP character presentation: three-quarter-body Keri canvas.
+- MVP-supported categories: hair, face/facial features, tops, short bottoms, short dresses, and accessories.
+- Deferred/post-MVP: full-body leg extension, shoes, socks, full-length trousers, full-length dresses, and any item that requires visible feet.
+- Shoes-related architecture may remain for future work, but shoes should not appear as an empty MVP UI category.

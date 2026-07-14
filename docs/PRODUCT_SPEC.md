@@ -31,8 +31,8 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 
 ## MVP in this repository
 
-- Một body template và pose chính diện.
-- Hair, top, bottom, dress, shoes, glasses, headwear, accessory, background.
+- Một body template 3/4 người và pose chính diện.
+- Hair, face/facial features, tops, short bottoms, short dresses, accessories, background.
 - Compatibility rules.
 - Selected state.
 - Random locks.
@@ -46,6 +46,8 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 
 ## Deferred
 
+- Full-body leg extension.
+- Shoes, socks, full-length trousers, full-length dresses, and foot-dependent items.
 - Face photo editor.
 - Privacy copy for the future face-photo flow; it is not shown persistently in the main header.
 - Real PNG base outfit and item thumbnails for the Phase 2 art proof pack.
