@@ -1,96 +1,81 @@
-# Thời Trang with THC
+# Thoi Trang with THC
 
-Game thay đồ 2D đời thường thời trang, xây dựng bằng **Godot 4.7 + GDScript**, ưu tiên desktop web.
+2D everyday-fashion dress-up toy built with **Godot 4.7 Standard + GDScript**, targeting desktop web first.
 
-## Trạng thái hiện tại
+## Current Status
 
-Đây là foundation hoàn chỉnh để bắt đầu engineering loop bằng Codex trong VS Code:
+The repository is past the initial foundation and UI audit milestones:
 
-- Nhân vật nữ placeholder được vẽ bằng GDScript, không cần asset ảnh để chạy.
-- Catalog data-driven với tóc, áo, quần/váy, đầm, giày, kính, mũ, phụ kiện và phông nền.
-- Chọn/tháo item ngay lập tức.
-- Tự xử lý xung đột giữa đầm và áo/bottom.
-- Random có khóa danh mục.
-- Undo/redo toàn state.
-- Reset có xác nhận.
-- Lưu outfit cục bộ, không cần tài khoản/database.
-- Xuất PNG trên desktop và trình duyệt.
-- Web export preset, script test/export và cấu hình Netlify.
-- Kiến trúc sẵn để thay procedural placeholder bằng PNG layered do AI/artist tạo.
+- Godot 4.7 local import, parse, startup smoke, and logic smoke checks pass.
+- Catalog is data-driven with 9 categories and 45 placeholder items.
+- The main scene runs locally.
+- Selection, compatibility, random locks, undo/redo, reset, local save, and PNG capture exist.
+- The character and wardrobe are still procedural placeholders.
+- `DollView` owns a permanent `base_outfit` so the character remains modest even when top, bottom, and dress are all none.
+- Optional `thumbnail_path` and `accessible_name` metadata are supported with text fallback.
+- Web export scripts and Netlify configuration exist, but full browser QA is deferred to a web-focused phase.
+- Phase 2 art proof work has not started.
 
-## Mở project
+No login, backend, database, account system, API upload, ads, gacha, chat, or leaderboard exists.
 
-1. Cài **Godot 4.7 Standard** và export templates tương ứng.
-2. Mở Godot → Import → chọn `project.godot`.
-3. Nhấn F6/F5.
+## Open The Project
 
-Không cần bản .NET.
+1. Install **Godot 4.7 Standard** and matching export templates.
+2. Open Godot -> Import -> choose `project.godot`.
+3. Run the main scene with F5/F6.
 
-## Dùng Codex trong VS Code
+No .NET build is required.
 
-1. Mở **toàn bộ thư mục repo** bằng VS Code.
-2. Cài Codex IDE extension.
-3. Đảm bảo terminal gọi được `godot --version`.
-4. Yêu cầu Codex đọc `AGENTS.md` trước khi sửa.
-5. Giao từng milestone nhỏ và yêu cầu chạy engineering loop.
+## Use Codex In VS Code
 
-## Kiểm tra local
+1. Open the full repository folder in VS Code.
+2. Make sure the terminal can run `godot --version`.
+3. Ask Codex to read `AGENTS.md` before changes.
+4. Work one milestone at a time.
+5. Require the engineering loop and final diff review.
+
+## Local Checks
 
 ```powershell
-./tools/check_project.ps1
+python tools/validate_catalog.py
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.ps1"
 ```
 
-Script sẽ import project và chạy smoke test logic.
+Expected:
+
+- `Catalog valid: 9 categories, 45 items`
+- `SMOKE TEST PASSED`
+- `Project checks passed.`
 
 ## Export Web
+
+For web/export milestones:
 
 ```powershell
 ./tools/export_web.ps1
 ./tools/serve_web.ps1
 ```
 
-Mở `http://localhost:8000`, sau đó kiểm tra Console/Network trong DevTools.
+Open `http://localhost:8000`, then check browser Console/Network. See `docs/TEST_PLAN.md` and `docs/DEPLOYMENT.md`.
 
-## Push commit đầu tiên
+## Add Wardrobe Content
 
-Repository đích:
+- Placeholder/testing content: add metadata to `data/catalog.json`; item count remains data-driven.
+- Real PNG content: use 1024x1536 transparent full-canvas PNGs aligned to the same body anchor.
+- Keep `display_name` even when thumbnails exist.
+- Use `thumbnail_path` only when a real thumbnail asset is present.
+- Do not add item-specific rendering branches to UI code.
 
-`https://github.com/ShortonKredit/thoitrangwiththc.git`
+See `docs/CONTENT_ADDING_GUIDE.md` and `docs/ASSET_SPEC.md`.
 
-Có thể chạy:
+## Privacy
 
-```powershell
-./tools/first_push.ps1
-```
-
-Script yêu cầu Git đã đăng nhập/có quyền push.
-
-## Deploy Netlify
-
-Cách đơn giản nhất:
-
-1. Chạy `./tools/export_web.ps1`.
-2. Kéo thư mục `build/web` vào Netlify Drop.
-3. Kiểm tra URL thật bằng Chrome, Edge và Firefox.
-
-Chi tiết tại `docs/DEPLOYMENT.md`.
-
-## Thêm trang phục
-
-- Với placeholder: thêm item vào `data/catalog.json`; chỉ dùng cho test logic.
-- Với asset thật: tạo PNG 1024×1536 nền trong suốt, cùng body template, rồi khai báo đường dẫn trong `layers`.
-- Khi chuyển hoàn toàn sang PNG, đổi `character.mode` từ `procedural` thành `png`.
-
-Xem `docs/CONTENT_ADDING_GUIDE.md` và `docs/ASSET_SPEC.md`.
-
-## Quyền riêng tư
-
-- Không đăng nhập.
-- Không database người dùng.
-- Không có API upload ảnh.
-- Save data chỉ chứa ID outfit và khóa random trong `user://`/IndexedDB.
-- Tính năng khuôn mặt chưa được triển khai trong milestone này.
+- No login.
+- No user database.
+- No API photo upload.
+- Save data contains only outfit IDs and random locks in local Godot/browser storage.
+- Any future face-photo workflow must remain local-only and pass a separate privacy review.
 
 ## License
 
-Mã nguồn mẫu: MIT. Asset do AI/artist tạo về sau cần được kiểm tra giấy phép riêng.
+Sample source code: MIT. Future artist/AI assets need separate provenance and license review before import.
