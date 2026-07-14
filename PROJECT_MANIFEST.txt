@@ -1,0 +1,16 @@
+Thời Trang with THC — Foundation 0.1.0
+
+Engine target: Godot 4.7 Standard
+Primary platform: Desktop Web
+Development workflow: VS Code + Codex IDE extension + local engineering loop
+Repository: https://github.com/ShortonKredit/thoitrangwiththc.git
+Database: none
+Login: none
+Character: original stylized female teenager, everyday fashion, non-chibi
+Renderer: procedural placeholder now; PNG layered architecture prepared
+
+Start here:
+1. README.md
+2. docs/FIRST_STEPS.md
+3. AGENTS.md
+4. docs/CURRENT_STATE.md

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "character": {
+    "id": "female_fashion_01",
+    "display_name": "Nhân vật nữ thời trang 01",
+    "mode": "procedural",
+    "canvas_size": [1024, 1536],
+    "body_style": "stylized_2d_fashion_teen",
+    "layer_order": [
+      "background",
+      "hair_back",
+      "accessory_back",
+      "body",
+      "face",
+      "shoes",
+      "bottom",
+      "top",
+      "dress_back",
+      "dress_main",
+      "body_foreground",
+      "hair_front",
+      "glasses",
+      "face_accessory",
+      "headwear",
+      "accessory_front",
+      "effect_front"
+    ],
+    "layers": {}
+  },
+  "categories": [
+    {"id": "hair", "display_name": "Tóc", "description": "Kiểu tóc đời thường, cùng một form đầu và tư thế.", "allow_none": false, "random_default": true, "order": 10},
+    {"id": "top", "display_name": "Áo", "description": "Chọn áo hoặc để trống khi mặc đầm.", "allow_none": true, "random_default": true, "order": 20},
+    {"id": "bottom", "display_name": "Quần / Váy", "description": "Quần, quần short và chân váy dùng chung slot bottom.", "allow_none": true, "random_default": true, "order": 30},
+    {"id": "dress", "display_name": "Đầm", "description": "Đầm chiếm cả slot áo và bottom nên tự tháo hai nhóm đó.", "allow_none": true, "random_default": true, "order": 40},
+    {"id": "shoes", "display_name": "Giày", "description": "Giày đời thường phù hợp các outfit casual và smart-casual.", "allow_none": false, "random_default": true, "order": 50},
+    {"id": "glasses", "display_name": "Kính", "description": "Kính nằm phía trước khuôn mặt và có thể tháo.", "allow_none": true, "random_default": true, "order": 60},
+    {"id": "headwear", "display_name": "Mũ / Băng đô", "description": "Mũ và băng đô; một số item xung đột với tóc phồng.", "allow_none": true, "random_default": true, "order": 70},
+    {"id": "accessory", "display_name": "Phụ kiện", "description": "Túi, dây chuyền và phụ kiện nhỏ.", "allow_none": true, "random_default": true, "order": 80},
+    {"id": "background", "display_name": "Phông nền", "description": "Không gian đời thường để chụp outfit.", "allow_none": false, "random_default": true, "order": 90}
+  ],
+  "initial_state": {
+    "hair": "hair_long_straight",
+    "top": "top_blouse",
+    "bottom": "bottom_pleated_skirt",
+    "dress": "dress_none",
+    "shoes": "shoes_sneakers",
+    "glasses": "glasses_none",
+    "headwear": "headwear_none",
+    "accessory": "accessory_handbag",
+    "background": "background_studio"
+  },
+  "items": [
+    {"id": "hair_long_straight", "category": "hair", "display_name": "Tóc dài thẳng", "description": "Tóc dài gọn, dễ phối với đồ đời thường.", "render_key": "long_straight", "order": 10, "occupies": ["hair"], "tags": ["long_hair"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#4a3028", "secondary": "#765044"}},
+    {"id": "hair_bob", "category": "hair", "display_name": "Tóc bob", "description": "Tóc bob hiện đại và gọn gàng.", "render_key": "bob", "order": 20, "occupies": ["hair"], "tags": ["short_hair"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#2f2527", "secondary": "#514044"}},
+    {"id": "hair_ponytail", "category": "hair", "display_name": "Tóc đuôi ngựa", "description": "Tóc buộc cao trẻ trung.", "render_key": "ponytail", "order": 30, "occupies": ["hair"], "tags": ["tied_hair"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#6b4534", "secondary": "#8d624d"}},
+    {"id": "hair_soft_waves", "category": "hair", "display_name": "Tóc xoăn nhẹ", "description": "Tóc xoăn mềm, có độ phồng.", "render_key": "soft_waves", "order": 40, "occupies": ["hair"], "tags": ["voluminous_hair", "long_hair"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#9a673c", "secondary": "#bd8a58"}},
+
+    {"id": "top_none", "category": "top", "display_name": "Không mặc áo", "description": "Dùng khi mặc đầm.", "render_key": "none", "random_enabled": false, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "top_blouse", "category": "top", "display_name": "Áo blouse nơ", "description": "Áo blouse nữ tính cho outfit đi chơi.", "render_key": "blouse", "order": 10, "occupies": ["top"], "tags": ["feminine", "smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#f0a6bc", "secondary": "#fff1f5"}},
+    {"id": "top_tee", "category": "top", "display_name": "Áo thun", "description": "Áo thun đơn giản và năng động.", "render_key": "tee", "order": 20, "occupies": ["top"], "tags": ["casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#f5d260", "secondary": "#fff2b8"}},
+    {"id": "top_cardigan", "category": "top", "display_name": "Cardigan", "description": "Cardigan mềm cho phong cách nhẹ nhàng.", "render_key": "cardigan", "order": 30, "occupies": ["top"], "tags": ["soft", "layered"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#b89bd4", "secondary": "#efe5f6"}},
+    {"id": "top_shirt", "category": "top", "display_name": "Sơ mi", "description": "Sơ mi smart-casual thanh lịch.", "render_key": "shirt", "order": 40, "occupies": ["top"], "tags": ["smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#eaf2fb", "secondary": "#89a7c8"}},
+    {"id": "top_knit", "category": "top", "display_name": "Áo len mỏng", "description": "Áo len mỏng phù hợp outfit mùa thu.", "render_key": "knit", "order": 50, "occupies": ["top"], "tags": ["cozy"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d9a47f", "secondary": "#f2d6c1"}},
+    {"id": "top_denim_jacket", "category": "top", "display_name": "Áo khoác denim", "description": "Áo denim trẻ trung và cá tính nhẹ.", "render_key": "denim_jacket", "order": 60, "occupies": ["top"], "tags": ["casual", "denim"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#739bc2", "secondary": "#d8e5f2"}},
+
+    {"id": "bottom_none", "category": "bottom", "display_name": "Không mặc bottom", "description": "Dùng khi mặc đầm.", "render_key": "none", "random_enabled": false, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "bottom_pleated_skirt", "category": "bottom", "display_name": "Chân váy xếp ly", "description": "Chân váy xếp ly trẻ trung.", "render_key": "pleated_skirt", "order": 10, "occupies": ["bottom"], "tags": ["skirt", "feminine"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#8fa4ce", "secondary": "#dce5f5"}},
+    {"id": "bottom_jeans", "category": "bottom", "display_name": "Quần jeans", "description": "Quần jeans cơ bản cho outfit hằng ngày.", "render_key": "jeans", "order": 20, "occupies": ["bottom"], "tags": ["pants", "denim", "casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#668bb2", "secondary": "#c5d7e8"}},
+    {"id": "bottom_wide_leg", "category": "bottom", "display_name": "Quần ống rộng", "description": "Quần ống rộng hiện đại.", "render_key": "wide_leg", "order": 30, "occupies": ["bottom"], "tags": ["pants", "smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#a68d7c", "secondary": "#e3d5cb"}},
+    {"id": "bottom_shorts", "category": "bottom", "display_name": "Quần short", "description": "Quần short năng động.", "render_key": "shorts", "order": 40, "occupies": ["bottom"], "tags": ["pants", "casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#91b8a1", "secondary": "#dcece1"}},
+    {"id": "bottom_midi_skirt", "category": "bottom", "display_name": "Chân váy midi", "description": "Chân váy midi thanh lịch.", "render_key": "midi_skirt", "order": 50, "occupies": ["bottom"], "tags": ["skirt", "smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#c78b9d", "secondary": "#f0d9e0"}},
+    {"id": "bottom_cargo", "category": "bottom", "display_name": "Quần cargo", "description": "Quần cargo hiện đại, cá tính vừa phải.", "render_key": "cargo", "order": 60, "occupies": ["bottom"], "tags": ["pants", "street"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#81927b", "secondary": "#d5ddd2"}},
+
+    {"id": "dress_none", "category": "dress", "display_name": "Không mặc đầm", "description": "Phối áo và bottom riêng.", "render_key": "none", "random_enabled": true, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "dress_casual", "category": "dress", "display_name": "Đầm casual", "description": "Đầm xòe nhẹ để đi chơi.", "render_key": "casual_dress", "order": 10, "occupies": ["top", "bottom"], "tags": ["dress", "casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#e892ad", "secondary": "#f8dce5"}},
+    {"id": "dress_denim", "category": "dress", "display_name": "Đầm denim", "description": "Đầm denim đời thường.", "render_key": "denim_dress", "order": 20, "occupies": ["top", "bottom"], "tags": ["dress", "denim"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#7198bf", "secondary": "#d4e3ef"}},
+    {"id": "dress_shirt", "category": "dress", "display_name": "Đầm sơ mi", "description": "Đầm sơ mi smart-casual.", "render_key": "shirt_dress", "order": 30, "occupies": ["top", "bottom"], "tags": ["dress", "smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d5b58a", "secondary": "#f5e7d3"}},
+    {"id": "dress_evening", "category": "dress", "display_name": "Đầm dự tiệc nhẹ", "description": "Đầm dự tiệc đơn giản, không fantasy.", "render_key": "simple_evening", "order": 40, "occupies": ["top", "bottom"], "tags": ["dress", "occasion"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#8b79ba", "secondary": "#ded6ef"}},
+
+    {"id": "shoes_sneakers", "category": "shoes", "display_name": "Sneakers", "description": "Giày thể thao trắng dễ phối.", "render_key": "sneakers", "order": 10, "occupies": ["shoes"], "tags": ["casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#f7f3f2", "secondary": "#b8aeb2"}},
+    {"id": "shoes_flats", "category": "shoes", "display_name": "Giày búp bê", "description": "Giày búp bê nữ tính.", "render_key": "flats", "order": 20, "occupies": ["shoes"], "tags": ["feminine"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d77f9d", "secondary": "#f1cad7"}},
+    {"id": "shoes_ankle_boots", "category": "shoes", "display_name": "Ankle boots", "description": "Boot cổ ngắn cho outfit mùa thu.", "render_key": "ankle_boots", "order": 30, "occupies": ["shoes"], "tags": ["smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#6f5147", "secondary": "#b99c90"}},
+    {"id": "shoes_loafers", "category": "shoes", "display_name": "Loafers", "description": "Loafers thanh lịch.", "render_key": "loafers", "order": 40, "occupies": ["shoes"], "tags": ["smart_casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#5a4140", "secondary": "#c1aaa9"}},
+
+    {"id": "glasses_none", "category": "glasses", "display_name": "Không dùng", "description": "Tháo kính.", "render_key": "none", "random_enabled": true, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "glasses_round", "category": "glasses", "display_name": "Kính tròn", "description": "Kính tròn viền mảnh.", "render_key": "round", "order": 10, "occupies": ["glasses"], "tags": ["glasses"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#5b4b52", "secondary": "#d8cbd1"}},
+    {"id": "glasses_cat_eye", "category": "glasses", "display_name": "Kính cat-eye", "description": "Kính cat-eye thời trang.", "render_key": "cat_eye", "order": 20, "occupies": ["glasses"], "tags": ["glasses", "fashion"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#9c4f70", "secondary": "#ebc9d7"}},
+    {"id": "glasses_sunglasses", "category": "glasses", "display_name": "Kính râm", "description": "Kính râm cho outfit dạo phố.", "render_key": "sunglasses", "order": 30, "occupies": ["glasses"], "tags": ["glasses", "street"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#3d3840", "secondary": "#8f8494"}},
+
+    {"id": "headwear_none", "category": "headwear", "display_name": "Không dùng", "description": "Tháo mũ hoặc băng đô.", "render_key": "none", "random_enabled": true, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "headwear_beret", "category": "headwear", "display_name": "Mũ beret", "description": "Mũ beret cho outfit thanh lịch.", "render_key": "beret", "order": 10, "occupies": ["headwear"], "tags": ["headwear"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#b75f7d", "secondary": "#e9bdcc"}},
+    {"id": "headwear_cap", "category": "headwear", "display_name": "Mũ lưỡi trai", "description": "Mũ casual; không phối với tóc quá phồng.", "render_key": "cap", "order": 20, "occupies": ["headwear"], "tags": ["headwear", "casual"], "conflicts_with_tags": ["voluminous_hair"], "layers": {}, "placeholder": {"primary": "#7899b8", "secondary": "#cfdeea"}},
+    {"id": "headwear_headband", "category": "headwear", "display_name": "Băng đô", "description": "Băng đô nơ nhẹ nhàng.", "render_key": "headband", "order": 30, "occupies": ["headwear"], "tags": ["headwear", "feminine"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d77e9b", "secondary": "#f3d0dc"}},
+
+    {"id": "accessory_none", "category": "accessory", "display_name": "Không dùng", "description": "Tháo phụ kiện.", "render_key": "none", "random_enabled": true, "order": 0, "occupies": [], "tags": ["none"], "conflicts_with_tags": [], "layers": {}, "placeholder": {}},
+    {"id": "accessory_handbag", "category": "accessory", "display_name": "Túi xách nhỏ", "description": "Túi xách nhỏ phong cách nữ tính.", "render_key": "handbag", "order": 10, "occupies": ["accessory"], "tags": ["bag"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#cf668b", "secondary": "#f3c6d5"}},
+    {"id": "accessory_crossbody", "category": "accessory", "display_name": "Túi đeo chéo", "description": "Túi đeo chéo casual.", "render_key": "crossbody", "order": 20, "occupies": ["accessory"], "tags": ["bag", "casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#8d765f", "secondary": "#d7c7b7"}},
+    {"id": "accessory_necklace", "category": "accessory", "display_name": "Dây chuyền", "description": "Dây chuyền nhỏ và thanh lịch.", "render_key": "necklace", "order": 30, "occupies": ["accessory"], "tags": ["jewelry"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d6ad49", "secondary": "#fff0a5"}},
+    {"id": "accessory_bracelet", "category": "accessory", "display_name": "Vòng tay", "description": "Vòng tay nhỏ.", "render_key": "bracelet", "order": 40, "occupies": ["accessory"], "tags": ["jewelry"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d6ad49", "secondary": "#fff0a5"}},
+    {"id": "accessory_tote", "category": "accessory", "display_name": "Túi tote", "description": "Túi tote cho outfit đi học hoặc đi cà phê.", "render_key": "tote", "order": 50, "occupies": ["accessory"], "tags": ["bag", "casual"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#d7c29f", "secondary": "#f3ead9"}},
+
+    {"id": "background_studio", "category": "background", "display_name": "Studio sáng", "description": "Phông studio sạch để nhìn rõ outfit.", "render_key": "studio", "order": 10, "occupies": ["background"], "tags": ["indoor"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#f5e9f0", "secondary": "#e5cbd9"}},
+    {"id": "background_city", "category": "background", "display_name": "Dạo phố", "description": "Phông thành phố nhẹ nhàng.", "render_key": "city", "order": 20, "occupies": ["background"], "tags": ["outdoor", "city"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#dceafa", "secondary": "#a9bfd3"}},
+    {"id": "background_cafe", "category": "background", "display_name": "Quán cà phê", "description": "Không gian cà phê ấm áp.", "render_key": "cafe", "order": 30, "occupies": ["background"], "tags": ["indoor", "cafe"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#f2e4d4", "secondary": "#cfae92"}},
+    {"id": "background_park", "category": "background", "display_name": "Công viên", "description": "Phông công viên trong trẻo.", "render_key": "park", "order": 40, "occupies": ["background"], "tags": ["outdoor", "nature"], "conflicts_with_tags": [], "layers": {}, "placeholder": {"primary": "#dcefdc", "secondary": "#9fce9f"}}
+  ]
+}

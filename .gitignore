@@ -1,0 +1,22 @@
+# Godot generated files
+.godot/
+.import/
+*.translation
+
+# Local builds (deploy manually from this folder)
+build/*
+!build/web/
+!build/web/.gitkeep
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+
+# Local logs and temp files
+*.log
+*.tmp
+
+# Never commit personal photos
+user_photos/
+private_assets/
