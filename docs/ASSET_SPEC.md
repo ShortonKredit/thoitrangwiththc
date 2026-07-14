@@ -8,6 +8,19 @@
 - All files share the same body position and origin.
 - Thumbnail: 256 × 256 px, cropped for readability.
 
+## Thumbnail metadata
+
+Wardrobe items may later declare:
+
+```json
+{
+  "thumbnail_path": "res://assets/thumbnails/top_blouse_01.png",
+  "accessible_name": "Áo blouse nơ"
+}
+```
+
+Both fields are optional in the current placeholder catalog. If `thumbnail_path` is absent or empty, the UI keeps showing the text `display_name`. If a thumbnail path is provided, it must start with `res://`. Do not remove `display_name`; it remains required for fallback text, tooltips, accessibility, status text and debugging.
+
 ## Layer order
 
 1. background
@@ -15,18 +28,21 @@
 3. accessory_back
 4. body
 5. face
-6. shoes
-7. bottom
-8. top
-9. dress_back
-10. dress_main
-11. body_foreground
-12. hair_front
-13. glasses
-14. face_accessory
-15. headwear
-16. accessory_front
-17. effect_front
+6. base_outfit
+7. shoes
+8. bottom
+9. top
+10. dress_back
+11. dress_main
+12. body_foreground
+13. hair_front
+14. glasses
+15. face_accessory
+16. headwear
+17. accessory_front
+18. effect_front
+
+`base_outfit` is a permanent modest underlayer. In procedural mode it is drawn by `DollView`; in PNG mode it should be supplied as a full-canvas transparent PNG under `character.layers`, not as a wardrobe item.
 
 ## File naming
 

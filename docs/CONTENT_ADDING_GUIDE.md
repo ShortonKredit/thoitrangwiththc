@@ -7,7 +7,8 @@
 3. Assign a unique stable ID.
 4. Choose a supported `render_key` and placeholder colors.
 5. Set slots/tags/conflicts.
-6. Run `./tools/check_project.ps1`.
+6. Optionally add `thumbnail_path` later when a real thumbnail PNG exists; keep `display_name` for fallback text.
+7. Run `./tools/check_project.ps1`.
 
 The item list and random range update automatically.
 

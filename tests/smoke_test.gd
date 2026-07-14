@@ -2,6 +2,7 @@ extends SceneTree
 
 const ItemCatalogScript = preload("res://scripts/core/item_catalog.gd")
 const GameStateScript = preload("res://scripts/core/game_state.gd")
+const DollViewScript = preload("res://scripts/rendering/doll_view.gd")
 
 var failures: Array[String] = []
 
@@ -15,12 +16,28 @@ func _run() -> void:
 	_assert(catalog.load_catalog() == OK, "Catalog phải tải thành công")
 	_assert(catalog.get_category_ids().size() == 9, "Catalog phải có 9 category")
 	_assert(catalog.items.size() == 45, "Catalog baseline phải có 45 item")
+	_assert(catalog.character.get("layer_order", []).has("base_outfit"), "Layer order phai co base_outfit")
+	var thumbnail_fallback_item: Dictionary = catalog.get_item("top_tee")
+	_assert(str(thumbnail_fallback_item.get("thumbnail_path", "")) == "", "thumbnail_path optional phai fallback rong")
+	_assert(str(thumbnail_fallback_item.get("accessible_name", "")) == str(thumbnail_fallback_item.get("display_name", "")), "accessible_name phai fallback ve display_name")
+	_assert(_invalid_thumbnail_catalog_is_rejected(), "thumbnail_path sai phai bi validator GDScript tu choi")
 
 	var state = GameStateScript.new()
 	state.initialize(catalog)
+	_assert(DollViewScript.get_base_outfit_layer_order().has("base_outfit"), "Renderer phai khai bao base outfit invariant")
+	_assert(not state.selected.has("base_outfit"), "Base outfit khong duoc luu trong selected state")
 	_assert_state_compatible(catalog, state, "Initial state không được có xung đột")
 	_assert(state.selected["top"] == "top_blouse", "Top mặc định phải là blouse")
 	_assert(state.selected["dress"] == "dress_none", "Dress mặc định phải là none")
+
+	state.select_item("top_none")
+	state.select_item("bottom_none")
+	state.select_item("dress_none")
+	_assert(state.selected["top"] == "top_none", "top_none phai la state hop le")
+	_assert(state.selected["bottom"] == "bottom_none", "bottom_none phai la state hop le")
+	_assert(state.selected["dress"] == "dress_none", "dress_none phai la state hop le")
+	_assert_state_compatible(catalog, state, "State trong top/bottom/dress van phai hop le")
+	_assert(not state.snapshot()["selected"].has("base_outfit"), "Snapshot khong duoc chua base outfit invariant")
 
 	state.select_item("dress_casual")
 	_assert(state.selected["dress"] == "dress_casual", "Phải chọn được dress")
@@ -86,6 +103,48 @@ func _run() -> void:
 func _assert(condition: bool, message: String) -> void:
 	if not condition:
 		failures.append(message)
+
+
+func _invalid_thumbnail_catalog_is_rejected() -> bool:
+	var path := "user://invalid_thumbnail_catalog.json"
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify({
+		"schema_version": 1,
+		"character": {
+			"id": "test_character",
+			"mode": "procedural",
+			"canvas_size": [1024, 1536],
+			"layer_order": ["body", "base_outfit"],
+			"layers": {}
+		},
+		"categories": [
+			{"id": "test", "display_name": "Test", "allow_none": false, "random_default": true, "order": 1}
+		],
+		"initial_state": {"test": "test_item"},
+		"items": [
+			{
+				"id": "test_item",
+				"category": "test",
+				"display_name": "Test Item",
+				"render_key": "none",
+				"order": 1,
+				"occupies": ["test"],
+				"tags": [],
+				"conflicts_with_tags": [],
+				"thumbnail_path": "bad/path.png",
+				"layers": {},
+				"placeholder": {}
+			}
+		]
+	}))
+	file.close()
+
+	var invalid_catalog = ItemCatalogScript.new()
+	var result := invalid_catalog.load_catalog(path, false)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	return result == ERR_INVALID_DATA
 
 
 func _assert_state_compatible(catalog: RefCounted, state: RefCounted, message: String) -> void:

@@ -12,16 +12,18 @@ var _items_by_id: Dictionary = {}
 var _items_by_category: Dictionary = {}
 
 
-func load_catalog(path: String = DEFAULT_CATALOG_PATH) -> Error:
+func load_catalog(path: String = DEFAULT_CATALOG_PATH, report_errors: bool = true) -> Error:
 	clear()
 	if not FileAccess.file_exists(path):
-		push_error("Không tìm thấy catalog: %s" % path)
+		if report_errors:
+			push_error("Không tìm thấy catalog: %s" % path)
 		return ERR_FILE_NOT_FOUND
 
 	var raw_text := FileAccess.get_file_as_string(path)
 	var parsed: Variant = JSON.parse_string(raw_text)
 	if typeof(parsed) != TYPE_DICTIONARY:
-		push_error("Catalog JSON không hợp lệ: %s" % path)
+		if report_errors:
+			push_error("Catalog JSON không hợp lệ: %s" % path)
 		return ERR_PARSE_ERROR
 
 	var root: Dictionary = parsed
@@ -61,6 +63,8 @@ func load_catalog(path: String = DEFAULT_CATALOG_PATH) -> Error:
 		item["id"] = item_id
 		item["category"] = category_id
 		item["display_name"] = str(item.get("display_name", item_id))
+		item["accessible_name"] = str(item.get("accessible_name", item["display_name"]))
+		item["thumbnail_path"] = str(item.get("thumbnail_path", "")).strip_edges()
 		item["description"] = str(item.get("description", ""))
 		item["render_key"] = str(item.get("render_key", "none"))
 		item["random_enabled"] = bool(item.get("random_enabled", true))
@@ -83,8 +87,9 @@ func load_catalog(path: String = DEFAULT_CATALOG_PATH) -> Error:
 
 	var errors := validate()
 	if not errors.is_empty():
-		for message in errors:
-			push_error(message)
+		if report_errors:
+			for message in errors:
+				push_error(message)
 		return ERR_INVALID_DATA
 
 	return OK
@@ -123,6 +128,11 @@ func validate() -> PackedStringArray:
 			errors.append("initial_state tham chiếu item không tồn tại: '%s'." % initial_item_id)
 		elif str(get_item(initial_item_id).get("category", "")) != category_id:
 			errors.append("Item '%s' không thuộc category '%s'." % [initial_item_id, category_id])
+
+	for item in items:
+		var thumbnail_path := str(item.get("thumbnail_path", ""))
+		if not thumbnail_path.is_empty() and not thumbnail_path.begins_with("res://"):
+			errors.append("Item '%s' có thumbnail_path không hợp lệ: '%s'." % [item.get("id", ""), thumbnail_path])
 
 	return errors
 

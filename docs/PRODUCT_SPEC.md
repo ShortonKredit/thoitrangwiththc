@@ -1,5 +1,15 @@
 # Product Spec
 
+## Product title
+
+The in-game header shows:
+
+```text
+GAME THỜI TRANG
+```
+
+The repository/project name and deployment slug can remain `Thời Trang with THC` / `thoitrangwiththc`; the simplified title is the player-facing main-screen title.
+
 ## Product statement
 
 **Thời Trang with THC** là creative dress-up toy 2D dành cho gia đình. Người chơi mở website, phối một outfit đời thường thời trang, random có kiểm soát và lưu ảnh PNG mà không phải đăng nhập.
@@ -31,10 +41,14 @@
 - Local save.
 - PNG capture.
 - Web export foundation.
+- Renderer-invariant base outfit so the character is never shown without modest base clothing, even when top, bottom and dress are all set to none.
+- Optional thumbnail metadata with text fallback until real thumbnails exist.
 
 ## Deferred
 
 - Face photo editor.
+- Privacy copy for the future face-photo flow; it is not shown persistently in the main header.
+- Real PNG base outfit and item thumbnails for the Phase 2 art proof pack.
 - Mobile-first UI.
 - Dynamic remote content packs.
 - Multiple body templates/poses.

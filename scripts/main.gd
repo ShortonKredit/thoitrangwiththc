@@ -70,7 +70,7 @@ func _build_interface() -> void:
 	var page_margin := MarginContainer.new()
 	page_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	page_margin.add_theme_constant_override("margin_left", 20)
-	page_margin.add_theme_constant_override("margin_top", 22)
+	page_margin.add_theme_constant_override("margin_top", 16)
 	page_margin.add_theme_constant_override("margin_right", 20)
 	page_margin.add_theme_constant_override("margin_bottom", 16)
 	add_child(page_margin)
@@ -95,7 +95,7 @@ func _build_interface() -> void:
 
 func _build_header() -> Control:
 	var header := HBoxContainer.new()
-	header.custom_minimum_size = Vector2(0, 58)
+	header.custom_minimum_size = Vector2(0, 36)
 	header.add_theme_constant_override("separation", 12)
 
 	var title_group := VBoxContainer.new()
@@ -103,24 +103,11 @@ func _build_header() -> Control:
 	header.add_child(title_group)
 
 	var title := Label.new()
-	title.text = "THỜI TRANG WITH THC"
+	title.text = "GAME THỜI TRANG"
 	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", COLOR_TEXT)
 	title_group.add_child(title)
 
-	var subtitle := Label.new()
-	subtitle.text = "Phối đồ đời thường thời trang • Không đăng nhập • Dữ liệu lưu trên thiết bị"
-	subtitle.add_theme_font_size_override("font_size", 14)
-	subtitle.add_theme_color_override("font_color", COLOR_MUTED)
-	title_group.add_child(subtitle)
-
-	var privacy_badge := Label.new()
-	privacy_badge.text = "LOCAL ONLY"
-	privacy_badge.tooltip_text = "Game không cần tài khoản và không có backend người dùng."
-	privacy_badge.add_theme_font_size_override("font_size", 13)
-	privacy_badge.add_theme_color_override("font_color", COLOR_ACCENT)
-	privacy_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	header.add_child(privacy_badge)
 	return header
 
 
@@ -336,8 +323,14 @@ func _rebuild_item_grid() -> void:
 	for item in catalog.get_items_for_category(current_category_id):
 		var item_id := str(item.get("id", ""))
 		var button := Button.new()
-		button.text = str(item.get("display_name", item_id))
-		button.tooltip_text = str(item.get("description", ""))
+		var display_name := str(item.get("display_name", item_id))
+		var accessible_name := str(item.get("accessible_name", display_name))
+		var thumbnail_path := str(item.get("thumbnail_path", ""))
+		button.text = display_name
+		button.tooltip_text = _item_tooltip(accessible_name, str(item.get("description", "")))
+		if not thumbnail_path.is_empty() and ResourceLoader.exists(thumbnail_path, "Texture2D"):
+			button.icon = load(thumbnail_path)
+			button.expand_icon = true
 		button.toggle_mode = true
 		button.button_group = item_button_group
 		button.focus_mode = Control.FOCUS_NONE
@@ -348,6 +341,12 @@ func _rebuild_item_grid() -> void:
 		button.pressed.connect(_on_item_pressed.bind(item_id))
 		item_grid.add_child(button)
 		item_buttons[item_id] = button
+
+
+func _item_tooltip(accessible_name: String, description: String) -> String:
+	if description.is_empty():
+		return accessible_name
+	return "%s\n%s" % [accessible_name, description]
 
 
 func _on_item_pressed(item_id: String) -> void:

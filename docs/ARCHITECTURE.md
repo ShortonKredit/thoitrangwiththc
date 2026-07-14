@@ -10,7 +10,7 @@ ItemCatalog (load + validate + sanitize)
 GameState (selection + compatibility + locks + history)
         ↓
 Main UI                         DollView
-(category/item controls)        (procedural or PNG rendering)
+(category/item controls)        (base outfit + procedural or PNG rendering)
         ↓                            ↓
 SaveService                    PNG capture
 (user:// / IndexedDB)          local download only
@@ -27,8 +27,12 @@ Each item has:
 - `occupies` slots
 - `tags` and `conflicts_with_tags`
 - `random_enabled`
+- optional `thumbnail_path`
+- optional `accessible_name`
 - `layers` for future PNG paths
 - placeholder colors
+
+`thumbnail_path` is optional. When it is missing or empty, the wardrobe UI keeps using `display_name` text. When it is present, it must use a `res://` path. `accessible_name` falls back to `display_name`.
 
 ## Compatibility
 
@@ -40,6 +44,20 @@ Compatibility is generic:
 - Tag conflicts cover cases such as a cap versus voluminous hair.
 
 No per-ID outfit rules should be added to UI code.
+
+## Base outfit invariant
+
+`DollView` always renders a modest base outfit above the body and below all player-selectable fashion layers. It is not a catalog item, not part of selected state, not saved, not randomized, not lockable and not removable through undo/redo/reset.
+
+Layer intent:
+
+```text
+body
+base_outfit
+shoes / bottom / top / dress / accessories
+```
+
+For the future PNG path, `character.layer_order` includes `base_outfit`; the path can be supplied later through `character.layers` without changing wardrobe state logic.
 
 ## Rendering modes
 

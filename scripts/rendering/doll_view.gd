@@ -6,6 +6,9 @@ const SKIN_SHADOW := Color("#d9a78a")
 const OUTLINE := Color("#5d4852")
 const WHITE := Color("#fffafc")
 const BLACK := Color("#352d33")
+const BASE_TOP := Color("#f8edf3")
+const BASE_BOTTOM := Color("#c27d91")
+const BASE_TRIM := Color("#d9a8ba")
 
 var catalog: RefCounted
 var game_state: RefCounted
@@ -28,6 +31,10 @@ func configure(item_catalog: RefCounted, state: RefCounted) -> void:
 func get_capture_rect() -> Rect2i:
 	var rect := get_global_rect()
 	return Rect2i(Vector2i(rect.position.round()), Vector2i(rect.size.round()))
+
+
+static func get_base_outfit_layer_order() -> PackedStringArray:
+	return PackedStringArray(["body", "base_outfit", "fashion"])
 
 
 func _on_state_changed(_reason: String) -> void:
@@ -111,6 +118,7 @@ func _draw_procedural_character(target_rect: Rect2) -> void:
 	_draw_hair_back(hair)
 	_draw_legs()
 	_draw_torso()
+	_draw_base_outfit()
 	_draw_bottom(bottom)
 	_draw_top(top)
 	_draw_dress(dress)
@@ -187,6 +195,16 @@ func _draw_legs() -> void:
 
 func _draw_torso() -> void:
 	draw_polygon(PackedVector2Array([Vector2(207, 222), Vector2(305, 222), Vector2(292, 422), Vector2(220, 422)]), PackedColorArray([SKIN]))
+
+
+func _draw_base_outfit() -> void:
+	draw_polygon(PackedVector2Array([Vector2(207, 225), Vector2(305, 225), Vector2(297, 358), Vector2(215, 358)]), PackedColorArray([BASE_TOP]))
+	draw_polygon(PackedVector2Array([Vector2(207, 225), Vector2(184, 280), Vector2(204, 292), Vector2(222, 246)]), PackedColorArray([BASE_TOP]))
+	draw_polygon(PackedVector2Array([Vector2(305, 225), Vector2(328, 280), Vector2(308, 292), Vector2(290, 246)]), PackedColorArray([BASE_TOP]))
+	draw_line(Vector2(218, 225), Vector2(294, 225), BASE_TRIM, 4)
+	draw_line(Vector2(216, 358), Vector2(296, 358), BASE_TRIM, 4)
+	draw_polygon(PackedVector2Array([Vector2(216, 350), Vector2(296, 350), Vector2(290, 438), Vector2(262, 438), Vector2(256, 391), Vector2(250, 438), Vector2(222, 438)]), PackedColorArray([BASE_BOTTOM]))
+	draw_line(Vector2(220, 365), Vector2(292, 365), BASE_TRIM, 4)
 
 
 func _draw_top(item: Dictionary) -> void:

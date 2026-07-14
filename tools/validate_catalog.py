@@ -48,6 +48,9 @@ def main() -> int:
         for path in layers.values() if isinstance(layers, dict) else []:
             if not str(path).startswith("res://"):
                 errors.append(f"Item {item.get('id')} layer path must start with res://: {path}")
+        thumbnail_path = str(item.get("thumbnail_path", "")).strip()
+        if thumbnail_path and not thumbnail_path.startswith("res://"):
+            errors.append(f"Item {item.get('id')} thumbnail_path must start with res://: {thumbnail_path}")
 
     for category in categories:
         category_id = str(category["id"])
