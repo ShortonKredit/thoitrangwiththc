@@ -17,7 +17,7 @@ var game_state: RefCounted
 var save_service: RefCounted
 var doll_view: Control
 
-var current_category_id: String = "hair"
+var current_category_id: String = ""
 var category_button_group: ButtonGroup
 var item_button_group: ButtonGroup
 var category_buttons: Dictionary = {}
@@ -48,6 +48,8 @@ func _ready() -> void:
 	game_state.changed.connect(_on_state_changed)
 	game_state.history_changed.connect(_on_history_changed)
 
+	var category_ids: Array = catalog.get_category_ids()
+	current_category_id = str(category_ids[0]) if not category_ids.is_empty() else ""
 	_build_interface()
 	_select_category(current_category_id)
 	_on_state_changed("ready")
