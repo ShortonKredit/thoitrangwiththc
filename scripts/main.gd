@@ -8,9 +8,14 @@ const DollViewScript = preload("res://scripts/rendering/doll_view.gd")
 const COLOR_PAGE := Color("#f7f1f8")
 const COLOR_PANEL := Color("#fffafd")
 const COLOR_ACCENT := Color("#c65e88")
+const COLOR_ACCENT_DARK := Color("#9f3d68")
 const COLOR_ACCENT_SOFT := Color("#f3d5e1")
 const COLOR_TEXT := Color("#493b43")
 const COLOR_MUTED := Color("#806f78")
+const COLOR_BUTTON := Color("#ffffff")
+const COLOR_BUTTON_HOVER := Color("#f8edf3")
+const COLOR_BUTTON_DISABLED := Color("#eee8ec")
+const COLOR_DANGER := Color("#9d5a62")
 
 var catalog: RefCounted
 var game_state: RefCounted
@@ -65,13 +70,13 @@ func _build_interface() -> void:
 	var page_margin := MarginContainer.new()
 	page_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	page_margin.add_theme_constant_override("margin_left", 20)
-	page_margin.add_theme_constant_override("margin_top", 16)
+	page_margin.add_theme_constant_override("margin_top", 22)
 	page_margin.add_theme_constant_override("margin_right", 20)
 	page_margin.add_theme_constant_override("margin_bottom", 16)
 	add_child(page_margin)
 
 	var page_layout := VBoxContainer.new()
-	page_layout.add_theme_constant_override("separation", 12)
+	page_layout.add_theme_constant_override("separation", 10)
 	page_margin.add_child(page_layout)
 
 	page_layout.add_child(_build_header())
@@ -83,18 +88,14 @@ func _build_interface() -> void:
 	content.add_child(_build_stage_panel())
 	content.add_child(_build_wardrobe_panel())
 
-	status_label = Label.new()
-	status_label.text = "Sẵn sàng phối đồ. Phím tắt: Ctrl+Z, Ctrl+Y, R và F11."
-	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	status_label.add_theme_color_override("font_color", COLOR_MUTED)
-	status_label.add_theme_font_size_override("font_size", 13)
-	page_layout.add_child(status_label)
+	page_layout.add_child(_build_status_bar())
 
 	_build_dialogs()
 
 
 func _build_header() -> Control:
 	var header := HBoxContainer.new()
+	header.custom_minimum_size = Vector2(0, 58)
 	header.add_theme_constant_override("separation", 12)
 
 	var title_group := VBoxContainer.new()
@@ -103,7 +104,7 @@ func _build_header() -> Control:
 
 	var title := Label.new()
 	title.text = "THỜI TRANG WITH THC"
-	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_font_size_override("font_size", 26)
 	title.add_theme_color_override("font_color", COLOR_TEXT)
 	title_group.add_child(title)
 
@@ -121,6 +122,27 @@ func _build_header() -> Control:
 	privacy_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	header.add_child(privacy_badge)
 	return header
+
+
+func _build_status_bar() -> Control:
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", _panel_style(Color("#fff8fc"), 8, Color("#eadde8")))
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 12)
+	margin.add_theme_constant_override("margin_top", 6)
+	margin.add_theme_constant_override("margin_right", 12)
+	margin.add_theme_constant_override("margin_bottom", 6)
+	panel.add_child(margin)
+
+	status_label = Label.new()
+	status_label.text = "Sẵn sàng phối đồ. Phím tắt: Ctrl+Z, Ctrl+Y, R và F11."
+	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	status_label.add_theme_color_override("font_color", COLOR_TEXT)
+	status_label.add_theme_font_size_override("font_size", 14)
+	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	margin.add_child(status_label)
+	return panel
 
 
 func _build_stage_panel() -> Control:
@@ -186,6 +208,7 @@ func _build_wardrobe_panel() -> Control:
 		button.button_group = category_button_group
 		button.focus_mode = Control.FOCUS_NONE
 		button.custom_minimum_size = Vector2(92, 34)
+		_apply_button_style(button, "category")
 		button.pressed.connect(_select_category.bind(category_id))
 		category_flow.add_child(button)
 		category_buttons[category_id] = button
@@ -213,6 +236,10 @@ func _build_wardrobe_panel() -> Control:
 	lock_toggle = CheckButton.new()
 	lock_toggle.text = "Khóa"
 	lock_toggle.tooltip_text = "Giữ nguyên danh mục này khi bấm Phối ngẫu nhiên."
+	lock_toggle.custom_minimum_size = Vector2(96, 36)
+	lock_toggle.add_theme_color_override("font_color", COLOR_TEXT)
+	lock_toggle.add_theme_color_override("font_pressed_color", COLOR_ACCENT_DARK)
+	lock_toggle.add_theme_font_size_override("font_size", 14)
 	lock_toggle.toggled.connect(_on_lock_toggled)
 	category_header.add_child(lock_toggle)
 
@@ -243,23 +270,24 @@ func _build_action_grid() -> Control:
 	redo_button = _action_button("Làm lại", _redo, "Ctrl+Y")
 	actions.add_child(undo_button)
 	actions.add_child(redo_button)
-	actions.add_child(_action_button("Ngẫu nhiên", _randomize, "R"))
+	actions.add_child(_action_button("Ngẫu nhiên", _randomize, "R", "primary"))
 	actions.add_child(_action_button("Đặt lại", _ask_reset))
-	actions.add_child(_action_button("Lưu PNG", _save_look))
+	actions.add_child(_action_button("Lưu PNG", _save_look, "", "strong"))
 	actions.add_child(_action_button("Toàn màn hình", _toggle_fullscreen, "F11"))
 
-	var clear_button := _action_button("Xóa dữ liệu lưu", _ask_clear_data)
+	var clear_button := _action_button("Xóa dữ liệu lưu", _ask_clear_data, "", "danger")
 	clear_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(clear_button)
 	return actions
 
 
-func _action_button(text: String, callback: Callable, shortcut_text: String = "") -> Button:
+func _action_button(text: String, callback: Callable, shortcut_text: String = "", role: String = "neutral") -> Button:
 	var button := Button.new()
 	button.text = text
 	button.custom_minimum_size = Vector2(0, 42)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.focus_mode = Control.FOCUS_NONE
+	_apply_button_style(button, role)
 	if not shortcut_text.is_empty():
 		button.tooltip_text = "Phím tắt: %s" % shortcut_text
 	button.pressed.connect(callback)
@@ -316,6 +344,7 @@ func _rebuild_item_grid() -> void:
 		button.custom_minimum_size = Vector2(0, 56)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.button_pressed = item_id == selected_id
+		_apply_button_style(button, "item")
 		button.pressed.connect(_on_item_pressed.bind(item_id))
 		item_grid.add_child(button)
 		item_buttons[item_id] = button
@@ -472,6 +501,64 @@ func _panel_style(background: Color, radius: int, border_color: Color) -> StyleB
 	style.set_corner_radius_all(radius)
 	style.shadow_color = Color(0.25, 0.15, 0.23, 0.08)
 	style.shadow_size = 8
+	return style
+
+
+func _apply_button_style(button: Button, role: String) -> void:
+	var normal := _button_style(COLOR_BUTTON, Color("#d9ccd5"), 7)
+	var hover := _button_style(COLOR_BUTTON_HOVER, COLOR_ACCENT_SOFT, 7)
+	var pressed := _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 7)
+	var disabled := _button_style(COLOR_BUTTON_DISABLED, Color("#d8d0d5"), 7)
+	var font_normal := COLOR_TEXT
+	var font_pressed := Color.WHITE
+	var font_disabled := Color("#8a7e86")
+
+	match role:
+		"category":
+			normal = _button_style(Color("#fdf7fb"), Color("#d8ccd4"), 6)
+			hover = _button_style(Color("#f7e6ef"), COLOR_ACCENT_SOFT, 6)
+			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
+		"item":
+			normal = _button_style(Color("#fbf7fa"), Color("#ddd2da"), 6)
+			hover = _button_style(Color("#f5e4ed"), COLOR_ACCENT_SOFT, 6)
+			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
+		"primary":
+			normal = _button_style(COLOR_ACCENT, COLOR_ACCENT_DARK, 6)
+			hover = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
+			pressed = _button_style(Color("#7f2f52"), Color("#7f2f52"), 6)
+			font_normal = Color.WHITE
+		"strong":
+			normal = _button_style(Color("#655d63"), Color("#51484f"), 6)
+			hover = _button_style(Color("#51484f"), Color("#51484f"), 6)
+			pressed = _button_style(Color("#3f373d"), Color("#3f373d"), 6)
+			font_normal = Color.WHITE
+		"danger":
+			normal = _button_style(Color("#fff9fb"), COLOR_DANGER, 6)
+			hover = _button_style(Color("#f8e9ec"), COLOR_DANGER, 6)
+			pressed = _button_style(COLOR_DANGER, COLOR_DANGER, 6)
+			font_normal = COLOR_DANGER
+
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_stylebox_override("disabled", disabled)
+	button.add_theme_color_override("font_color", font_normal)
+	button.add_theme_color_override("font_hover_color", font_normal)
+	button.add_theme_color_override("font_pressed_color", font_pressed)
+	button.add_theme_color_override("font_disabled_color", font_disabled)
+	button.add_theme_font_size_override("font_size", 15)
+
+
+func _button_style(background: Color, border_color: Color, radius: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = background
+	style.border_color = border_color
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(radius)
+	style.content_margin_left = 10
+	style.content_margin_right = 10
+	style.content_margin_top = 6
+	style.content_margin_bottom = 6
 	return style
 
 

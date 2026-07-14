@@ -16,6 +16,7 @@ Thumbs.db
 # Local logs and temp files
 *.log
 *.tmp
+docs/screenshots/*.import
 
 # Never commit personal photos
 user_photos/
