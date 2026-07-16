@@ -15,7 +15,8 @@ Date: 2026-07-16
 | Phase 2D - MVP wardrobe proof pack | Superseded / incorporated | The explicit Phase 3A product-integration milestone audits and integrates the compatible local wardrobe set directly. |
 | Phase 3A - Product Integration | Manual visual QA pending | Three-button action bar, 29 tops, five shorts, six trousers, six skirts, and 13 unique face effects are integrated; catalog/Godot automated checks pass. |
 | Phase 3B - Local Face Import | Not started | No file picker, real-person image handling, recognition, biometric analysis, upload, or API was added. |
-| Phase 3C - Web Release | Not started | No web export, browser QA, or release work was performed in Phase 3A. |
+| Phase 3C-A - GitHub Pages Web Preview | Manual Web QA pending | Single-threaded export and local HTTP/Chrome smoke pass; Unicode action glyphs were replaced by packaged local SVGs. Edge/mobile interaction and public deployment remain unverified. |
+| Phase 3C - Production Web Release | Not started | Preview deployment and browser QA must pass before any production-release claim. |
 
 ## Current Gate
 

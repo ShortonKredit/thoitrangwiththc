@@ -1,2 +1,2 @@
 $ErrorActionPreference = "Stop"
-python tools/serve.py --root build/web --port 8000
+python tools/serve.py --root docs --port 8060

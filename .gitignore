@@ -17,6 +17,7 @@ Thumbs.db
 *.log
 *.tmp
 docs/screenshots/*.import
+docs/index*.import
 
 # Never commit personal photos
 user_photos/

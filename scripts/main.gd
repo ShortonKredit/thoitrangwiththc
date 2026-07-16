@@ -23,9 +23,14 @@ const ITEM_TILE_SHOWS_TEXT := false
 const THUMBNAIL_SIZE := Vector2i(192, 192)
 const THUMBNAIL_ALPHA_THRESHOLD := 8
 const THUMBNAIL_PADDING_RATIO := 0.12
-const ACTION_ICON_UNDO := "↶"
-const ACTION_ICON_REDO := "↷"
-const ACTION_ICON_RESET := "⟳"
+const ACTION_ICON_PATHS := [
+	"res://assets/ui/icons/undo.svg",
+	"res://assets/ui/icons/redo.svg",
+	"res://assets/ui/icons/reset.svg",
+]
+const ACTION_ICON_UNDO: Texture2D = preload("res://assets/ui/icons/undo.svg")
+const ACTION_ICON_REDO: Texture2D = preload("res://assets/ui/icons/redo.svg")
+const ACTION_ICON_RESET: Texture2D = preload("res://assets/ui/icons/reset.svg")
 const ACTION_BUTTON_NAMES := ["UndoButton", "RedoButton", "ResetButton"]
 
 class NoneTileButton:
@@ -263,16 +268,25 @@ func _build_action_grid() -> Control:
 	return actions
 
 
-func _action_button(node_name: String, icon_text: String, accessible_label: String, callback: Callable) -> Button:
+func _action_button(node_name: String, icon_texture: Texture2D, accessible_label: String, callback: Callable) -> Button:
 	var button := Button.new()
 	button.name = node_name
-	button.text = icon_text
+	button.text = ""
+	button.icon = icon_texture
+	button.expand_icon = false
+	button.add_theme_constant_override("icon_max_width", 24)
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
 	button.tooltip_text = accessible_label
 	button.accessibility_name = accessible_label
 	button.custom_minimum_size = Vector2(52, 44)
 	button.focus_mode = Control.FOCUS_ALL
-	button.add_theme_font_size_override("font_size", 24)
 	_apply_button_style(button, "action")
+	button.add_theme_color_override("icon_normal_color", Color.WHITE)
+	button.add_theme_color_override("icon_hover_color", Color.WHITE)
+	button.add_theme_color_override("icon_pressed_color", Color.WHITE)
+	button.add_theme_color_override("icon_focus_color", Color.WHITE)
+	button.add_theme_color_override("icon_disabled_color", Color(1, 1, 1, 0.46))
 	button.pressed.connect(callback)
 	return button
 
@@ -929,7 +943,7 @@ func _apply_button_style(button: Button, role: String) -> void:
 		"action":
 			normal = _button_style(Color("#fffafd"), Color("#d8ccd4"), 8, 1)
 			hover = _button_style(Color("#f7e6ef"), COLOR_ACCENT, 8, 2)
-			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 8, 1)
+			pressed = _button_style(Color("#efd3df"), COLOR_ACCENT_DARK, 8, 1)
 			disabled = _button_style(COLOR_BUTTON_DISABLED, Color("#d8d0d5"), 8, 1)
 			focus = _button_style(Color("#ffffff"), COLOR_ACCENT, 8, 2)
 		"primary":

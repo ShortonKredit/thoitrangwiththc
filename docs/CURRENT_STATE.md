@@ -2,7 +2,7 @@
 
 Date: 2026-07-16
 
-Baseline: Phase 0 through Phase 2C are complete. Phase 3A product integration is implemented, passes automated checks, and remains **MANUAL VISUAL QA PENDING**. Phase 3B Local Face Import and Phase 3C Web Release are not started.
+Baseline: Phase 0 through Phase 2C are complete. Phase 3A content completion is implemented, passes automated checks, and remains **MANUAL VISUAL QA PENDING**. Phase 3B Local Face Import is not started. Phase 3C-A GitHub Pages preview exports and passes local HTTP/Chrome smoke; cross-browser/mobile manual QA and deployment remain pending.
 
 ## Current Architecture
 
@@ -30,7 +30,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 
 ## Working Features
 
-- Catalog validation passes with 15 state categories and 210 items.
+- Catalog validation passes with 16 state categories and 236 items.
 - Godot 4.7 import, parse, startup smoke, and logic smoke tests pass locally.
 - Main scene runs locally in Godot.
 - Category and item selection are data-driven.
@@ -44,16 +44,16 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Optional `thumbnail_path` and `accessible_name` metadata exist with text fallback.
 - Phase 2B selector thumbnails are generated in memory from preview modes: alpha visible bounds for PNG layers, body+face crop for face items, procedural cover previews for backgrounds, and a drawn X for none items.
 - Phase 2C adds five silhouette-identical skin variants, 75 combined-hair variants, 30 eye variants, five eyebrow variants, five mouth variants, and two blush layers from the local extracted PNG source/template set.
-- The `Khuôn mặt` main category exposes only non-empty, data-driven subcategories: `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`. No eyelash subcategory is shown because the audited source contains no eyelash PNG.
+- The `Khuôn mặt` main category exposes non-empty, data-driven skin, eyes, eyebrows, mouth, makeup, and effect groups. No eyelash subcategory is shown because the audited source contains no eyelash PNG.
 - Save schema version 3 adds the independent `face_effect` slot; version-1/version-2 saves sanitize missing effects to `effect_none` and the legacy composite face to separate defaults.
 - The polished clean/reset default is `skin_tone_01` with hair, legacy face, eyes, eyebrows, mouth, and makeup all set to their `none` items. Existing valid saves still restore their saved appearance until the player resets.
 - Skin selector thumbnails are opaque representative color swatches; they no longer render a miniature character.
 - Eyes, eyebrows, mouth, and makeup thumbnails crop only their own visible feature bounds on a consistent neutral background.
 - Hair thumbnails use hair-only visible bounds, reduced padding, a neutral background, and centered fitting.
-- Phase 3A audits all 184 PNGs in the local extracted PNG source/template set and integrates all compatible non-duplicate garments: 29 selectable tops and five selectable shorts.
+- Phase 3A audits all 184 PNGs and integrates 29 tops, five shorts, six trousers, six skirts, and 13 unique face effects.
 - The action bar contains only textless Undo, Redo, and Reset icon buttons with tooltip, accessibility, focus, hover, pressed, and disabled states.
 - Reset is one undoable history action, persists the catalog default locally, supports Redo, and clears the redo branch after a new post-Undo selection.
-- Product tops/shorts store style/color/variant metadata and use focused alpha-bound thumbnails on a neutral background.
+- Product garments/effects store style/color/variant metadata and use focused alpha-bound thumbnails on a neutral background.
 - The clean/reset background selection is `background_none`, which renders the default studio background.
 
 ## Mandatory Invariants
@@ -74,7 +74,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - The legacy placeholder catalog remains for migration/procedural reference, but non-proof fashion items are hidden from the Phase 2B UI where needed.
 - `thumbnail_path` support exists, but the current catalog does not depend on real thumbnail asset files.
 - Future PNG layer paths are scaffolded but not production art.
-- Web export foundation exists, but browser QA is deferred until a web-focused phase.
+- Web preset/scripts produce a single-threaded GitHub Pages build under `docs/`; local SVG action icons avoid Web font-glyph dependencies.
 
 ## Phase 2C Closure
 
@@ -99,7 +99,8 @@ Keri remains a conditional three-quarter-body proof candidate, not a final art a
 - Phase 2B three-quarter-body integration proof is complete after owner-confirmed manual visual QA.
 - Phase 2C appearance layering is complete.
 - Phase 3A content completion is implemented with data-driven bottom groups and Face -> Effect; it remains `MANUAL VISUAL QA PENDING`.
-- Phase 3B Local Face Import and Phase 3C Web Release are not started.
+- Phase 3B Local Face Import is not started.
+- Phase 3C-A Web Preview is `MANUAL WEB QA PENDING`; a local build exists, but no public deployment has been committed/pushed or verified.
 - Full-body leg extension is deferred/post-MVP.
 - Keri proof PNG assets have been imported into Godot under `assets/**/keri/proof/`.
 - No AI asset generation has been performed in this phase.

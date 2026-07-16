@@ -7,15 +7,15 @@
 The repository is past the initial foundation and UI audit milestones:
 
 - Godot 4.7 local import, parse, startup smoke, and logic smoke checks pass.
-- Catalog is data-driven with 15 state categories and 210 items after Phase 3A product integration.
+- Catalog is data-driven with 16 state categories and 236 items after Phase 3A content completion.
 - The main scene runs locally.
 - Selection, compatibility, backend random locks, undo/redo, reset, local save, and PNG capture logic exist.
 - The active Phase 2C proof uses selectable Keri skin, combined hair, eyes, eyebrows, mouth, and makeup PNG layers; legacy procedural/composite items remain only where needed for migration/reference.
 - `DollView` owns a permanent `base_outfit` so the character remains modest even when top, bottom, and dress are all none.
 - Optional `thumbnail_path` and `accessible_name` metadata are supported with text fallback.
-- Web export scripts and Netlify configuration exist, but full browser QA is deferred to a web-focused phase.
+- GitHub Pages Web-preview configuration and build target `docs/`; local export/HTTP smoke pass and manual browser QA remains pending.
 - Phase 2A Keri audit is complete; MVP art proof work is now scoped to a three-quarter-body integration path.
-- Phase 2C appearance work is complete. Phase 3A integrates 29 tops and five shorts and is manual visual QA pending.
+- Phase 2C appearance work is complete. Phase 3A integrates 29 tops, five shorts, six trousers, six skirts, and 13 effects and remains manual visual QA pending.
 - The product action bar contains only Undo, Redo, and Reset icon buttons; Random, Save PNG, Fullscreen, and Clear saved data are not exposed in the Phase 3A UI.
 
 No login, backend, database, account system, API upload, ads, gacha, chat, or leaderboard exists.
@@ -45,7 +45,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.p
 
 Expected:
 
-- `Catalog valid: 15 categories, 210 items`
+- `Catalog valid: 16 categories, 236 items`
 - `SMOKE TEST PASSED`
 - `Project checks passed.`
 
@@ -58,7 +58,13 @@ For web/export milestones:
 ./tools/serve_web.ps1
 ```
 
-Open `http://localhost:8000`, then check browser Console/Network. See `docs/TEST_PLAN.md` and `docs/DEPLOYMENT.md`.
+Official Godot 4.7 Web templates are required. After export succeeds, open `http://localhost:8060`, then check browser Console/Network. See `docs/TEST_PLAN.md` and `docs/PHASE_3C_WEB_PREVIEW_REPORT.md`.
+
+Expected GitHub Pages preview: `https://shortonkredit.github.io/thoitrangwiththc/`
+
+- Desktop: preview target; manual browser QA pending.
+- Mobile: experimental.
+- Local Face Import: not implemented.
 
 ## Add Wardrobe Content
 

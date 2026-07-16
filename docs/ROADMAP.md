@@ -181,9 +181,19 @@ Status: Implemented; manual visual QA pending.
 
 Status: Not started. Must remain local-only and requires a separate explicit milestone/privacy gate.
 
-### Phase 3C - Web Release
+### Phase 3C-A - GitHub Pages Web Preview
 
-Status: Not started. Web export, browser smoke/visual QA, and release are deferred to this separate milestone.
+Status: Manual Web QA pending.
+
+- Compatibility renderer and browser-safe runtime dependencies audited;
+- single-threaded, non-PWA Web preset targets `docs/index.html`;
+- local SVG action icons replace unreliable Unicode Web-font glyphs;
+- export and local HTTP/Chrome smoke pass;
+- Edge/mobile manual QA, Web build commit/push, Pages configuration, and public URL verification remain pending.
+
+### Phase 3C - Production Web Release
+
+Status: Not started. The preview must export, deploy, and pass desktop/mobile QA before production release work begins.
 
 ## Post-MVP
 

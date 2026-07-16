@@ -253,7 +253,7 @@ func _assert_action_bar() -> void:
 	var buttons := action_bar.get_children()
 	_assert(buttons.size() == 3, "Phase 3A action bar must expose exactly Undo, Redo, and Reset")
 	var expected_names: Array = MainScript.ACTION_BUTTON_NAMES
-	var expected_icons := [MainScript.ACTION_ICON_UNDO, MainScript.ACTION_ICON_REDO, MainScript.ACTION_ICON_RESET]
+	var expected_icon_paths: Array = MainScript.ACTION_ICON_PATHS
 	var expected_tooltips := ["Hoàn tác", "Làm lại", "Reset"]
 	for index in range(buttons.size()):
 		var button := buttons[index] as Button
@@ -261,7 +261,12 @@ func _assert_action_bar() -> void:
 		if button == null:
 			continue
 		_assert(str(button.name) == str(expected_names[index]), "Action buttons must retain stable public names")
-		_assert(button.text == expected_icons[index], "Action buttons must show icon glyphs without visible labels")
+		_assert(button.text.is_empty(), "Action buttons must not depend on Unicode or emoji text glyphs")
+		_assert(button.icon != null, "Action buttons must use local icon textures")
+		if button.icon != null:
+			_assert(button.icon.resource_path == str(expected_icon_paths[index]), "Action button must use its stable local SVG path")
+			_assert(button.icon.get_size() == Vector2(24, 24), "Action SVG textures must retain their square 24x24 size")
+		_assert(not button.expand_icon and button.get_theme_constant("icon_max_width") == 24, "Action icons must remain centered without stretch distortion")
 		_assert(button.tooltip_text == expected_tooltips[index], "Action button tooltip must match the Vietnamese product copy")
 		_assert(button.accessibility_name == expected_tooltips[index], "Action button accessible name must match its tooltip")
 		_assert(button.focus_mode == Control.FOCUS_ALL, "Action buttons must remain keyboard-focusable")
@@ -269,6 +274,8 @@ func _assert_action_bar() -> void:
 		_assert(button.get_theme_stylebox("pressed") != null, "Action buttons need a pressed style")
 		_assert(button.get_theme_stylebox("disabled") != null, "Action buttons need a disabled style")
 		_assert(button.get_theme_stylebox("focus") != null, "Action buttons need a focus style")
+		_assert(button.get_theme_color("icon_disabled_color").a < button.get_theme_color("icon_normal_color").a, "Disabled action icons must remain visible with reduced emphasis")
+	_assert_action_svg_sources(expected_icon_paths)
 	main._on_history_changed(false, false)
 	_assert(main.undo_button.disabled and main.redo_button.disabled, "Undo and Redo must start disabled when history is unavailable")
 	_assert(not main.reset_button.disabled, "Reset must remain enabled")
@@ -276,6 +283,18 @@ func _assert_action_bar() -> void:
 	_assert(not main.undo_button.disabled and main.redo_button.disabled, "Undo/Redo disabled states must follow history")
 	action_bar.free()
 	main.free()
+
+
+func _assert_action_svg_sources(icon_paths: Array) -> void:
+	for path_value in icon_paths:
+		var path := str(path_value)
+		_assert(FileAccess.file_exists(path), "Action SVG source must exist: %s" % path)
+		if not FileAccess.file_exists(path):
+			continue
+		var source := FileAccess.get_file_as_string(path)
+		_assert(source.contains("<svg") and source.contains("viewBox=\"0 0 24 24\""), "Action icon must be a valid square SVG: %s" % path)
+		_assert(source.contains("<path") and source.contains("stroke=\"#493b43\""), "Action SVG must use explicit monochrome path strokes: %s" % path)
+		_assert(not source.contains("<text") and not source.contains("currentColor") and not source.contains("href="), "Action SVG must not use text, font, currentColor, or external references: %s" % path)
 
 
 func _assert_reset_persists_to_local_save(catalog: RefCounted) -> void:
