@@ -116,7 +116,7 @@ Acceptance criteria:
 
 ### Phase 2C - Face And Hair Layering Proof
 
-Status: Implemented; manual visual QA pending.
+Status: Complete.
 
 Goal: verify face/facial-feature layers and hair front/back separation where needed.
 
@@ -138,6 +138,8 @@ Implemented scope:
 
 ### Phase 2D - MVP Wardrobe Proof Pack
 
+Status: Superseded / incorporated into the explicitly started Phase 3A product-integration milestone.
+
 Goal: normalize about 3-5 items for each supported MVP category before producing more content.
 
 Supported categories:
@@ -158,14 +160,28 @@ Acceptance criteria:
 - no shoes, socks, long trousers, or full-length dresses;
 - Godot visual QA passes at target viewports.
 
-## Phase 3 - Product Integration And Web Release
+## Phase 3 - Product Integration And Release
 
-Phase 3 should start only after the MVP proof pack passes. Likely work:
+### Phase 3A - Product Integration
 
-- import approved MVP assets;
-- finalize thumbnails and UI category visibility;
-- test compatibility, random, history, reset, and save;
-- export and smoke-test the web build.
+Status: Implemented; manual visual QA pending.
+
+- closed Phase 2C;
+- reduced the action bar to Undo, Redo, and Reset icon buttons;
+- removed Random, Save PNG, Fullscreen, and Clear saved data from product UI;
+- audited all 184 PNGs in the local extracted PNG source/template set;
+- retained/reused four proof garments and copied 30 additional compatible PNGs unchanged;
+- exposed 29 tops and five shorts with style/color metadata and focused thumbnails;
+- excluded long trousers, crop-broken skirts, face effects, and duplicate fallback sources;
+- retained save v2, compatibility, backend random/locks, history, reset, and migration tests.
+
+### Phase 3B - Local Face Import
+
+Status: Not started. Must remain local-only and requires a separate explicit milestone/privacy gate.
+
+### Phase 3C - Web Release
+
+Status: Not started. Web export, browser smoke/visual QA, and release are deferred to this separate milestone.
 
 ## Post-MVP
 

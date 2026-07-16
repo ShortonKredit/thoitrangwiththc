@@ -275,7 +275,7 @@
     "glasses": "glasses_none",
     "headwear": "headwear_none",
     "accessory": "accessory_none",
-    "background": "background_studio",
+    "background": "background_none",
     "face": "face_none",
     "skin": "skin_tone_01",
     "eyes": "eyes_none",
@@ -1280,92 +1280,150 @@
     {
       "id": "top_keri_casual_01",
       "category": "top",
-      "display_name": "Áo Keri proof 01",
-      "accessible_name": "Keri proof top 01",
-      "description": "Selectable top proof from top3_1, separate from fallback_top.",
+      "display_name": "Áo quây dáng dài - màu 01",
+      "accessible_name": "Áo quây dáng dài - màu 01",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
-      "order": 100,
+      "random_enabled": true,
+      "order": 301,
       "occupies": [
         "top"
       ],
       "tags": [
-        "keri_proof",
-        "casual"
+        "keri_product",
+        "top",
+        "style_03"
       ],
       "conflicts_with_tags": [],
-      "thumbnail_path": "res://assets/tops/keri/proof/top_casual_01.png",
       "layers": {
         "top": "res://assets/tops/keri/proof/top_casual_01.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_01",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "272d3f7e3e94ab8220faccd1361f7fd6de2ad7c68f5184ae1bbd5326450141bb",
+      "source_file": "Tops/top3_1.png"
     },
     {
       "id": "top_keri_casual_02",
       "category": "top",
-      "display_name": "Áo Keri proof 02",
-      "accessible_name": "Keri proof top 02",
-      "description": "Top proof tu top2_1, cung canvas va origin voi Keri.",
+      "display_name": "Áo phối lớp - màu 01",
+      "accessible_name": "Áo phối lớp - màu 01",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
-      "order": 110,
+      "random_enabled": true,
+      "order": 201,
       "occupies": [
         "top"
       ],
       "tags": [
-        "keri_proof",
-        "casual"
+        "keri_product",
+        "top",
+        "style_02"
       ],
       "conflicts_with_tags": [],
-      "thumbnail_path": "res://assets/tops/keri/proof/top_casual_02.png",
       "layers": {
         "top": "res://assets/tops/keri/proof/top_casual_02.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_01",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "d2189583a0cecff18c2ba93073fb5032e0cadda96424bbe3861c3917773b3b22",
+      "source_file": "Tops/top2_1.png"
     },
     {
       "id": "bottom_keri_shorts_01",
       "category": "bottom",
-      "display_name": "Quần short Keri 01",
-      "accessible_name": "Keri proof shorts 01",
-      "description": "Selectable short bottom proof from bottom2_3, separate from fallback_bottom.",
+      "display_name": "Quần short - màu 03",
+      "accessible_name": "Quần short - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
-      "order": 100,
+      "random_enabled": true,
+      "order": 103,
       "occupies": [
         "bottom"
       ],
       "tags": [
-        "keri_proof",
-        "shorts",
-        "casual"
+        "keri_product",
+        "bottom",
+        "style_02"
       ],
       "conflicts_with_tags": [],
-      "thumbnail_path": "res://assets/bottoms/keri/proof/bottom_shorts_01.png",
       "layers": {
         "bottom": "res://assets/bottoms/keri/proof/bottom_shorts_01.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        519,
+        515
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "shorts_style_01",
+      "color_id": "color_03",
+      "variant_group": "keri_shorts_style_01",
+      "source_sha256": "19133e526c754acc4eade9e062e64aac607a0e8d3dc9172af0968e64c0aafb20",
+      "source_file": "Bottoms/bottom2_3.png"
     },
     {
       "id": "bottom_keri_shorts_02",
       "category": "bottom",
-      "display_name": "Quần short Keri 02",
-      "accessible_name": "Keri proof shorts 02",
-      "description": "Short bottom proof tu bottom2_2, nam trong crop three-quarter-body.",
+      "display_name": "Quần short - màu 02",
+      "accessible_name": "Quần short - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
-      "order": 110,
+      "random_enabled": true,
+      "order": 102,
       "occupies": [
         "bottom"
       ],
       "tags": [
-        "keri_proof",
-        "shorts",
-        "casual"
+        "keri_product",
+        "bottom",
+        "style_02"
       ],
       "conflicts_with_tags": [],
-      "thumbnail_path": "res://assets/bottoms/keri/proof/bottom_shorts_02.png",
       "layers": {
         "bottom": "res://assets/bottoms/keri/proof/bottom_shorts_02.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        519,
+        515
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "shorts_style_01",
+      "color_id": "color_02",
+      "variant_group": "keri_shorts_style_01",
+      "source_sha256": "7b3225252edd03ad9203f646a8ce1a27c72b6ccf6745d42dad75125c4587b23b",
+      "source_file": "Bottoms/bottom2_2.png"
     },
     {
       "id": "hair_none",
@@ -5102,6 +5160,1116 @@
       "layers": {},
       "placeholder": {},
       "hidden": false
+    },
+    {
+      "id": "bottom_keri_shorts_color_04",
+      "category": "bottom",
+      "display_name": "Quần short - màu 04",
+      "accessible_name": "Quần short - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 104,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/shorts_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        519,
+        515
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "shorts_style_01",
+      "color_id": "color_04",
+      "variant_group": "keri_shorts_style_01",
+      "source_sha256": "7f4bae4006ad75b97c40e89f82055d534bca728e0d76b6f973e0d94a464be148",
+      "source_file": "Bottoms/bottom2_4.png"
+    },
+    {
+      "id": "bottom_keri_shorts_color_05",
+      "category": "bottom",
+      "display_name": "Quần short - màu 05",
+      "accessible_name": "Quần short - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 105,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/shorts_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        519,
+        515
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "shorts_style_01",
+      "color_id": "color_05",
+      "variant_group": "keri_shorts_style_01",
+      "source_sha256": "1412db7f75bb3aa3198706e1b2ea4481378a56faace76cf7a2f7d7fa92ec236f",
+      "source_file": "Bottoms/bottom2_5.png"
+    },
+    {
+      "id": "bottom_keri_shorts_color_06",
+      "category": "bottom",
+      "display_name": "Quần short - màu 06",
+      "accessible_name": "Quần short - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 106,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/shorts_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        519,
+        515
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "shorts_style_01",
+      "color_id": "color_06",
+      "variant_group": "keri_shorts_style_01",
+      "source_sha256": "ee54f0659b43e4504c8841c5561cafce1ee32a9c21ac8b629fef2f7a559f8506",
+      "source_file": "Bottoms/bottom2_6.png"
+    },
+    {
+      "id": "top_keri_style_01_color_02",
+      "category": "top",
+      "display_name": "Áo dáng dài - màu 02",
+      "accessible_name": "Áo dáng dài - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 102,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_01_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        568,
+        659,
+        874
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_01",
+      "color_id": "color_02",
+      "variant_group": "keri_top_style_01",
+      "source_sha256": "20f2c3bb369d71834515d94fb62d1132fa2cde4cff646ff7858f1ab1b5d3890e",
+      "source_file": "Tops/top1_2.png"
+    },
+    {
+      "id": "top_keri_style_01_color_03",
+      "category": "top",
+      "display_name": "Áo dáng dài - màu 03",
+      "accessible_name": "Áo dáng dài - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 103,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_01_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        568,
+        659,
+        874
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_01",
+      "color_id": "color_03",
+      "variant_group": "keri_top_style_01",
+      "source_sha256": "dfb5481f55d21c2761f754ed6414e23c68c48b10a813ace5abedc8a392e50f2e",
+      "source_file": "Tops/top1_3.png"
+    },
+    {
+      "id": "top_keri_style_01_color_04",
+      "category": "top",
+      "display_name": "Áo dáng dài - màu 04",
+      "accessible_name": "Áo dáng dài - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 104,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        568,
+        659,
+        874
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_01",
+      "color_id": "color_04",
+      "variant_group": "keri_top_style_01",
+      "source_sha256": "d13bf383fb358cd29f84b4e400c502118aa895f093ab5915d79269318856d2fe",
+      "source_file": "Tops/top1_4.png"
+    },
+    {
+      "id": "top_keri_style_01_color_05",
+      "category": "top",
+      "display_name": "Áo dáng dài - màu 05",
+      "accessible_name": "Áo dáng dài - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 105,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        568,
+        659,
+        874
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_01",
+      "color_id": "color_05",
+      "variant_group": "keri_top_style_01",
+      "source_sha256": "e75f27feb25fac997b3a571d5ce529837d67e493118afe06988f948b57e7f0cc",
+      "source_file": "Tops/top1_5.png"
+    },
+    {
+      "id": "top_keri_style_01_color_06",
+      "category": "top",
+      "display_name": "Áo dáng dài - màu 06",
+      "accessible_name": "Áo dáng dài - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 106,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        568,
+        659,
+        874
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_01",
+      "color_id": "color_06",
+      "variant_group": "keri_top_style_01",
+      "source_sha256": "30809fd74e49a3504a96707024774e934c6f9572e4194c17bbe2da74baf06ef1",
+      "source_file": "Tops/top1_6.png"
+    },
+    {
+      "id": "top_keri_style_02_color_02",
+      "category": "top",
+      "display_name": "Áo phối lớp - màu 02",
+      "accessible_name": "Áo phối lớp - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 202,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_02_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_02",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "7e0a4372597eabaf4e57315a4ba6c420c089a1d66669a1727a0b188be02795fa",
+      "source_file": "Tops/top2_2.png"
+    },
+    {
+      "id": "top_keri_style_02_color_03",
+      "category": "top",
+      "display_name": "Áo phối lớp - màu 03",
+      "accessible_name": "Áo phối lớp - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 203,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_02_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_03",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "835a15e9f14259e84926737a3ae56b7ea3409343c3c79868aedf84783a945f26",
+      "source_file": "Tops/top2_3.png"
+    },
+    {
+      "id": "top_keri_style_02_color_04",
+      "category": "top",
+      "display_name": "Áo phối lớp - màu 04",
+      "accessible_name": "Áo phối lớp - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 204,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_02_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_04",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "f0099e110c2393d4cb0397435966f0a958f55a9528c6ab6809b56f6bb344d47f",
+      "source_file": "Tops/top2_4.png"
+    },
+    {
+      "id": "top_keri_style_02_color_05",
+      "category": "top",
+      "display_name": "Áo phối lớp - màu 05",
+      "accessible_name": "Áo phối lớp - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 205,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_02_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_05",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "20a4aec7e1aac5460266d2f18645c629d43fe3d88601c3d126eef62d101d42be",
+      "source_file": "Tops/top2_5.png"
+    },
+    {
+      "id": "top_keri_style_02_color_06",
+      "category": "top",
+      "display_name": "Áo phối lớp - màu 06",
+      "accessible_name": "Áo phối lớp - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 206,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_02_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        943
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_02",
+      "color_id": "color_06",
+      "variant_group": "keri_top_style_02",
+      "source_sha256": "9f37e3db04a2354efca02a4fc7fd5c7353d1618e11365db546847f0f2716b96f",
+      "source_file": "Tops/top2_6.png"
+    },
+    {
+      "id": "top_keri_style_03_color_02",
+      "category": "top",
+      "display_name": "Áo quây dáng dài - màu 02",
+      "accessible_name": "Áo quây dáng dài - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 302,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_03_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_02",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "619019961e76bf55c5832a9badd9a63d4404ba4f7e7a52bce8a31b646a14be1b",
+      "source_file": "Tops/top3_2.png"
+    },
+    {
+      "id": "top_keri_style_03_color_03",
+      "category": "top",
+      "display_name": "Áo quây dáng dài - màu 03",
+      "accessible_name": "Áo quây dáng dài - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 303,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_03_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_03",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "b2ac0cb88902010ecf0a373a498388969ef8e1d37540351b933f9c77ef99b532",
+      "source_file": "Tops/top3_3.png"
+    },
+    {
+      "id": "top_keri_style_03_color_04",
+      "category": "top",
+      "display_name": "Áo quây dáng dài - màu 04",
+      "accessible_name": "Áo quây dáng dài - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 304,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_03_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_04",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "5dcefc7b2b568e2c0e4686f8ec1151ec633aa03efbbdab48cdc006bb82fbf28a",
+      "source_file": "Tops/top3_4.png"
+    },
+    {
+      "id": "top_keri_style_03_color_05",
+      "category": "top",
+      "display_name": "Áo quây dáng dài - màu 05",
+      "accessible_name": "Áo quây dáng dài - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 305,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_03_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_05",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "f3d4a05b0db73c16b53ea560f2241d7c7dfc77a6520a61a87a879956722c72fd",
+      "source_file": "Tops/top3_5.png"
+    },
+    {
+      "id": "top_keri_style_03_color_06",
+      "category": "top",
+      "display_name": "Áo quây dáng dài - màu 06",
+      "accessible_name": "Áo quây dáng dài - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 306,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_03_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        109,
+        675,
+        592,
+        842
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_03",
+      "color_id": "color_06",
+      "variant_group": "keri_top_style_03",
+      "source_sha256": "cc98c26770392ce8df85aa95036b0b79e01c387788ab9f1d8c5754ea9db3eadb",
+      "source_file": "Tops/top3_6.png"
+    },
+    {
+      "id": "top_keri_style_04_color_01",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 01",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 01",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 401,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_01",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "8a928ddcf05251add41ba7d082597271016760ab3621987d50ca5c14a73e6320",
+      "source_file": "Tops/top4_1.png"
+    },
+    {
+      "id": "top_keri_style_04_color_02",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 02",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 402,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_02",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "c44d14d1f1bafb5afcc718088d91c7c98b3c5295d025a05b1efbdfd9d1a2812c",
+      "source_file": "Tops/top4_2.png"
+    },
+    {
+      "id": "top_keri_style_04_color_03",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 03",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 403,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_03",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "75348a9d5eae5acc8ab7fb5ff997daaa8b0abd38a68ee19f7873bf278a9ba654",
+      "source_file": "Tops/top4_3.png"
+    },
+    {
+      "id": "top_keri_style_04_color_04",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 04",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 404,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_04",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "fb78eddbd807668c348e7807647ae860a19925d0cc47004271c186dfc3a44b1d",
+      "source_file": "Tops/top4_4.png"
+    },
+    {
+      "id": "top_keri_style_04_color_05",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 05",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 405,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_05",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "cd3431ebeb1982d6fadd1348d30f89abfdb9c3a0f3ff15e7bde38b6f7109a2bf",
+      "source_file": "Tops/top4_5.png"
+    },
+    {
+      "id": "top_keri_style_04_color_06",
+      "category": "top",
+      "display_name": "Áo lệch tà tay ngắn - màu 06",
+      "accessible_name": "Áo lệch tà tay ngắn - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 406,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_04_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        123,
+        574,
+        620,
+        760
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_04",
+      "color_id": "color_06",
+      "variant_group": "keri_top_style_04",
+      "source_sha256": "29a138e4c619eb1122818bb4c72f262524f90e96b52f677eb28a11c85ba8f24e",
+      "source_file": "Tops/top4_6.png"
+    },
+    {
+      "id": "top_keri_style_05_color_01",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 01",
+      "accessible_name": "Áo lệch tà tay dài - màu 01",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 501,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_01",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "77e158882dd8889d362422bec934d080d3730b6619a8a0d5efa16536e0040886",
+      "source_file": "Tops/top5_1.png"
+    },
+    {
+      "id": "top_keri_style_05_color_02",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 02",
+      "accessible_name": "Áo lệch tà tay dài - màu 02",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 502,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_02",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "6cdf264e2fa12deae9ea055a37f5c4ced67bf81046730b65b06d3efba4439a14",
+      "source_file": "Tops/top5_2.png"
+    },
+    {
+      "id": "top_keri_style_05_color_03",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 03",
+      "accessible_name": "Áo lệch tà tay dài - màu 03",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 503,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_03",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "6fc56c0ca5d5505d3fc948b88bcd8f5975139d457f01ccfa490cd5bd59812029",
+      "source_file": "Tops/top5_3.png"
+    },
+    {
+      "id": "top_keri_style_05_color_04",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 04",
+      "accessible_name": "Áo lệch tà tay dài - màu 04",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 504,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_04",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "841f6046850db61f73564d41a0b77b2148827650d51910d945ad6e54c6a7da0b",
+      "source_file": "Tops/top5_4.png"
+    },
+    {
+      "id": "top_keri_style_05_color_05",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 05",
+      "accessible_name": "Áo lệch tà tay dài - màu 05",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 505,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_05",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "1ec10cf22fdb272f5ec13afee51b5e770edd71578a349d719c8583d35399952e",
+      "source_file": "Tops/top5_5.png"
+    },
+    {
+      "id": "top_keri_style_05_color_06",
+      "category": "top",
+      "display_name": "Áo lệch tà tay dài - màu 06",
+      "accessible_name": "Áo lệch tà tay dài - màu 06",
+      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 506,
+      "occupies": [
+        "top"
+      ],
+      "tags": [
+        "keri_product",
+        "top",
+        "style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "top": "res://assets/clothing/keri/tops/top_style_05_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "top_crop",
+      "preview_rect": [
+        62,
+        574,
+        836,
+        896
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "top_style_05",
+      "color_id": "color_06",
+      "variant_group": "keri_top_style_05",
+      "source_sha256": "0ee29d4f208fe1bc88144e0b735b5b5caca5dac617970393b5ec303689c24337",
+      "source_file": "Tops/top5_6.png"
     }
   ]
 }

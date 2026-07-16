@@ -2,7 +2,9 @@
 
 Date: 2026-07-16
 
-Status: **MANUAL VISUAL QA PENDING**
+Status: **COMPLETE**
+
+Closure: the Phase 3A start gate on 2026-07-16 records Phase 2C as complete. The checklist below is retained as the accepted visual-QA record and regression checklist.
 
 ## Default and thumbnail UX polish
 
@@ -220,7 +222,7 @@ Godot dummy-renderer cleanup/leak warnings remain informational and do not produ
 - Automated checks do not establish visual alignment, thumbnail readability, or art quality.
 - Browser export/QA is not part of this non-web milestone.
 
-## Required manual visual QA
+## Accepted manual visual QA / regression checklist
 
 - Confirm all five skin choices keep identical pose/scale/alignment and fallback coverage.
 - Confirm all five skin tiles contain only color, fill nearly the whole card, and are distinguishable without character imagery.
@@ -238,7 +240,7 @@ Godot dummy-renderer cleanup/leak warnings remain informational and do not produ
 
 ## Explicit boundary confirmation
 
-- Phase 2C remains **MANUAL VISUAL QA PENDING**.
+- Phase 2C is **COMPLETE**.
 - Phase 3A, Phase 3B, and Phase 3C were not started.
 - Local face import was not implemented.
 - No wardrobe bulk import, full-body, donor-leg, shoes, socks, long trousers, or full-length dresses were added.

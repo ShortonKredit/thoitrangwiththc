@@ -31,8 +31,9 @@ Work in an engineering loop: inspect -> make a small change -> run python tools/
 
 - Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete.
 - The full-body leg-extension path is deferred/post-MVP.
-- The next implementation milestone is Phase 2B - Three-Quarter-Body Integration Proof.
-- Do not continue generative leg extension, donor-leg compositing, shoes, full-length garments, or full-body canvas work for MVP unless the owner explicitly starts a post-MVP full-body milestone.
+- Phase 2C is complete; Phase 3A is implemented and remains manual visual QA pending.
+- Phase 3B Local Face Import and Phase 3C Web Release are not started and require separate explicit instructions.
+- Do not continue generative leg extension, donor-leg compositing, shoes, full-length garments, face import, or web release from the Phase 3A thread.
 
 ## Phase Start Checklist
 
@@ -51,6 +52,7 @@ Before every new phase:
 
 1. Phase 2A - Keri asset and license audit.
 2. Phase 2B - three-quarter-body integration proof.
-3. Phase 2C - face and hair layering proof.
-4. Phase 2D - MVP wardrobe proof pack.
-5. Phase 3 - product integration and web release.
+3. Phase 2C - face and hair layering proof (complete).
+4. Phase 3A - product integration (manual visual QA pending).
+5. Phase 3B - local face import (not started).
+6. Phase 3C - web release (not started).

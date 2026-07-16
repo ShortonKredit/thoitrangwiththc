@@ -38,6 +38,8 @@ Categories may declare `parent_category` for subcategory navigation. A hidden ca
 
 `thumbnail_path` is optional. When it is missing or empty, the wardrobe UI keeps using `display_name` text. When it is present, it must use a `res://` path. `accessible_name` falls back to `display_name`.
 
+Phase 3A product garments additionally store `style_id`, `color_id`, `variant_group`, `source_sha256`, `preview_mode`, `preview_rect`, padding, and preview background. These fields group source style × color variants and validate provenance/thumbnails without creating new saved-state fields.
+
 ## Compatibility
 
 Compatibility is generic:
@@ -75,6 +77,18 @@ Centralized `character.face_import_metadata` stores face/head preview rectangles
 
 MVP note: shoes remain an architectural/future layer concept, but shoes and other foot-dependent items are deferred and should not appear as empty MVP UI categories.
 
+## Phase 3A product UI
+
+The public action bar is a compact, fixed set of three product actions: Undo, Redo, and Reset. Each uses a monochrome default-font glyph plus tooltip/accessibility metadata. Undo/Redo disabled state comes from `GameState.history_changed`; Reset uses the existing confirmation dialog and is an undoable snapshot action.
+
+Randomization, PNG capture, fullscreen switching, and save clearing may remain reusable backend methods, but Phase 3A creates no button, focus target, tooltip, keyboard shortcut, or UI signal for them.
+
+## Phase 3A content seam
+
+The audited source provides five top styles × six color positions and one compatible shorts style. Catalog items remain flat selectable records but carry grouping metadata for later UI grouping. No item-specific renderer branch is required: accepted tops map to `top`, shorts map to `bottom`, and the existing `occupies` contract handles dress conflicts.
+
+Focused garment thumbnails are generated in memory from catalog `preview_rect` metadata. Production PNG bytes remain full-canvas and unchanged.
+
 ## Rendering modes
 
 ### procedural
@@ -92,6 +106,6 @@ When a complete body and test content pack exists:
 
 ## Persistence
 
-Only selected item IDs and lock flags are saved. Save version 2 includes all Phase 2C category IDs. Saves are sanitized against the current catalog, so removed, renamed, wrong-category, or migration-only IDs fall back to defaults. Phase 2B version-1 saves remain loadable.
+Only selected item IDs and lock flags are saved. Save version 2 includes all Phase 2C/3A category IDs; Phase 3A adds items but no slots, so no schema bump is required. Saves are sanitized against the current catalog, so removed, renamed, wrong-category, or migration-only IDs fall back to defaults. Phase 2B version-1 saves remain loadable. Reset records one history snapshot, emits the normal state change, and therefore overwrites local save with the default state; Undo and Redo apply complete snapshots.
 
 No database or account is required.

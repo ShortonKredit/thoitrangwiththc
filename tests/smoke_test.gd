@@ -2,6 +2,7 @@ extends SceneTree
 
 const ItemCatalogScript = preload("res://scripts/core/item_catalog.gd")
 const GameStateScript = preload("res://scripts/core/game_state.gd")
+const SaveServiceScript = preload("res://scripts/core/save_service.gd")
 const DollViewScript = preload("res://scripts/rendering/doll_view.gd")
 const MainScript = preload("res://scripts/main.gd")
 
@@ -35,6 +36,7 @@ func _run() -> void:
 	_assert(MainScript.ITEM_GRID_COLUMNS == 2, "Item grid must use two columns")
 	_assert(not MainScript.ITEM_TILE_SHOWS_TEXT, "Item tiles must not render visible item names")
 	_assert(MainScript.ITEM_TILE_MIN_SIZE.y >= 160.0, "Item tiles must be large enough for thumbnail-first selection")
+	_assert_action_bar()
 	_assert(str(catalog.character.get("mode", "")) == "png", "Phase 2B proof must use PNG mode")
 	_assert(_array_equals_ints(catalog.character.get("canvas_size", []), [948, 1920]), "Keri proof must use the 948x1920 canvas")
 	_assert(catalog.character.get("layer_order", []).has("body_core"), "Layer order must include body_core")
@@ -69,6 +71,7 @@ func _run() -> void:
 	_assert(state.selected["top"] == "top_none", "Default top must use fallback top coverage")
 	_assert(state.selected["bottom"] == "bottom_none", "Default bottom must use fallback bottom coverage")
 	_assert(state.selected["dress"] == "dress_none", "Default dress must be none")
+	_assert(state.selected["background"] == "background_none", "Default background must use the catalog none/default item")
 	_assert_png_layers(catalog, state, true, true, false, false, false, "Initial no-selection state must show both fallbacks")
 	var default_layers: Dictionary = DollViewScript.get_png_layer_paths(catalog, state)
 	for optional_layer in ["hair_front", "hair_back", "eyes", "eyebrows", "mouth", "makeup", "face"]:
@@ -166,6 +169,14 @@ func _run() -> void:
 	state.undo()
 	_assert(state.selected["shoes"] == next_shoes, "Undo after reset must restore previous outfit")
 	_assert_png_has_coverage(catalog, state, "Undo after reset must keep coverage")
+	state.redo()
+	_assert(state.selected == catalog.get_default_state(), "Redo after undoing reset must apply defaults again")
+	state.undo()
+	var branch_skin := "skin_tone_02" if state.selected["skin"] != "skin_tone_02" else "skin_tone_03"
+	_assert(state.select_item(branch_skin), "A new selection after undoing reset must succeed")
+	_assert(not state.can_redo(), "A new selection after undo must clear the redo stack")
+
+	_assert_reset_persists_to_local_save(catalog)
 
 	var exported: Dictionary = state.export_save_data()
 	_assert(int(exported.get("version", 0)) == 2, "Phase 2C save data must have version 2")
@@ -204,6 +215,58 @@ func _run() -> void:
 func _assert(condition: bool, message: String) -> void:
 	if not condition:
 		failures.append(message)
+
+
+func _assert_action_bar() -> void:
+	var main = MainScript.new()
+	var action_bar: Control = main._build_action_grid()
+	var buttons := action_bar.get_children()
+	_assert(buttons.size() == 3, "Phase 3A action bar must expose exactly Undo, Redo, and Reset")
+	var expected_names: Array = MainScript.ACTION_BUTTON_NAMES
+	var expected_icons := [MainScript.ACTION_ICON_UNDO, MainScript.ACTION_ICON_REDO, MainScript.ACTION_ICON_RESET]
+	var expected_tooltips := ["Hoàn tác", "Làm lại", "Reset"]
+	for index in range(buttons.size()):
+		var button := buttons[index] as Button
+		_assert(button != null, "Every public action must be a Button")
+		if button == null:
+			continue
+		_assert(str(button.name) == str(expected_names[index]), "Action buttons must retain stable public names")
+		_assert(button.text == expected_icons[index], "Action buttons must show icon glyphs without visible labels")
+		_assert(button.tooltip_text == expected_tooltips[index], "Action button tooltip must match the Vietnamese product copy")
+		_assert(button.accessibility_name == expected_tooltips[index], "Action button accessible name must match its tooltip")
+		_assert(button.focus_mode == Control.FOCUS_ALL, "Action buttons must remain keyboard-focusable")
+		_assert(button.get_theme_stylebox("hover") != null, "Action buttons need a hover style")
+		_assert(button.get_theme_stylebox("pressed") != null, "Action buttons need a pressed style")
+		_assert(button.get_theme_stylebox("disabled") != null, "Action buttons need a disabled style")
+		_assert(button.get_theme_stylebox("focus") != null, "Action buttons need a focus style")
+	main._on_history_changed(false, false)
+	_assert(main.undo_button.disabled and main.redo_button.disabled, "Undo and Redo must start disabled when history is unavailable")
+	_assert(not main.reset_button.disabled, "Reset must remain enabled")
+	main._on_history_changed(true, false)
+	_assert(not main.undo_button.disabled and main.redo_button.disabled, "Undo/Redo disabled states must follow history")
+	action_bar.free()
+	main.free()
+
+
+func _assert_reset_persists_to_local_save(catalog: RefCounted) -> void:
+	var path := "user://phase_3a_reset_smoke.json"
+	var service = SaveServiceScript.new(path)
+	service.clear_data()
+	var state = GameStateScript.new()
+	state.initialize(catalog)
+	state.changed.connect(func(_reason: String) -> void:
+		service.save_data(state.export_save_data())
+	)
+	state.select_item("top_keri_style_05_color_06")
+	state.select_item("bottom_keri_shorts_color_06")
+	state.select_item("background_city")
+	state.reset_to_default(true)
+	var persisted: Dictionary = service.load_data()
+	_assert(catalog.sanitize_selection(persisted.get("selected", {})) == catalog.get_default_state(), "Reset must persist the full catalog default to local save")
+	var restored = GameStateScript.new()
+	restored.initialize(catalog, persisted)
+	_assert(restored.selected == catalog.get_default_state(), "A reset state must not be replaced by the pre-reset outfit after relaunch")
+	service.clear_data()
 
 
 func _invalid_thumbnail_catalog_is_rejected() -> bool:
@@ -256,6 +319,8 @@ func _assert_thumbnail_pipeline(catalog: RefCounted) -> void:
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("skin_tone_02")) == "skin_swatch", "Skin items must use color-swatch previews")
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("eyes_style_01_color_01")) == "feature_crop", "Face features must use focused crop previews")
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("hair_style_01_color_01")) == "hair_preview", "Hair must use hair-focused previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("top_keri_style_05_color_06")) == "top_crop", "Product tops must use focused top crops")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("bottom_keri_shorts_color_06")) == "bottom_crop", "Product shorts must use focused bottom crops")
 	var swatch_colors: Dictionary = {}
 	for skin_item in catalog.get_items_for_category("skin"):
 		var swatch := MainScript.skin_swatch_color_for_item(skin_item)
@@ -278,6 +343,8 @@ func _assert_thumbnail_pipeline(catalog: RefCounted) -> void:
 	_assert_layer_has_cropped_bounds(catalog.get_item("hair_style_01_color_01"), "Hair thumbnail preview must crop transparent canvas")
 	_assert_layer_has_cropped_bounds(catalog.get_item("top_keri_casual_01"), "Top thumbnail preview must crop transparent canvas")
 	_assert_layer_has_cropped_bounds(catalog.get_item("bottom_keri_shorts_01"), "Bottom thumbnail preview must crop transparent canvas")
+	_assert(_item_preview_rect_is_valid(catalog.get_item("top_keri_style_05_color_06"), catalog.character), "Product top preview metadata must stay inside the canvas")
+	_assert(_item_preview_rect_is_valid(catalog.get_item("bottom_keri_shorts_color_06"), catalog.character), "Product bottom preview metadata must stay inside the canvas")
 
 	var canvas_size: Array = catalog.character.get("canvas_size", [])
 	var face_rect: Rect2i = MainScript.face_metadata_rect(catalog.character, "head_preview_rect")

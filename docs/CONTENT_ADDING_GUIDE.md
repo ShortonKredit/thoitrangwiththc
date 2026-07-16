@@ -25,9 +25,17 @@ Example:
   "occupies": ["top"],
   "tags": ["smart_casual"],
   "conflicts_with_tags": [],
-  "layers": {
-    "top": "res://assets/tops/top_white_shirt_02.png"
-  }
+    "layers": {
+      "top": "res://assets/tops/top_white_shirt_02.png"
+    },
+    "preview_mode": "top_crop",
+    "preview_rect": [109, 675, 592, 842],
+    "preview_padding_ratio": 0.08,
+    "preview_background": "#f7f1f5",
+    "style_id": "top_shirt_02",
+    "color_id": "color_white",
+    "variant_group": "top_shirt_02",
+    "source_sha256": "..."
 }
 ```
 
@@ -39,6 +47,9 @@ Requirements:
 - Asset path uses `res://`.
 - File ID matches catalog ID.
 - Use front/back layers when needed.
+- Record an audited source hash and source-to-destination mapping for production content.
+- Store style/color grouping metadata when the source is organized as style × color.
+- Use `top_crop` or `bottom_crop` with an audited alpha-derived rectangle; do not rewrite the production PNG to create a thumbnail.
 - Keep MVP items inside the supported three-quarter-body crop.
 - Do not add shoes, socks, full-length trousers, full-length dresses, or foot-dependent items for MVP.
 
@@ -49,3 +60,7 @@ Requirements:
 - Mix unrelated AI art styles.
 - Store user photos in the asset folder.
 - Add unsupported deferred categories as empty MVP UI categories.
+
+## Phase 3A audit helper
+
+`python tools/integrate_phase_3a_content.py` regenerates the read-only-source inventory. `--apply` additionally copies only accepted new PNGs unchanged and idempotently updates Phase 3A catalog garment records. The validator checks the resulting inventory paths/hashes, so do not hand-wave an excluded source into runtime content.

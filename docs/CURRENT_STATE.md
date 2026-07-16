@@ -2,7 +2,7 @@
 
 Date: 2026-07-16
 
-Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, Phase 2A, and Phase 2B are complete. The owner accepted Phase 2B manual visual QA. Phase 2C skin, face, and hair layering is implemented and passes automated checks; Phase 2C manual visual QA is pending.
+Baseline: Phase 0 through Phase 2C are complete. Phase 3A product integration is implemented, passes automated checks, and remains **MANUAL VISUAL QA PENDING**. Phase 3B Local Face Import and Phase 3C Web Release are not started.
 
 ## Current Architecture
 
@@ -30,16 +30,16 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 
 ## Working Features
 
-- Catalog validation passes with 15 state categories and 180 items.
+- Catalog validation passes with 15 state categories and 210 items.
 - Godot 4.7 import, parse, startup smoke, and logic smoke tests pass locally.
 - Main scene runs locally in Godot.
 - Category and item selection are data-driven.
 - Compatibility clears conflicting top/bottom/dress selections through slot metadata.
-- Random respects category locks.
+- Random remains a tested backend contract and respects category locks, but it is not exposed in the Phase 3A product UI.
 - Undo/redo operate on full state snapshots.
 - Reset is available and keeps the base outfit invariant.
 - Local save/load is sanitized against the current catalog.
-- PNG capture exists for the doll view.
+- PNG capture, fullscreen, and clear-save helpers remain reusable backend code but are not exposed in the Phase 3A product UI.
 - Header text has been simplified to the player-facing title.
 - Optional `thumbnail_path` and `accessible_name` metadata exist with text fallback.
 - Phase 2B selector thumbnails are generated in memory from preview modes: alpha visible bounds for PNG layers, body+face crop for face items, procedural cover previews for backgrounds, and a drawn X for none items.
@@ -50,6 +50,11 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Skin selector thumbnails are opaque representative color swatches; they no longer render a miniature character.
 - Eyes, eyebrows, mouth, and makeup thumbnails crop only their own visible feature bounds on a consistent neutral background.
 - Hair thumbnails use hair-only visible bounds, reduced padding, a neutral background, and centered fitting.
+- Phase 3A audits all 184 PNGs in the local extracted PNG source/template set and integrates all compatible non-duplicate garments: 29 selectable tops and five selectable shorts.
+- The action bar contains only textless Undo, Redo, and Reset icon buttons with tooltip, accessibility, focus, hover, pressed, and disabled states.
+- Reset is one undoable history action, persists the catalog default locally, supports Redo, and clears the redo branch after a new post-Undo selection.
+- Product tops/shorts store style/color/variant metadata and use focused alpha-bound thumbnails on a neutral background.
+- The clean/reset background selection is `background_none`, which renders the default studio background.
 
 ## Mandatory Invariants
 
@@ -71,16 +76,17 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Future PNG layer paths are scaffolded but not production art.
 - Web export foundation exists, but browser QA is deferred until a web-focused phase.
 
-## Phase 2C Manual Visual QA Pending
+## Phase 2C Closure
 
-- Skin swaps preserve visible alignment and fallback outfit coverage.
-- Independent eyes, eyebrows, mouth, and makeup layers align with the head.
-- All five hair shapes and their color variants remain readable; hair `none` removes hair completely.
-- Skin swatches and focused face/hair thumbnails are readable and sufficiently distinct at final tile size.
-- Combined-hair front-only ordering is acceptable for the available source.
-- Face anchor and mask-bound metadata is suitable as a future local-import seam without implementing import.
-- Browser rendering across Chrome, Edge, and Firefox after export.
-- Small viewport behavior beyond the captured Phase 1 screenshots.
+Phase 2C is complete per the Phase 3A start gate. Its skin/face/hair defaults, layering, thumbnail strategy, save migration, and metadata-only future face seam remain unchanged.
+
+## Phase 3A Manual Visual QA Pending
+
+- Readability and states of the three action icons at target viewports.
+- Alignment, fallback coverage, and crop quality for every one of the 29 tops and five shorts.
+- Focused garment thumbnails, two-column vertical scrolling, none tiles, and selected borders.
+- Reset persistence plus Undo/Redo Reset through the visible product UI.
+- Phase 2C appearance and three-quarter-body crop regression checks.
 
 ## Asset Direction
 
@@ -90,7 +96,9 @@ Keri remains a conditional three-quarter-body proof candidate, not a final art a
 
 - Phase 2A is complete as a documentation-only Keri asset/license audit.
 - Phase 2B three-quarter-body integration proof is complete after owner-confirmed manual visual QA.
-- Phase 2C appearance layering is implemented and remains `MANUAL VISUAL QA PENDING`.
+- Phase 2C appearance layering is complete.
+- Phase 3A product integration is implemented and remains `MANUAL VISUAL QA PENDING`.
+- Phase 3B Local Face Import and Phase 3C Web Release are not started.
 - Full-body leg extension is deferred/post-MVP.
 - Keri proof PNG assets have been imported into Godot under `assets/**/keri/proof/`.
 - No AI asset generation has been performed in this phase.
@@ -109,6 +117,6 @@ Keri remains a conditional three-quarter-body proof candidate, not a final art a
 ## MVP Scope
 
 - MVP character presentation: three-quarter-body Keri canvas.
-- MVP-supported categories: hair, face/facial features, tops, short bottoms, short dresses, and accessories.
+- MVP-supported categories: hair, face/facial features, tops, short bottoms, and background; short dresses/accessories remain supported in architecture but no compatible production source exists in this audit.
 - Deferred/post-MVP: full-body leg extension, shoes, socks, full-length trousers, full-length dresses, and any item that requires visible feet.
 - Shoes-related architecture may remain for future work, but shoes should not appear as an empty MVP UI category.

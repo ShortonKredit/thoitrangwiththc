@@ -12,7 +12,7 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 
 ## Product statement
 
-**Thời Trang with THC** là creative dress-up toy 2D dành cho gia đình. Người chơi mở website, phối một outfit đời thường thời trang, random có kiểm soát và lưu ảnh PNG mà không phải đăng nhập.
+**Thời Trang with THC** là creative dress-up toy 2D dành cho gia đình. Người chơi mở game, phối một outfit đời thường và chỉnh sửa an toàn bằng Undo, Redo, Reset mà không phải đăng nhập.
 
 ## Audience
 
@@ -32,14 +32,14 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 ## MVP in this repository
 
 - Một body template 3/4 người và pose chính diện.
-- Hair, face/facial features, tops, short bottoms, short dresses, accessories, background.
+- Hair, face/facial features, 29 production tops, five production shorts, and background. Dress/accessory slots remain architecturally supported but hidden until compatible production assets exist.
 - Compatibility rules.
 - Selected state.
-- Random locks.
+- Random/lock logic remains valid in the backend; lock behavior remains supported, while Random has no Phase 3A product button.
 - Undo/redo.
 - Reset.
 - Local save.
-- PNG capture.
+- PNG capture logic remains reusable but has no Phase 3A product button.
 - Web export foundation.
 - Renderer-invariant base outfit so the character is never shown without modest base clothing, even when top, bottom and dress are all set to none.
 - Optional thumbnail metadata with text fallback until real thumbnails exist.
@@ -47,6 +47,9 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 - A `Khuôn mặt` main category with non-empty subcategory navigation and thumbnail-first, two-column item selection.
 - Clean/reset appearance starts with base skin 01 and no optional hair, eyes, eyebrows, mouth, makeup, or legacy face preset.
 - Skin choices read as large color swatches; facial-feature cards show only the relevant feature crop; hair cards show centered hair-only previews.
+- The action bar shows only three monochrome icon buttons: Undo, Redo, and Reset. Random, Save PNG, Fullscreen, and Clear saved data are absent from product UI.
+- Reset is undoable, redoable, saves immediately, and restores skin 01, optional appearance none, fallback clothing, accessory none, and `background_none`/default studio.
+- Product garment tiles are textless two-column previews generated from catalog alpha bounds; style/color grouping metadata is retained for future presentation work.
 
 ## Deferred
 

@@ -23,6 +23,10 @@ const ITEM_TILE_SHOWS_TEXT := false
 const THUMBNAIL_SIZE := Vector2i(192, 192)
 const THUMBNAIL_ALPHA_THRESHOLD := 8
 const THUMBNAIL_PADDING_RATIO := 0.12
+const ACTION_ICON_UNDO := "↶"
+const ACTION_ICON_REDO := "↷"
+const ACTION_ICON_RESET := "⟳"
+const ACTION_BUTTON_NAMES := ["UndoButton", "RedoButton", "ResetButton"]
 
 class NoneTileButton:
 	extends Button
@@ -55,8 +59,8 @@ var lock_toggle: CheckButton
 var status_label: Label
 var undo_button: Button
 var redo_button: Button
+var reset_button: Button
 var reset_dialog: ConfirmationDialog
-var clear_data_dialog: ConfirmationDialog
 
 
 func _ready() -> void:
@@ -77,6 +81,7 @@ func _ready() -> void:
 	current_main_category_id = str(category_ids[0]) if not category_ids.is_empty() else ""
 	current_category_id = current_main_category_id
 	_build_interface()
+	_on_history_changed(game_state.can_undo(), game_state.can_redo())
 	_select_category(current_main_category_id)
 	_on_state_changed("ready")
 	set_process_unhandled_input(true)
@@ -217,7 +222,7 @@ func _build_wardrobe_panel() -> Control:
 
 	lock_toggle = CheckButton.new()
 	lock_toggle.text = "Khóa"
-	lock_toggle.tooltip_text = "Giữ nguyên danh mục này khi bấm Ngẫu nhiên."
+	lock_toggle.tooltip_text = "Giữ nguyên lựa chọn trong danh mục này."
 	lock_toggle.custom_minimum_size = Vector2(96, 36)
 	lock_toggle.add_theme_color_override("font_color", COLOR_TEXT)
 	lock_toggle.add_theme_color_override("font_pressed_color", COLOR_ACCENT_DARK)
@@ -243,35 +248,30 @@ func _build_wardrobe_panel() -> Control:
 
 
 func _build_action_grid() -> Control:
-	var actions := GridContainer.new()
-	actions.columns = 3
+	var actions := HBoxContainer.new()
+	actions.name = "ActionBar"
 	actions.add_theme_constant_override("h_separation", 7)
-	actions.add_theme_constant_override("v_separation", 7)
+	actions.alignment = BoxContainer.ALIGNMENT_CENTER
 
-	undo_button = _action_button("Hoàn tác", _undo, "Ctrl+Z")
-	redo_button = _action_button("Làm lại", _redo, "Ctrl+Y")
+	undo_button = _action_button("UndoButton", ACTION_ICON_UNDO, "Hoàn tác", _undo)
+	redo_button = _action_button("RedoButton", ACTION_ICON_REDO, "Làm lại", _redo)
+	reset_button = _action_button("ResetButton", ACTION_ICON_RESET, "Reset", _ask_reset)
 	actions.add_child(undo_button)
 	actions.add_child(redo_button)
-	actions.add_child(_action_button("Ngẫu nhiên", _randomize, "R", "primary"))
-	actions.add_child(_action_button("Đặt lại", _ask_reset))
-	actions.add_child(_action_button("Lưu PNG", _save_look, "", "strong"))
-	actions.add_child(_action_button("Toàn màn hình", _toggle_fullscreen, "F11"))
-
-	var clear_button := _action_button("Xóa dữ liệu lưu", _ask_clear_data, "", "danger")
-	clear_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	actions.add_child(clear_button)
+	actions.add_child(reset_button)
 	return actions
 
 
-func _action_button(text: String, callback: Callable, shortcut_text: String = "", role: String = "neutral") -> Button:
+func _action_button(node_name: String, icon_text: String, accessible_label: String, callback: Callable) -> Button:
 	var button := Button.new()
-	button.text = text
-	button.custom_minimum_size = Vector2(0, 42)
-	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.focus_mode = Control.FOCUS_NONE
-	_apply_button_style(button, role)
-	if not shortcut_text.is_empty():
-		button.tooltip_text = "Phím tắt: %s" % shortcut_text
+	button.name = node_name
+	button.text = icon_text
+	button.tooltip_text = accessible_label
+	button.accessibility_name = accessible_label
+	button.custom_minimum_size = Vector2(52, 44)
+	button.focus_mode = Control.FOCUS_ALL
+	button.add_theme_font_size_override("font_size", 24)
+	_apply_button_style(button, "action")
 	button.pressed.connect(callback)
 	return button
 
@@ -285,13 +285,6 @@ func _build_dialogs() -> void:
 	reset_dialog.confirmed.connect(_reset_to_default)
 	add_child(reset_dialog)
 
-	clear_data_dialog = ConfirmationDialog.new()
-	clear_data_dialog.title = "Xóa dữ liệu đã lưu"
-	clear_data_dialog.dialog_text = "Xóa outfit và các khóa đã lưu trên trình duyệt/máy này?"
-	clear_data_dialog.ok_button_text = "Xóa dữ liệu"
-	clear_data_dialog.cancel_button_text = "Hủy"
-	clear_data_dialog.confirmed.connect(_clear_saved_data)
-	add_child(clear_data_dialog)
 
 
 func _select_category(category_id: String) -> void:
@@ -426,6 +419,10 @@ func _tile_preview_image(item: Dictionary) -> Image:
 			return _make_feature_crop_preview(item)
 		"hair_preview":
 			return _make_hair_preview(item)
+		"top_crop":
+			return _make_layer_focused_preview(item, Color("#f7f1f5"), 0.08)
+		"bottom_crop":
+			return _make_layer_focused_preview(item, Color("#f7f1f5"), 0.08)
 		_:
 			var source_path := _preview_source_path(item)
 			if source_path.is_empty():
@@ -754,18 +751,6 @@ func _reset_to_default() -> void:
 	game_state.reset_to_default(true)
 
 
-func _ask_clear_data() -> void:
-	clear_data_dialog.popup_centered()
-
-
-func _clear_saved_data() -> void:
-	var error: Error = save_service.clear_data()
-	if error == OK:
-		game_state.reset_to_default(false)
-	elif status_label != null:
-		status_label.text = "Không xóa được dữ liệu. Mã lỗi: %s" % error
-
-
 func _toggle_fullscreen() -> void:
 	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
@@ -862,15 +847,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.ctrl_pressed and event.keycode == KEY_Y:
 		_redo()
 		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_R:
-		_randomize()
-		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_F11:
-		_toggle_fullscreen()
-		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_ESCAPE and DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		get_viewport().set_input_as_handled()
 
 
 func _panel_style(background: Color, radius: int, border_color: Color) -> StyleBoxFlat:
@@ -903,6 +879,12 @@ func _apply_button_style(button: Button, role: String) -> void:
 			normal = _button_style(Color("#fbf7fa"), Color("#ddd2da"), 8, 1)
 			hover = _button_style(Color("#f5e4ed"), COLOR_ACCENT_SOFT, 8, 2)
 			pressed = _button_style(Color("#fff1f7"), COLOR_ACCENT_DARK, 8, 4)
+			focus = _button_style(Color("#ffffff"), COLOR_ACCENT, 8, 2)
+		"action":
+			normal = _button_style(Color("#fffafd"), Color("#d8ccd4"), 8, 1)
+			hover = _button_style(Color("#f7e6ef"), COLOR_ACCENT, 8, 2)
+			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 8, 1)
+			disabled = _button_style(COLOR_BUTTON_DISABLED, Color("#d8d0d5"), 8, 1)
 			focus = _button_style(Color("#ffffff"), COLOR_ACCENT, 8, 2)
 		"primary":
 			normal = _button_style(COLOR_ACCENT, COLOR_ACCENT_DARK, 6, 1)

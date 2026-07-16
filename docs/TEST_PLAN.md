@@ -11,9 +11,9 @@ python tools/validate_catalog.py
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.ps1"
 ```
 
-Expected after Phase 2C:
+Expected after Phase 3A:
 
-- catalog validation prints `Catalog valid: 15 categories, 180 items`;
+- catalog validation prints `Catalog valid: 15 categories, 210 items`;
 - Godot 4.7 import and script parse exit 0;
 - main scene startup smoke exits 0;
 - logic smoke test prints `SMOKE TEST PASSED`;
@@ -60,6 +60,13 @@ Current checks cover:
 - Skin items use distinct opaque `skin_swatch` metadata instead of character previews.
 - Eyes, eyebrows, mouth, and makeup use validated per-item `feature_crop` rectangles inside the Keri canvas.
 - Visible hair items use `hair_preview`; all optional none items still resolve to the X-tile mode.
+- The product action bar exposes exactly `UndoButton`, `RedoButton`, and `ResetButton`, using icon glyphs, correct tooltips/accessibility names, keyboard focus, and explicit hover/pressed/disabled/focus styles.
+- Undo/Redo disabled state follows history; Reset stays enabled.
+- Reset persists the catalog default, can be undone/redone as one full-state action, and a new selection after Undo clears Redo.
+- The 184-entry Phase 3A inventory includes every source PNG and every required audit field.
+- All 34 selectable production garments map to audited source hashes; 30 new runtime PNGs are byte-identical copies and four proof paths are reused.
+- Long trousers, crop-risk skirts, effects, fallback duplicates, PSDs, and archives are absent from selectable/runtime content.
+- Product tops and shorts include style/color/variant grouping and focused thumbnail metadata.
 
 ## Automated Gaps
 
@@ -90,12 +97,12 @@ Run in Godot and verify:
 7. Dress clears top and bottom.
 8. Selecting top or bottom clears dress.
 9. Top, bottom, and dress can all be none while the base outfit remains visible.
-10. Lock hair, random several times, and verify hair remains unchanged.
-11. Undo reverses one random action.
-12. Redo restores that random action.
-13. Reset shows confirmation and returns to valid defaults.
-14. Close and reopen; saved outfit is restored or safely sanitized.
-15. Save PNG excludes wardrobe controls.
+10. Confirm the action bar contains only Undo, Redo, and Reset icon buttons.
+11. Undo reverses one selection and Redo restores it; disabled states are clear at history ends.
+12. Reset shows confirmation and returns to valid defaults.
+13. Undo immediately after Reset restores the complete prior look; Redo reapplies Reset.
+14. Close and reopen; the reset or selected outfit is restored or safely sanitized.
+15. Confirm Random, Save PNG, Fullscreen, and Clear saved data are absent from UI.
 
 For the three-quarter-body MVP proof, adjust the category expectation to the supported MVP categories only. Shoes and other deferred categories must not appear as empty UI categories.
 
@@ -159,6 +166,19 @@ After Phase 2B/2D asset work, verify:
 10. Save/load restores every Phase 2C slot without errors and the fallback outfit remains correct.
 11. Combined-hair ordering is acceptable for the actual source; no false front/back split is implied.
 12. The face anchor/mask bounds are only metadata and no local face import UI appears.
+
+## Phase 3A Native Visual Checklist
+
+1. Only three equal monochrome action icons appear; tooltips read `Hoàn tác`, `Làm lại`, and `Reset`.
+2. Hover, pressed, focus, and disabled states remain clear at 1440x900, 1280x720, and 1024x768.
+3. No removed action leaves a button, keyboard focus target, tooltip, or empty grid cell.
+4. Reset returns to skin 01, optional appearance none, top/bottom/dress/accessory none, both fallbacks, and the default studio via `background_none`.
+5. Reset persists across close/reopen; Undo/Redo Reset and redo-branch clearing behave as documented.
+6. Inspect all 29 tops and five shorts for body alignment, coverage, overlap, and accepted crop.
+7. Confirm no long trousers, crop-broken skirt, shoes, socks, dress, effect, or empty accessory category appears.
+8. Every garment preview is centered, large, textless, distinct, and selected clearly in the two-column vertical grid.
+9. Skin, face features, hair, fallback layers, save/load, and legacy migration do not regress.
+10. Do not mark Phase 3A complete until these checks are owner-confirmed.
 
 ## Web Local Test
 

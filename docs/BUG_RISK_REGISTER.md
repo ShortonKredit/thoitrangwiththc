@@ -44,3 +44,14 @@
 | Feature thumbnails show the whole face/body instead of the selected feature | Medium | Per-item alpha-bound `feature_crop` metadata, neutral background, canvas-bound validation, and mode smoke tests |
 | Hair thumbnails are tiny or off-center | Medium | Hair-only visible bounds, reduced metadata padding, square centered fitting, and manual review across all five shapes |
 | Reset or clean launch restores old preset hair/face features | High | Catalog default explicitly uses skin 01 and none IDs; smoke-test initialization, reset, save/load fallback, and legacy migration |
+| Removed Phase 3A actions remain reachable through product UI/keyboard focus | High | Build only three public action nodes; smoke-test names/count/tooltips/focus; remove R/F11 UI shortcuts and clear-save dialog |
+| Undo/Redo icon disabled state drifts from history | High | Drive buttons from `history_changed`; action-bar smoke test both disabled-state combinations |
+| Reset save is overwritten by the pre-reset outfit after relaunch | Critical | Save on the normal state-change signal; isolated local-save smoke test Reset and reinitialize from disk |
+| Undo Reset restores only part of the outfit | Critical | Reset is one full snapshot; test Undo/Redo across garment, appearance, background, and locks |
+| New selection after Undo leaves stale Redo history | High | `HistoryManager.record` truncates the forward slice; smoke-test branching after Undo Reset |
+| Audited garment bytes drift from source mapping | Critical | 184-entry inventory plus validator SHA256 checks for every included destination/catalog item |
+| Renderer fallback bytes become redundant selectable garments | High | Inventory marks the two duplicate sources excluded; validator rejects their hashes in item layers |
+| Long trousers or skirt hems are visibly cut by the three-quarter crop | Critical | Exclude bottom style 1 and style 3; record crop risk/bounds; manual inspect every accepted short bottom |
+| Huge flat garment list loses style/color relationships | Medium | Store `style_id`, `color_id`, and `variant_group`; defer complex picker UI without losing grouping metadata |
+| Garment thumbnail shows full transparent canvas or unreadable item | High | `top_crop`/`bottom_crop` metadata with audited bounds, neutral background, padding, and manual final-size review |
+| Archive or PSD enters runtime assets | High | Validator recursively rejects `.psd`, `.zip`, `.rar`, and `.7z` under `assets/` |

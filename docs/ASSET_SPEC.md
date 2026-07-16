@@ -73,6 +73,17 @@ Face metadata lives in `character.face_import_metadata` in `data/catalog.json`. 
 
 `base_outfit` is a permanent modest underlayer. In procedural mode it is drawn by `DollView`; in PNG mode it should be supplied as a full-canvas transparent PNG under `character.layers`, not as a wardrobe item.
 
+## Phase 3A Keri product content
+
+- Source: local extracted PNG source/template set under `game/Create_Character`.
+- Full audit: 184 RGBA PNGs at 948×1920 with alpha-derived visible bounds and SHA256 mapping.
+- Accepted selectable garments: 29 tops and five shorts; 30 new PNG files were copied unchanged and four proof paths were reused.
+- Excluded: long trousers reaching y=1920, skirts whose hem falls below the y=1660 product crop, expression effects, and byte-identical selectable copies of renderer fallbacks.
+- Runtime paths: `assets/clothing/keri/tops/` and `assets/clothing/keri/bottoms/`, plus retained Phase 2B proof paths.
+- Production files are never resized, cropped, warped, recompressed, or edited to fit.
+
+Catalog garment metadata includes `style_id`, `color_id`, `variant_group`, `source_sha256`, and a focused preview definition. `top_crop` and `bottom_crop` use the audited `[x, y, width, height]` alpha rectangle, neutral background, and padding to create an in-memory 192×192 preview. None tiles remain drawn X controls and never reference a PNG.
+
 ## File naming
 
 ```text

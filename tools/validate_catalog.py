@@ -9,6 +9,7 @@ import struct
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "data" / "catalog.json"
+PHASE_3A_INVENTORY = ROOT / "docs" / "asset_audits" / "keri" / "PHASE_3A_CONTENT_INVENTORY.json"
 KERI_PROOF_CANVAS = [948, 1920]
 DEFAULT_CANVAS = [1024, 1536]
 KERI_FORBIDDEN_FLATTENED_BODY = "res://assets/characters/keri/proof/keri_clothed_base.png"
@@ -141,6 +142,7 @@ def main() -> int:
         _validate_layer_png(errors, f"Character layer {layer_name}", str(path), data)
 
     _validate_phase_2c_character(errors, data, by_id)
+    _validate_phase_3a_content(errors, data, by_category, initial)
 
     if errors:
         for error in errors:
@@ -248,6 +250,132 @@ def _validate_phase_2c_character(errors: list[str], data: dict, by_id: dict[str,
             errors.append(f"{item_id} must map body_core to {expected_path}.")
         elif _sha256(_resolve_res_path(actual_path)) != expected_hash:
             errors.append(f"{item_id} hash must remain {expected_hash}.")
+
+
+def _validate_phase_3a_content(
+    errors: list[str],
+    data: dict,
+    by_category: dict[str, list[dict]],
+    initial: dict[str, object],
+) -> None:
+    expected_defaults = {
+        "skin": "skin_tone_01",
+        "hair": "hair_none",
+        "face": "face_none",
+        "eyes": "eyes_none",
+        "eyebrows": "eyebrows_none",
+        "mouth": "mouth_none",
+        "makeup": "makeup_none",
+        "top": "top_none",
+        "bottom": "bottom_none",
+        "dress": "dress_none",
+        "glasses": "glasses_none",
+        "headwear": "headwear_none",
+        "accessory": "accessory_none",
+        "background": "background_none",
+    }
+    for category_id, item_id in expected_defaults.items():
+        if str(initial.get(category_id, "")) != item_id:
+            errors.append(f"Phase 3A default {category_id} must be {item_id}.")
+
+    for category_id in ("top", "bottom", "dress", "glasses", "headwear", "accessory", "background"):
+        none_items = [item for item in by_category.get(category_id, []) if item.get("render_key") == "none"]
+        if not none_items:
+            errors.append(f"Phase 3A optional category {category_id} must retain a none item.")
+
+    if not PHASE_3A_INVENTORY.exists():
+        errors.append("Phase 3A content inventory is missing.")
+        return
+    try:
+        inventory = json.loads(PHASE_3A_INVENTORY.read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"Cannot parse Phase 3A content inventory: {exc}")
+        return
+
+    entries = inventory.get("assets", [])
+    if not isinstance(entries, list) or int(inventory.get("asset_count", -1)) != len(entries):
+        errors.append("Phase 3A inventory asset_count must match its assets array.")
+        return
+    if len(entries) != 184:
+        errors.append(f"Phase 3A inventory must cover all 184 source PNGs, found {len(entries)}.")
+
+    required_fields = {
+        "source_path", "file_name", "sha256", "width", "height", "mode", "alpha",
+        "visible_bounds", "source_group", "inferred_runtime_category", "inferred_layer_role",
+        "style_group", "color_variant", "compatible", "compatibility_reason",
+        "phase_3a_include_exclude", "destination_path", "provenance_note", "crop_risk",
+        "manual_QA_required",
+    }
+    included_destinations: dict[str, dict] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            errors.append("Every Phase 3A inventory entry must be an object.")
+            continue
+        missing = sorted(required_fields.difference(entry))
+        if missing:
+            errors.append(f"Inventory entry {entry.get('file_name', '<unknown>')} is missing fields: {missing}.")
+            continue
+        decision = str(entry.get("phase_3a_include_exclude", ""))
+        digest = str(entry.get("sha256", ""))
+        destination = str(entry.get("destination_path", ""))
+        if decision in {"include_existing_runtime", "include_new_runtime"}:
+            if not bool(entry.get("compatible", False)) or not destination:
+                errors.append(f"Included inventory entry {entry.get('file_name')} must be compatible and mapped.")
+                continue
+            local_path = ROOT / destination
+            if not local_path.exists():
+                errors.append(f"Included Phase 3A runtime PNG is missing: {destination}.")
+            elif _sha256(local_path) != digest:
+                errors.append(f"Included Phase 3A runtime PNG hash mismatch: {destination}.")
+            included_destinations[f"res://{destination}"] = entry
+
+    product_items = [item for item in data.get("items", []) if str(item.get("source_sha256", ""))]
+    referenced_destinations: set[str] = set()
+    for item in product_items:
+        item_id = str(item.get("id", ""))
+        layers = item.get("layers", {})
+        if not isinstance(layers, dict) or len(layers) != 1:
+            errors.append(f"Phase 3A product item {item_id} must declare exactly one garment layer.")
+            continue
+        path = str(next(iter(layers.values())))
+        referenced_destinations.add(path)
+        inventory_entry = included_destinations.get(path)
+        if inventory_entry is None:
+            errors.append(f"Phase 3A product item {item_id} has no included inventory mapping: {path}.")
+            continue
+        if str(item.get("source_sha256", "")) != str(inventory_entry.get("sha256", "")):
+            errors.append(f"Phase 3A product item {item_id} source hash does not match inventory.")
+        expected_mode = "top_crop" if str(item.get("category", "")) == "top" else "bottom_crop"
+        if str(item.get("preview_mode", "")) != expected_mode:
+            errors.append(f"Phase 3A product item {item_id} must use {expected_mode}.")
+        _validate_canvas_rect(errors, f"Phase 3A item {item_id} preview_rect", item.get("preview_rect"), [948, 1920])
+        for key in ("style_id", "color_id", "variant_group"):
+            if not str(item.get(key, "")).strip():
+                errors.append(f"Phase 3A product item {item_id} must declare {key}.")
+
+    missing_references = sorted(set(included_destinations).difference(referenced_destinations))
+    if missing_references:
+        errors.append(f"Included Phase 3A mappings are not referenced by catalog items: {missing_references}.")
+
+    item_layer_hashes: set[str] = set()
+    for item in data.get("items", []):
+        for path in item.get("layers", {}).values() if isinstance(item.get("layers"), dict) else []:
+            local_path = _resolve_res_path(str(path))
+            if local_path.exists():
+                item_layer_hashes.add(_sha256(local_path))
+    forbidden_selectable_hashes = {
+        str(entry.get("sha256", ""))
+        for entry in entries
+        if entry.get("phase_3a_include_exclude") == "exclude_duplicate_renderer_fallback"
+    }
+    if forbidden_selectable_hashes.intersection(item_layer_hashes):
+        errors.append("Renderer fallback source bytes must not be reused as selectable catalog garments.")
+
+    asset_root = ROOT / "assets"
+    forbidden_suffixes = {".psd", ".zip", ".rar", ".7z"}
+    forbidden_files = [str(path.relative_to(ROOT)) for path in asset_root.rglob("*") if path.is_file() and path.suffix.lower() in forbidden_suffixes]
+    if forbidden_files:
+        errors.append(f"Runtime assets must not contain PSD/archive files: {forbidden_files}.")
 
 
 def _validate_canvas_rect(errors: list[str], label: str, value: object, canvas: object) -> None:

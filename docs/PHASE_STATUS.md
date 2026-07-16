@@ -11,17 +11,19 @@ Date: 2026-07-16
 | Phase 2A - Keri asset and license audit | Complete | Historical decision was CONDITIONAL GO TO PHASE 2B; later MVP decision defers full-body leg extension. No asset import. |
 | Phase 2B - Full-body leg extension proof | Deferred / superseded | Not an MVP phase. Reconsider only with licensed full-body base, artist-finished legs, or production-quality extension workflow. |
 | Phase 2B - Three-Quarter-Body Integration Proof | Complete | Owner-confirmed manual QA: usable thumbnail previews, stable body/fallback architecture, two-column grid, visible background previews, accepted three-quarter crop, textless item cards, and hidden empty categories. |
-| Phase 2C - Skin, Face and Hair Layering | Manual visual QA pending | Five skin variants plus separate hair/eyes/eyebrows/mouth/makeup layers are implemented; automated catalog and Godot smoke checks pass. |
-| Phase 2D - MVP wardrobe proof pack | Not started | Normalize 3-5 items per supported MVP category; no shoes, long trousers, or full-length dresses. |
-| Phase 3 - Product integration and web release | Not started | Import approved MVP assets, finalize thumbnails/UI, test state flows, export and smoke-test web. |
+| Phase 2C - Skin, Face and Hair Layering | Complete | Phase 3A start gate records the appearance proof as accepted; five skins and separate hair/face features remain the product baseline. |
+| Phase 2D - MVP wardrobe proof pack | Superseded / incorporated | The explicit Phase 3A product-integration milestone audits and integrates the compatible local wardrobe set directly. |
+| Phase 3A - Product Integration | Manual visual QA pending | Three-button action bar plus 29 tops and five shorts are integrated; catalog/Godot automated checks pass. |
+| Phase 3B - Local Face Import | Not started | No file picker, real-person image handling, recognition, biometric analysis, upload, or API was added. |
+| Phase 3C - Web Release | Not started | No web export, browser QA, or release work was performed in Phase 3A. |
 
 ## Current Gate
 
-Phase 2B is complete. The current gate is Phase 2C manual visual QA. Verify:
+Phase 2C is complete. The current gate is Phase 3A manual visual QA. Verify:
 
-- all five skin choices align and retain fallback coverage;
-- hair `none` removes hair and combined hair variants align acceptably;
-- eyes, eyebrows, mouth, and makeup change independently and their none tiles work;
-- face/skin thumbnails, two-column scrolling, selected borders, and subcategory navigation are readable;
-- random, reset, undo, redo, locks, save/load, and legacy-save migration behave correctly in the visible UI;
-- Keri remains a proof candidate, not the final anchor.
+- only Undo, Redo, and Reset appear in the action bar, with clear icon and disabled/focus states;
+- every imported top/short aligns, covers correctly, and stays inside the accepted crop;
+- garment thumbnails, two-column scrolling, selected borders, and none tiles remain readable;
+- Reset persists and its Undo/Redo contract works through the visible UI;
+- Phase 2C skin/face/hair and Phase 2B fallback/crop behavior do not regress;
+- Keri remains a conditional product candidate, not an unconditional final anchor.
