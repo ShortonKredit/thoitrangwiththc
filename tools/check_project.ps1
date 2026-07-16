@@ -23,8 +23,11 @@ function Invoke-GodotChecked {
     )
 
     Write-Host "`n== $StepName =="
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $output = & $GodotCommand @Arguments 2>&1
     $exitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousErrorActionPreference
     $output | ForEach-Object { Write-Host $_ }
     $text = ($output | Out-String)
 

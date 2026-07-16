@@ -7,10 +7,10 @@
 The repository is past the initial foundation and UI audit milestones:
 
 - Godot 4.7 local import, parse, startup smoke, and logic smoke checks pass.
-- Catalog is data-driven with 9 categories and 45 placeholder items.
+- Catalog is data-driven with 10 categories and 51 items after the Phase 2B Keri proof import.
 - The main scene runs locally.
 - Selection, compatibility, random locks, undo/redo, reset, local save, and PNG capture exist.
-- The character and wardrobe are still procedural placeholders.
+- The active Phase 2B proof uses Keri PNG layers; the legacy procedural placeholders remain in the catalog for migration/reference.
 - `DollView` owns a permanent `base_outfit` so the character remains modest even when top, bottom, and dress are all none.
 - Optional `thumbnail_path` and `accessible_name` metadata are supported with text fallback.
 - Web export scripts and Netlify configuration exist, but full browser QA is deferred to a web-focused phase.
@@ -43,7 +43,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.p
 
 Expected:
 
-- `Catalog valid: 9 categories, 45 items`
+- `Catalog valid: 10 categories, 51 items`
 - `SMOKE TEST PASSED`
 - `Project checks passed.`
 

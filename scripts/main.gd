@@ -17,6 +17,23 @@ const COLOR_BUTTON_HOVER := Color("#f8edf3")
 const COLOR_BUTTON_DISABLED := Color("#eee8ec")
 const COLOR_DANGER := Color("#9d5a62")
 
+const ITEM_GRID_COLUMNS := 2
+const ITEM_TILE_MIN_SIZE := Vector2(0, 184)
+const ITEM_TILE_SHOWS_TEXT := false
+const THUMBNAIL_SIZE := Vector2i(192, 192)
+const THUMBNAIL_ALPHA_THRESHOLD := 8
+const THUMBNAIL_PADDING_RATIO := 0.12
+const FACE_PREVIEW_RECT := Rect2i(190, 40, 560, 540)
+
+class NoneTileButton:
+	extends Button
+
+	func _draw() -> void:
+		var stroke := Color("#806f78")
+		var pad := minf(size.x, size.y) * 0.34
+		draw_line(Vector2(pad, pad), Vector2(size.x - pad, size.y - pad), stroke, 5.0, true)
+		draw_line(Vector2(size.x - pad, pad), Vector2(pad, size.y - pad), stroke, 5.0, true)
+
 var catalog: RefCounted
 var game_state: RefCounted
 var save_service: RefCounted
@@ -27,10 +44,10 @@ var category_button_group: ButtonGroup
 var item_button_group: ButtonGroup
 var category_buttons: Dictionary = {}
 var item_buttons: Dictionary = {}
+var thumbnail_cache: Dictionary = {}
 
 var item_grid: GridContainer
 var category_title: Label
-var category_help: Label
 var lock_toggle: CheckButton
 var status_label: Label
 var undo_button: Button
@@ -53,7 +70,7 @@ func _ready() -> void:
 	game_state.changed.connect(_on_state_changed)
 	game_state.history_changed.connect(_on_history_changed)
 
-	var category_ids: Array = catalog.get_category_ids()
+	var category_ids: Array = catalog.get_visible_category_ids()
 	current_category_id = str(category_ids[0]) if not category_ids.is_empty() else ""
 	_build_interface()
 	_select_category(current_category_id)
@@ -88,8 +105,7 @@ func _build_interface() -> void:
 	content.add_child(_build_stage_panel())
 	content.add_child(_build_wardrobe_panel())
 
-	page_layout.add_child(_build_status_bar())
-
+	status_label = Label.new()
 	_build_dialogs()
 
 
@@ -109,27 +125,6 @@ func _build_header() -> Control:
 	title_group.add_child(title)
 
 	return header
-
-
-func _build_status_bar() -> Control:
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("#fff8fc"), 8, Color("#eadde8")))
-
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 12)
-	margin.add_theme_constant_override("margin_top", 6)
-	margin.add_theme_constant_override("margin_right", 12)
-	margin.add_theme_constant_override("margin_bottom", 6)
-	panel.add_child(margin)
-
-	status_label = Label.new()
-	status_label.text = "Sẵn sàng phối đồ. Phím tắt: Ctrl+Z, Ctrl+Y, R và F11."
-	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	status_label.add_theme_color_override("font_color", COLOR_TEXT)
-	status_label.add_theme_font_size_override("font_size", 14)
-	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	margin.add_child(status_label)
-	return panel
 
 
 func _build_stage_panel() -> Control:
@@ -187,8 +182,8 @@ func _build_wardrobe_panel() -> Control:
 	category_flow.add_theme_constant_override("v_separation", 6)
 	wardrobe.add_child(category_flow)
 
-	for category in catalog.categories:
-		var category_id := str(category.get("id", ""))
+	for category_id in catalog.get_visible_category_ids():
+		var category: Dictionary = catalog.get_category(str(category_id))
 		var button := Button.new()
 		button.text = str(category.get("display_name", category_id))
 		button.toggle_mode = true
@@ -196,33 +191,24 @@ func _build_wardrobe_panel() -> Control:
 		button.focus_mode = Control.FOCUS_NONE
 		button.custom_minimum_size = Vector2(92, 34)
 		_apply_button_style(button, "category")
-		button.pressed.connect(_select_category.bind(category_id))
+		button.pressed.connect(_select_category.bind(str(category_id)))
 		category_flow.add_child(button)
-		category_buttons[category_id] = button
+		category_buttons[str(category_id)] = button
 
 	wardrobe.add_child(HSeparator.new())
 
 	var category_header := HBoxContainer.new()
 	wardrobe.add_child(category_header)
 
-	var title_group := VBoxContainer.new()
-	title_group.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	category_header.add_child(title_group)
-
 	category_title = Label.new()
+	category_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	category_title.add_theme_font_size_override("font_size", 19)
 	category_title.add_theme_color_override("font_color", COLOR_TEXT)
-	title_group.add_child(category_title)
-
-	category_help = Label.new()
-	category_help.add_theme_font_size_override("font_size", 12)
-	category_help.add_theme_color_override("font_color", COLOR_MUTED)
-	category_help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	title_group.add_child(category_help)
+	category_header.add_child(category_title)
 
 	lock_toggle = CheckButton.new()
 	lock_toggle.text = "Khóa"
-	lock_toggle.tooltip_text = "Giữ nguyên danh mục này khi bấm Phối ngẫu nhiên."
+	lock_toggle.tooltip_text = "Giữ nguyên danh mục này khi bấm Ngẫu nhiên."
 	lock_toggle.custom_minimum_size = Vector2(96, 36)
 	lock_toggle.add_theme_color_override("font_color", COLOR_TEXT)
 	lock_toggle.add_theme_color_override("font_pressed_color", COLOR_ACCENT_DARK)
@@ -236,10 +222,10 @@ func _build_wardrobe_panel() -> Control:
 	wardrobe.add_child(scroll)
 
 	item_grid = GridContainer.new()
-	item_grid.columns = 2
+	item_grid.columns = ITEM_GRID_COLUMNS
 	item_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	item_grid.add_theme_constant_override("h_separation", 8)
-	item_grid.add_theme_constant_override("v_separation", 8)
+	item_grid.add_theme_constant_override("h_separation", 10)
+	item_grid.add_theme_constant_override("v_separation", 10)
 	scroll.add_child(item_grid)
 
 	wardrobe.add_child(HSeparator.new())
@@ -300,7 +286,7 @@ func _build_dialogs() -> void:
 
 
 func _select_category(category_id: String) -> void:
-	if catalog.get_category(category_id).is_empty():
+	if not catalog.get_visible_category_ids().has(category_id):
 		return
 	current_category_id = category_id
 	for id in category_buttons.keys():
@@ -308,7 +294,6 @@ func _select_category(category_id: String) -> void:
 
 	var category: Dictionary = catalog.get_category(category_id)
 	category_title.text = str(category.get("display_name", category_id))
-	category_help.text = str(category.get("description", "Chọn một item để mặc ngay."))
 	lock_toggle.set_pressed_no_signal(bool(game_state.locks.get(category_id, false)))
 	_rebuild_item_grid()
 
@@ -322,25 +307,286 @@ func _rebuild_item_grid() -> void:
 	var selected_id := str(game_state.selected.get(current_category_id, ""))
 	for item in catalog.get_items_for_category(current_category_id):
 		var item_id := str(item.get("id", ""))
-		var button := Button.new()
-		var display_name := str(item.get("display_name", item_id))
-		var accessible_name := str(item.get("accessible_name", display_name))
-		var thumbnail_path := str(item.get("thumbnail_path", ""))
-		button.text = display_name
-		button.tooltip_text = _item_tooltip(accessible_name, str(item.get("description", "")))
-		if not thumbnail_path.is_empty() and ResourceLoader.exists(thumbnail_path, "Texture2D"):
-			button.icon = load(thumbnail_path)
-			button.expand_icon = true
-		button.toggle_mode = true
-		button.button_group = item_button_group
-		button.focus_mode = Control.FOCUS_NONE
-		button.custom_minimum_size = Vector2(0, 56)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var button := _build_item_tile(item)
 		button.button_pressed = item_id == selected_id
-		_apply_button_style(button, "item")
 		button.pressed.connect(_on_item_pressed.bind(item_id))
 		item_grid.add_child(button)
 		item_buttons[item_id] = button
+
+
+func _build_item_tile(item: Dictionary) -> Button:
+	var item_id := str(item.get("id", ""))
+	var display_name := str(item.get("display_name", item_id))
+	var accessible_name := str(item.get("accessible_name", display_name))
+	var button: Button
+	if str(item.get("render_key", "")) == "none":
+		button = NoneTileButton.new()
+	else:
+		button = Button.new()
+	button.text = ""
+	button.tooltip_text = _item_tooltip(accessible_name, str(item.get("description", "")))
+	button.toggle_mode = true
+	button.button_group = item_button_group
+	button.focus_mode = Control.FOCUS_ALL
+	button.custom_minimum_size = ITEM_TILE_MIN_SIZE
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	button.expand_icon = true
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
+	var texture := _tile_texture(item)
+	if texture != null:
+		button.icon = texture
+	_apply_button_style(button, "item")
+	return button
+
+
+func _tile_texture(item: Dictionary) -> Texture2D:
+	if DisplayServer.get_name() == "headless":
+		return null
+	if str(item.get("render_key", "")) == "none":
+		return null
+
+	var cache_key := _thumbnail_cache_key(item)
+	if thumbnail_cache.has(cache_key):
+		return thumbnail_cache[cache_key]
+
+	var preview_image: Image = _tile_preview_image(item)
+	if preview_image == null:
+		return null
+
+	var texture := ImageTexture.create_from_image(preview_image)
+	thumbnail_cache[cache_key] = texture
+	return texture
+
+
+func _thumbnail_cache_key(item: Dictionary) -> String:
+	var item_id := str(item.get("id", ""))
+	var mode := thumbnail_preview_mode_for_item(item)
+	var source_path := _preview_source_path(item)
+	return "%s|%s|%s" % [mode, item_id, source_path]
+
+
+func _tile_preview_image(item: Dictionary) -> Image:
+	var mode := thumbnail_preview_mode_for_item(item)
+	match mode:
+		"none":
+			return null
+		"cover":
+			return _make_background_preview(item)
+		"face_preview":
+			return _make_face_preview(item)
+		_:
+			var source_path := _preview_source_path(item)
+			if source_path.is_empty():
+				return null
+			return _make_visible_bounds_preview(source_path)
+
+
+static func thumbnail_preview_mode_for_item(item: Dictionary) -> String:
+	if str(item.get("render_key", "")) == "none":
+		return "none"
+	if str(item.get("category", "")) == "background":
+		return "cover"
+	if str(item.get("category", "")) == "face":
+		return "face_preview"
+	return "visible_bounds"
+
+
+func _preview_source_path(item: Dictionary) -> String:
+	var thumbnail_path := str(item.get("thumbnail_path", "")).strip_edges()
+	if not thumbnail_path.is_empty():
+		return thumbnail_path
+
+	var layers: Dictionary = item.get("layers", {})
+	for path in layers.values():
+		var layer_path := str(path).strip_edges()
+		if not layer_path.is_empty():
+			return layer_path
+
+	return ""
+
+
+func _make_visible_bounds_preview(path: String) -> Image:
+	var source := _load_preview_image(path)
+	if source == null:
+		return null
+	var used_rect := _alpha_used_rect(source, THUMBNAIL_ALPHA_THRESHOLD)
+	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
+		return null
+	var crop_rect := _padded_rect(used_rect, source.get_size(), THUMBNAIL_PADDING_RATIO)
+	return _fit_crop_to_thumbnail(source, crop_rect)
+
+
+func _make_face_preview(item: Dictionary) -> Image:
+	var character_layers: Dictionary = catalog.character.get("layers", {})
+	var body_path := str(character_layers.get("body_core", "")).strip_edges()
+	var face_path := _preview_source_path(item)
+	if body_path.is_empty() or face_path.is_empty():
+		return null
+
+	var body := _load_preview_image(body_path)
+	var face := _load_preview_image(face_path)
+	if body == null or face == null:
+		return null
+
+	var composite := body.duplicate()
+	composite.blend_rect(face, Rect2i(Vector2i.ZERO, face.get_size()), Vector2i.ZERO)
+	var crop_rect := FACE_PREVIEW_RECT.intersection(Rect2i(Vector2i.ZERO, composite.get_size()))
+	if crop_rect.size.x <= 0 or crop_rect.size.y <= 0:
+		return null
+	return _fit_crop_to_thumbnail(composite, crop_rect)
+
+
+func _make_background_preview(item: Dictionary) -> Image:
+	var placeholder: Dictionary = item.get("placeholder", {})
+	var primary := _placeholder_color(placeholder, "primary", Color("#dce7f5"))
+	var secondary := _placeholder_color(placeholder, "secondary", Color("#f2d5cb"))
+	var render_key := str(item.get("render_key", "background"))
+
+	var image := Image.create(THUMBNAIL_SIZE.x, THUMBNAIL_SIZE.y, false, Image.FORMAT_RGBA8)
+	image.fill(primary)
+	match render_key:
+		"city":
+			_fill_rect(image, Rect2i(0, 126, 192, 66), secondary.darkened(0.12))
+			_fill_rect(image, Rect2i(18, 68, 36, 74), secondary.darkened(0.28))
+			_fill_rect(image, Rect2i(68, 48, 44, 94), secondary.darkened(0.18))
+			_fill_rect(image, Rect2i(128, 76, 42, 66), secondary.darkened(0.34))
+			_fill_window_grid(image, Color("#fff6d8"))
+		"cafe":
+			_fill_rect(image, Rect2i(0, 118, 192, 74), secondary.darkened(0.08))
+			_fill_rect(image, Rect2i(26, 38, 64, 58), primary.lightened(0.26))
+			_fill_rect(image, Rect2i(116, 42, 48, 68), secondary.darkened(0.2))
+			_fill_rect(image, Rect2i(20, 112, 70, 14), Color("#8f6b53"))
+		"park":
+			_fill_rect(image, Rect2i(0, 110, 192, 82), secondary.darkened(0.02))
+			_fill_rect(image, Rect2i(28, 72, 16, 56), Color("#8b6547"))
+			_fill_rect(image, Rect2i(116, 64, 18, 68), Color("#7a5a3c"))
+			_draw_circle(image, Vector2i(36, 58), 34, primary.darkened(0.18))
+			_draw_circle(image, Vector2i(126, 48), 38, primary.darkened(0.24))
+		"studio":
+			_fill_rect(image, Rect2i(0, 128, 192, 64), secondary.lightened(0.04))
+			_fill_rect(image, Rect2i(34, 32, 124, 86), primary.lightened(0.12))
+			_fill_rect(image, Rect2i(52, 50, 88, 50), secondary.lightened(0.2))
+		_:
+			_fill_rect(image, Rect2i(0, 118, 192, 74), secondary)
+	return image
+
+
+func _placeholder_color(placeholder: Dictionary, key: String, fallback: Color) -> Color:
+	var value := str(placeholder.get(key, ""))
+	if Color.html_is_valid(value):
+		return Color(value)
+	return fallback
+
+
+func _load_preview_image(path: String) -> Image:
+	return _load_preview_image_static(path)
+
+
+static func thumbnail_used_rect_for_path(path: String, threshold: int = THUMBNAIL_ALPHA_THRESHOLD) -> Rect2i:
+	var image := _load_preview_image_static(path)
+	if image == null:
+		return Rect2i()
+	return _alpha_used_rect(image, threshold)
+
+
+static func _load_preview_image_static(path: String) -> Image:
+	if ResourceLoader.exists(path, "Texture2D"):
+		var texture := load(path) as Texture2D
+		if texture != null:
+			var texture_image := texture.get_image()
+			if _prepare_preview_image(texture_image):
+				return texture_image
+
+	var image := Image.load_from_file(path)
+	if _prepare_preview_image(image):
+		return image
+
+	var file_path := path
+	if file_path.begins_with("res://") or file_path.begins_with("user://"):
+		file_path = ProjectSettings.globalize_path(file_path)
+	image = Image.load_from_file(file_path)
+	if _prepare_preview_image(image):
+		return image
+	return null
+
+
+static func _prepare_preview_image(image: Image) -> bool:
+	if image == null or image.is_empty():
+		return false
+	if image.get_format() != Image.FORMAT_RGBA8:
+		image.convert(Image.FORMAT_RGBA8)
+	return true
+
+
+static func _alpha_used_rect(image: Image, threshold: int) -> Rect2i:
+	var min_x := image.get_width()
+	var min_y := image.get_height()
+	var max_x := -1
+	var max_y := -1
+	for y in range(image.get_height()):
+		for x in range(image.get_width()):
+			if int(roundi(image.get_pixel(x, y).a * 255.0)) >= threshold:
+				min_x = mini(min_x, x)
+				min_y = mini(min_y, y)
+				max_x = maxi(max_x, x)
+				max_y = maxi(max_y, y)
+	if max_x < min_x or max_y < min_y:
+		return Rect2i()
+	return Rect2i(min_x, min_y, max_x - min_x + 1, max_y - min_y + 1)
+
+
+static func _padded_rect(rect: Rect2i, image_size: Vector2i, padding_ratio: float) -> Rect2i:
+	var pad_x := int(ceili(float(rect.size.x) * padding_ratio))
+	var pad_y := int(ceili(float(rect.size.y) * padding_ratio))
+	var x := maxi(0, rect.position.x - pad_x)
+	var y := maxi(0, rect.position.y - pad_y)
+	var right := mini(image_size.x, rect.position.x + rect.size.x + pad_x)
+	var bottom := mini(image_size.y, rect.position.y + rect.size.y + pad_y)
+	return Rect2i(x, y, right - x, bottom - y)
+
+
+func _fit_crop_to_thumbnail(source: Image, crop_rect: Rect2i) -> Image:
+	var crop := source.get_region(crop_rect)
+	var target := Image.create(THUMBNAIL_SIZE.x, THUMBNAIL_SIZE.y, false, Image.FORMAT_RGBA8)
+	target.fill(Color(1, 1, 1, 0))
+	var scale := minf(float(THUMBNAIL_SIZE.x) / float(crop.get_width()), float(THUMBNAIL_SIZE.y) / float(crop.get_height()))
+	var fitted_size := Vector2i(
+		maxi(1, int(round(float(crop.get_width()) * scale))),
+		maxi(1, int(round(float(crop.get_height()) * scale)))
+	)
+	crop.resize(fitted_size.x, fitted_size.y, Image.INTERPOLATE_LANCZOS)
+	var offset := Vector2i(
+		int((THUMBNAIL_SIZE.x - fitted_size.x) / 2),
+		int((THUMBNAIL_SIZE.y - fitted_size.y) / 2)
+	)
+	target.blit_rect(crop, Rect2i(Vector2i.ZERO, fitted_size), offset)
+	return target
+
+
+func _fill_rect(image: Image, rect: Rect2i, color: Color) -> void:
+	var clipped := rect.intersection(Rect2i(Vector2i.ZERO, image.get_size()))
+	for y in range(clipped.position.y, clipped.position.y + clipped.size.y):
+		for x in range(clipped.position.x, clipped.position.x + clipped.size.x):
+			image.set_pixel(x, y, color)
+
+
+func _fill_window_grid(image: Image, color: Color) -> void:
+	for y in [84, 104, 124]:
+		for x in [30, 80, 94, 140]:
+			_fill_rect(image, Rect2i(x, y, 8, 10), color)
+
+
+func _draw_circle(image: Image, center: Vector2i, radius: int, color: Color) -> void:
+	var radius_squared := radius * radius
+	var rect := Rect2i(center - Vector2i(radius, radius), Vector2i(radius * 2 + 1, radius * 2 + 1))
+	var clipped := rect.intersection(Rect2i(Vector2i.ZERO, image.get_size()))
+	for y in range(clipped.position.y, clipped.position.y + clipped.size.y):
+		for x in range(clipped.position.x, clipped.position.x + clipped.size.x):
+			var delta := Vector2i(x, y) - center
+			if delta.x * delta.x + delta.y * delta.y <= radius_squared:
+				image.set_pixel(x, y, color)
 
 
 func _item_tooltip(accessible_name: String, description: String) -> String:
@@ -350,29 +596,23 @@ func _item_tooltip(accessible_name: String, description: String) -> String:
 
 
 func _on_item_pressed(item_id: String) -> void:
-	var item: Dictionary = catalog.get_item(item_id)
-	if game_state.select_item(item_id):
-		status_label.text = "%s: %s" % [category_title.text, str(item.get("display_name", item_id))]
+	game_state.select_item(item_id)
 
 
 func _on_lock_toggled(value: bool) -> void:
-	if game_state.set_lock(current_category_id, value):
-		status_label.text = "%s danh mục %s khi phối ngẫu nhiên." % ["Đã khóa" if value else "Đã mở khóa", category_title.text]
+	game_state.set_lock(current_category_id, value)
 
 
 func _randomize() -> void:
 	game_state.randomize()
-	status_label.text = "Đã tạo một outfit ngẫu nhiên. Các danh mục bị khóa được giữ nguyên."
 
 
 func _undo() -> void:
-	if game_state.undo():
-		status_label.text = "Đã hoàn tác thao tác gần nhất."
+	game_state.undo()
 
 
 func _redo() -> void:
-	if game_state.redo():
-		status_label.text = "Đã thực hiện lại thao tác."
+	game_state.redo()
 
 
 func _ask_reset() -> void:
@@ -381,7 +621,6 @@ func _ask_reset() -> void:
 
 func _reset_to_default() -> void:
 	game_state.reset_to_default(true)
-	status_label.text = "Đã khôi phục outfit mặc định; các khóa vẫn được giữ."
 
 
 func _ask_clear_data() -> void:
@@ -392,29 +631,24 @@ func _clear_saved_data() -> void:
 	var error: Error = save_service.clear_data()
 	if error == OK:
 		game_state.reset_to_default(false)
-		status_label.text = "Đã xóa dữ liệu cục bộ và khôi phục trạng thái ban đầu."
-	else:
+	elif status_label != null:
 		status_label.text = "Không xóa được dữ liệu. Mã lỗi: %s" % error
 
 
 func _toggle_fullscreen() -> void:
 	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		status_label.text = "Đã thoát toàn màn hình."
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		status_label.text = "Đang ở chế độ toàn màn hình."
 
 
 func _save_look() -> void:
-	status_label.text = "Đang tạo ảnh PNG..."
 	await RenderingServer.frame_post_draw
 	var viewport_image := get_viewport().get_texture().get_image()
 	var capture_rect: Rect2i = doll_view.get_capture_rect()
 	var image_bounds := Rect2i(Vector2i.ZERO, viewport_image.get_size())
 	capture_rect = capture_rect.intersection(image_bounds)
 	if capture_rect.size.x <= 0 or capture_rect.size.y <= 0:
-		status_label.text = "Không xác định được khu vực nhân vật để lưu ảnh."
 		return
 
 	var image := viewport_image.get_region(capture_rect)
@@ -423,15 +657,8 @@ func _save_look() -> void:
 
 	if OS.has_feature("web"):
 		_download_png_in_browser(image.save_png_to_buffer(), filename)
-		status_label.text = "Đã gửi ảnh PNG tới trình duyệt để tải xuống."
 	else:
-		var relative_path := "user://%s" % filename
-		var error := image.save_png(relative_path)
-		status_label.text = (
-			"Đã lưu tại: %s" % ProjectSettings.globalize_path(relative_path)
-			if error == OK
-			else "Không lưu được ảnh. Mã lỗi: %s" % error
-		)
+		image.save_png("user://%s" % filename)
 
 
 func _download_png_in_browser(bytes: PackedByteArray, filename: String) -> void:
@@ -457,12 +684,28 @@ func _download_png_in_browser(bytes: PackedByteArray, filename: String) -> void:
 
 
 func _on_state_changed(_reason: String) -> void:
+	_ensure_current_category_visible()
 	if item_grid != null and is_instance_valid(item_grid):
 		lock_toggle.set_pressed_no_signal(bool(game_state.locks.get(current_category_id, false)))
 		_rebuild_item_grid()
 	var error: Error = save_service.save_data(game_state.export_save_data())
 	if error != OK and status_label != null:
 		status_label.text = "Cảnh báo: không lưu được trạng thái cục bộ (%s)." % error
+
+
+func _ensure_current_category_visible() -> void:
+	var visible_ids: Array = catalog.get_visible_category_ids()
+	if visible_ids.is_empty():
+		current_category_id = ""
+		return
+	if visible_ids.has(current_category_id):
+		return
+	current_category_id = str(visible_ids[0])
+	for id in category_buttons.keys():
+		category_buttons[id].button_pressed = id == current_category_id
+	if category_title != null:
+		var category: Dictionary = catalog.get_category(current_category_id)
+		category_title.text = str(category.get("display_name", current_category_id))
 
 
 func _on_history_changed(can_undo: bool, can_redo: bool) -> void:
@@ -504,43 +747,46 @@ func _panel_style(background: Color, radius: int, border_color: Color) -> StyleB
 
 
 func _apply_button_style(button: Button, role: String) -> void:
-	var normal := _button_style(COLOR_BUTTON, Color("#d9ccd5"), 7)
-	var hover := _button_style(COLOR_BUTTON_HOVER, COLOR_ACCENT_SOFT, 7)
-	var pressed := _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 7)
-	var disabled := _button_style(COLOR_BUTTON_DISABLED, Color("#d8d0d5"), 7)
+	var normal := _button_style(COLOR_BUTTON, Color("#d9ccd5"), 7, 1)
+	var hover := _button_style(COLOR_BUTTON_HOVER, COLOR_ACCENT_SOFT, 7, 1)
+	var pressed := _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 7, 1)
+	var disabled := _button_style(COLOR_BUTTON_DISABLED, Color("#d8d0d5"), 7, 1)
+	var focus := _button_style(Color("#ffffff"), COLOR_ACCENT, 7, 2)
 	var font_normal := COLOR_TEXT
 	var font_pressed := Color.WHITE
 	var font_disabled := Color("#8a7e86")
 
 	match role:
 		"category":
-			normal = _button_style(Color("#fdf7fb"), Color("#d8ccd4"), 6)
-			hover = _button_style(Color("#f7e6ef"), COLOR_ACCENT_SOFT, 6)
-			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
+			normal = _button_style(Color("#fdf7fb"), Color("#d8ccd4"), 6, 1)
+			hover = _button_style(Color("#f7e6ef"), COLOR_ACCENT_SOFT, 6, 1)
+			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6, 1)
 		"item":
-			normal = _button_style(Color("#fbf7fa"), Color("#ddd2da"), 6)
-			hover = _button_style(Color("#f5e4ed"), COLOR_ACCENT_SOFT, 6)
-			pressed = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
+			normal = _button_style(Color("#fbf7fa"), Color("#ddd2da"), 8, 1)
+			hover = _button_style(Color("#f5e4ed"), COLOR_ACCENT_SOFT, 8, 2)
+			pressed = _button_style(Color("#fff1f7"), COLOR_ACCENT_DARK, 8, 4)
+			focus = _button_style(Color("#ffffff"), COLOR_ACCENT, 8, 2)
 		"primary":
-			normal = _button_style(COLOR_ACCENT, COLOR_ACCENT_DARK, 6)
-			hover = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6)
-			pressed = _button_style(Color("#7f2f52"), Color("#7f2f52"), 6)
+			normal = _button_style(COLOR_ACCENT, COLOR_ACCENT_DARK, 6, 1)
+			hover = _button_style(COLOR_ACCENT_DARK, COLOR_ACCENT_DARK, 6, 1)
+			pressed = _button_style(Color("#7f2f52"), Color("#7f2f52"), 6, 1)
 			font_normal = Color.WHITE
 		"strong":
-			normal = _button_style(Color("#655d63"), Color("#51484f"), 6)
-			hover = _button_style(Color("#51484f"), Color("#51484f"), 6)
-			pressed = _button_style(Color("#3f373d"), Color("#3f373d"), 6)
+			normal = _button_style(Color("#655d63"), Color("#51484f"), 6, 1)
+			hover = _button_style(Color("#51484f"), Color("#51484f"), 6, 1)
+			pressed = _button_style(Color("#3f373d"), Color("#3f373d"), 6, 1)
 			font_normal = Color.WHITE
 		"danger":
-			normal = _button_style(Color("#fff9fb"), COLOR_DANGER, 6)
-			hover = _button_style(Color("#f8e9ec"), COLOR_DANGER, 6)
-			pressed = _button_style(COLOR_DANGER, COLOR_DANGER, 6)
+			normal = _button_style(Color("#fff9fb"), COLOR_DANGER, 6, 1)
+			hover = _button_style(Color("#f8e9ec"), COLOR_DANGER, 6, 1)
+			pressed = _button_style(COLOR_DANGER, COLOR_DANGER, 6, 1)
 			font_normal = COLOR_DANGER
 
 	button.add_theme_stylebox_override("normal", normal)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", pressed)
 	button.add_theme_stylebox_override("disabled", disabled)
+	button.add_theme_stylebox_override("focus", focus)
 	button.add_theme_color_override("font_color", font_normal)
 	button.add_theme_color_override("font_hover_color", font_normal)
 	button.add_theme_color_override("font_pressed_color", font_pressed)
@@ -548,16 +794,16 @@ func _apply_button_style(button: Button, role: String) -> void:
 	button.add_theme_font_size_override("font_size", 15)
 
 
-func _button_style(background: Color, border_color: Color, radius: int) -> StyleBoxFlat:
+func _button_style(background: Color, border_color: Color, radius: int, border_width: int = 1) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = background
 	style.border_color = border_color
-	style.set_border_width_all(1)
+	style.set_border_width_all(border_width)
 	style.set_corner_radius_all(radius)
 	style.content_margin_left = 10
 	style.content_margin_right = 10
-	style.content_margin_top = 6
-	style.content_margin_bottom = 6
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
 	return style
 
 

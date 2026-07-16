@@ -3,6 +3,7 @@ extends SceneTree
 const ItemCatalogScript = preload("res://scripts/core/item_catalog.gd")
 const GameStateScript = preload("res://scripts/core/game_state.gd")
 const DollViewScript = preload("res://scripts/rendering/doll_view.gd")
+const MainScript = preload("res://scripts/main.gd")
 
 var failures: Array[String] = []
 
@@ -13,83 +14,123 @@ func _init() -> void:
 
 func _run() -> void:
 	var catalog = ItemCatalogScript.new()
-	_assert(catalog.load_catalog() == OK, "Catalog phải tải thành công")
-	_assert(catalog.get_category_ids().size() == 9, "Catalog phải có 9 category")
-	_assert(catalog.items.size() == 45, "Catalog baseline phải có 45 item")
-	_assert(catalog.character.get("layer_order", []).has("base_outfit"), "Layer order phai co base_outfit")
+	_assert(catalog.load_catalog() == OK, "Catalog must load")
+	_assert(catalog.get_category_ids().size() >= 9, "Catalog must retain at least the 9 baseline categories")
+	_assert(catalog.has_item("top_tee") and catalog.has_item("bottom_pleated_skirt"), "Representative placeholder items must be retained")
+	_assert(catalog.get_visible_category_ids().has("face"), "Face proof category must be visible")
+	_assert(str(catalog.get_category("face").get("display_name", "")) == "Khuôn mặt", "Face category display name must use Vietnamese accents")
+	_assert(str(catalog.get_category("hair").get("display_name", "")) == "Tóc", "Hair category display name must use Vietnamese accents")
+	_assert(str(catalog.get_category("top").get("display_name", "")) == "Áo", "Top category display name must use Vietnamese accents")
+	_assert(str(catalog.get_category("bottom").get("display_name", "")) == "Quần / Váy", "Bottom category display name must use Vietnamese accents")
+	_assert(not catalog.get_visible_category_ids().has("shoes"), "Shoes must not be visible in the MVP proof UI")
+	for category_id in catalog.get_visible_category_ids():
+		_assert(not catalog.get_items_for_category(str(category_id)).is_empty(), "Visible categories must have visible items")
+	_assert(MainScript.ITEM_GRID_COLUMNS == 2, "Item grid must use two columns")
+	_assert(not MainScript.ITEM_TILE_SHOWS_TEXT, "Item tiles must not render visible item names")
+	_assert(MainScript.ITEM_TILE_MIN_SIZE.y >= 160.0, "Item tiles must be large enough for thumbnail-first selection")
+	_assert(str(catalog.character.get("mode", "")) == "png", "Phase 2B proof must use PNG mode")
+	_assert(_array_equals_ints(catalog.character.get("canvas_size", []), [948, 1920]), "Keri proof must use the 948x1920 canvas")
+	_assert(catalog.character.get("layer_order", []).has("body_core"), "Layer order must include body_core")
+	_assert(catalog.character.get("layer_order", []).has("fallback_top"), "Layer order must include fallback_top")
+	_assert(catalog.character.get("layer_order", []).has("fallback_bottom"), "Layer order must include fallback_bottom")
+	_assert(_layer_paths_exist(catalog), "All catalog PNG layer paths must exist")
 	var thumbnail_fallback_item: Dictionary = catalog.get_item("top_tee")
-	_assert(str(thumbnail_fallback_item.get("thumbnail_path", "")) == "", "thumbnail_path optional phai fallback rong")
-	_assert(str(thumbnail_fallback_item.get("accessible_name", "")) == str(thumbnail_fallback_item.get("display_name", "")), "accessible_name phai fallback ve display_name")
-	_assert(_invalid_thumbnail_catalog_is_rejected(), "thumbnail_path sai phai bi validator GDScript tu choi")
+	_assert(str(thumbnail_fallback_item.get("thumbnail_path", "")) == "", "thumbnail_path must remain optional")
+	_assert(str(thumbnail_fallback_item.get("accessible_name", "")) == str(thumbnail_fallback_item.get("display_name", "")), "accessible_name must fall back to display_name")
+	_assert(_invalid_thumbnail_catalog_is_rejected(), "Invalid thumbnail_path must be rejected")
+	_assert_thumbnail_pipeline(catalog)
 
 	var state = GameStateScript.new()
 	state.initialize(catalog)
-	_assert(DollViewScript.get_base_outfit_layer_order().has("base_outfit"), "Renderer phai khai bao base outfit invariant")
-	_assert(not state.selected.has("base_outfit"), "Base outfit khong duoc luu trong selected state")
-	_assert_state_compatible(catalog, state, "Initial state không được có xung đột")
-	_assert(state.selected["top"] == "top_blouse", "Top mặc định phải là blouse")
-	_assert(state.selected["dress"] == "dress_none", "Dress mặc định phải là none")
+	_assert(DollViewScript.get_base_outfit_layer_order().has("fallback_top"), "Renderer must declare fallback top invariant")
+	_assert(DollViewScript.get_base_outfit_layer_order().has("fallback_bottom"), "Renderer must declare fallback bottom invariant")
+	_assert(not state.selected.has("base_outfit"), "Base outfit must not be saved in selected state")
+	_assert_state_compatible(catalog, state, "Initial state must be compatible")
+	_assert(state.selected["hair"] == "hair_keri_long_brown_01", "Default hair must be Keri proof hair")
+	_assert(state.selected["face"] == "face_keri_default_01", "Default face must be Keri proof face")
+	_assert(state.selected["top"] == "top_none", "Default top must use fallback top coverage")
+	_assert(state.selected["bottom"] == "bottom_none", "Default bottom must use fallback bottom coverage")
+	_assert(state.selected["dress"] == "dress_none", "Default dress must be none")
+	_assert_png_layers(catalog, state, true, true, false, false, false, "Initial no-selection state must show both fallbacks")
 
 	state.select_item("top_none")
 	state.select_item("bottom_none")
 	state.select_item("dress_none")
-	_assert(state.selected["top"] == "top_none", "top_none phai la state hop le")
-	_assert(state.selected["bottom"] == "bottom_none", "bottom_none phai la state hop le")
-	_assert(state.selected["dress"] == "dress_none", "dress_none phai la state hop le")
-	_assert_state_compatible(catalog, state, "State trong top/bottom/dress van phai hop le")
-	_assert(not state.snapshot()["selected"].has("base_outfit"), "Snapshot khong duoc chua base outfit invariant")
+	_assert(state.selected["top"] == "top_none", "top_none must be valid")
+	_assert(state.selected["bottom"] == "bottom_none", "bottom_none must be valid")
+	_assert(state.selected["dress"] == "dress_none", "dress_none must be valid")
+	_assert_state_compatible(catalog, state, "Empty top/bottom/dress state must stay compatible")
+	_assert(not state.snapshot()["selected"].has("base_outfit"), "Snapshot must not include base outfit")
+	_assert_png_layers(catalog, state, true, true, false, false, false, "No top/bottom selection must show fallback outfit")
+
+	state.select_item("top_keri_casual_01")
+	_assert_png_layers(catalog, state, false, true, true, false, false, "Selected top must hide fallback top only")
+
+	state.select_item("bottom_keri_shorts_01")
+	_assert_png_layers(catalog, state, false, false, true, true, false, "Selected top and bottom must hide both fallbacks")
 
 	state.select_item("dress_casual")
-	_assert(state.selected["dress"] == "dress_casual", "Phải chọn được dress")
-	_assert(state.selected["top"] == "top_none", "Dress phải tháo top")
-	_assert(state.selected["bottom"] == "bottom_none", "Dress phải tháo bottom")
-	_assert_state_compatible(catalog, state, "Dress không được để lại top/bottom xung đột")
+	_assert(state.selected["dress"] == "dress_casual", "Dress must be selectable for compatibility migration")
+	_assert(state.selected["top"] == "top_none", "Dress must clear top")
+	_assert(state.selected["bottom"] == "bottom_none", "Dress must clear bottom")
+	_assert_state_compatible(catalog, state, "Dress must not leave top/bottom conflicts")
+	_assert_png_layers(catalog, state, false, false, false, false, false, "Selected dress must hide fallbacks and selected separates")
 
-	state.select_item("top_tee")
-	_assert(state.selected["top"] == "top_tee", "Phải chọn được top")
-	_assert(state.selected["dress"] == "dress_none", "Top phải tháo dress")
-	_assert_state_compatible(catalog, state, "Top không được để lại dress xung đột")
+	state.select_item("top_keri_casual_02")
+	_assert(state.selected["top"] == "top_keri_casual_02", "Keri proof top 02 must be selectable")
+	_assert(state.selected["dress"] == "dress_none", "Top must clear dress")
+	_assert_state_compatible(catalog, state, "Top must not leave dress conflicts")
+	_assert_png_layers(catalog, state, false, true, true, false, false, "Clearing dress with top must restore bottom fallback")
 
 	state.select_item("hair_soft_waves")
 	state.select_item("headwear_cap")
-	_assert(state.selected["hair"] != "hair_soft_waves", "Cap phải tháo tóc phồng qua conflict tag")
+	_assert(state.selected["hair"] != "hair_soft_waves", "Cap must clear conflicting voluminous hair")
 	state.select_item("headwear_none")
-	state.select_item("hair_soft_waves")
+	state.select_item("hair_keri_long_brown_01")
 	state.set_lock("hair", true)
 	state.randomize()
-	_assert(state.selected["headwear"] != "headwear_cap", "Random không được chọn mũ xung đột với tóc bị khóa")
-	_assert_state_compatible(catalog, state, "Random với lock không được tạo xung đột tag")
+	_assert(state.selected["headwear"] != "headwear_cap", "Random must not pick hidden/conflicting cap")
+	_assert_state_compatible(catalog, state, "Random with locks must not create conflicts")
+	_assert_png_has_coverage(catalog, state, "Random with locks must keep coverage")
 
 	var hair_before: String = state.selected["hair"]
+	var shoes_before: String = state.selected["shoes"]
 	state.randomize()
-	_assert(state.selected["hair"] == hair_before, "Random phải giữ category bị khóa")
-	_assert_state_compatible(catalog, state, "Random không được tạo state xung đột")
+	_assert(state.selected["hair"] == hair_before, "Random must keep locked hair")
+	_assert(state.selected["shoes"] == shoes_before, "Random must not change hidden shoes category")
+	_assert_state_compatible(catalog, state, "Random must not create conflicts")
+	_assert_png_has_coverage(catalog, state, "Random must keep coverage")
 
 	var snapshot_before := state.snapshot()
 	var next_shoes := "shoes_sneakers" if state.selected["shoes"] == "shoes_flats" else "shoes_flats"
-	_assert(state.select_item(next_shoes), "Phải đổi được giày để kiểm tra undo/redo")
-	_assert(state.can_undo(), "Phải undo được sau thay đổi")
+	_assert(state.select_item(next_shoes), "Hidden legacy shoes must remain selectable for save migration/history")
+	_assert(state.can_undo(), "Undo must be available after a change")
 	state.undo()
-	_assert(state.snapshot() == snapshot_before, "Undo phải khôi phục toàn state")
+	_assert(state.snapshot() == snapshot_before, "Undo must restore the full state")
+	_assert_png_has_coverage(catalog, state, "Undo must keep coverage")
 	state.redo()
-	_assert(state.selected["shoes"] == next_shoes, "Redo phải áp dụng lại item")
+	_assert(state.selected["shoes"] == next_shoes, "Redo must reapply the item")
+	_assert_png_has_coverage(catalog, state, "Redo must keep coverage")
 
 	state.reset_to_default(true)
-	_assert(state.selected == catalog.get_default_state(), "Reset phải khôi phục selected mặc định")
-	_assert(bool(state.locks["hair"]), "Reset keep_locks phải giữ khóa")
+	_assert(state.selected == catalog.get_default_state(), "Reset must restore default selected state")
+	_assert_png_layers(catalog, state, true, true, false, false, false, "Reset must restore fallback outfit")
+	_assert(bool(state.locks["hair"]), "Reset keep_locks must retain locks")
 	state.undo()
-	_assert(state.selected["shoes"] == next_shoes, "Undo sau reset phải khôi phục outfit trước đó")
+	_assert(state.selected["shoes"] == next_shoes, "Undo after reset must restore previous outfit")
+	_assert_png_has_coverage(catalog, state, "Undo after reset must keep coverage")
 
 	var exported: Dictionary = state.export_save_data()
-	_assert(int(exported.get("version", 0)) == 1, "Save data phải có version 1")
+	_assert(int(exported.get("version", 0)) == 1, "Save data must have version 1")
 	exported["selected"]["top"] = "missing_item"
 	exported["selected"]["background"] = "top_tee"
 	exported["locks"]["hair"] = true
 	var restored_state = GameStateScript.new()
 	restored_state.initialize(catalog, exported)
-	_assert(restored_state.selected["top"] == catalog.get_default_state()["top"], "Restore phải sanitize item bị thiếu")
-	_assert(restored_state.selected["background"] == catalog.get_default_state()["background"], "Restore phải sanitize item sai category")
-	_assert(bool(restored_state.locks["hair"]), "Restore phải giữ lock hợp lệ")
+	_assert(restored_state.selected["top"] == catalog.get_default_state()["top"], "Restore must sanitize missing item")
+	_assert(restored_state.selected["background"] == catalog.get_default_state()["background"], "Restore must sanitize wrong-category item")
+	_assert(bool(restored_state.locks["hair"]), "Restore must keep valid lock")
+	_assert_png_has_coverage(catalog, restored_state, "Save/load restore must keep coverage")
 
 	if failures.is_empty():
 		print("SMOKE TEST PASSED")
@@ -147,11 +188,87 @@ func _invalid_thumbnail_catalog_is_rejected() -> bool:
 	return result == ERR_INVALID_DATA
 
 
+func _assert_thumbnail_pipeline(catalog: RefCounted) -> void:
+	_assert(MainScript.THUMBNAIL_SIZE == Vector2i(192, 192), "Thumbnail previews must use a stable square render target")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("top_none")) == "none", "None items must use the none preview mode")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("background_studio")) == "cover", "Backgrounds must use cover previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("face_keri_default_01")) == "face_preview", "Face items must use face previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("hair_keri_long_brown_01")) == "visible_bounds", "Hair must use visible-bounds previews")
+	_assert_layer_has_cropped_bounds(catalog.get_item("hair_keri_long_brown_01"), "Hair thumbnail preview must crop transparent canvas")
+	_assert_layer_has_cropped_bounds(catalog.get_item("top_keri_casual_01"), "Top thumbnail preview must crop transparent canvas")
+	_assert_layer_has_cropped_bounds(catalog.get_item("bottom_keri_shorts_01"), "Bottom thumbnail preview must crop transparent canvas")
+
+	var canvas_size: Array = catalog.character.get("canvas_size", [])
+	var face_rect := MainScript.FACE_PREVIEW_RECT
+	_assert(face_rect.position.x >= 0 and face_rect.position.y >= 0, "Face preview crop must start inside the Keri canvas")
+	_assert(face_rect.position.x + face_rect.size.x <= int(canvas_size[0]), "Face preview crop width must stay inside the Keri canvas")
+	_assert(face_rect.position.y + face_rect.size.y <= int(canvas_size[1]), "Face preview crop height must stay inside the Keri canvas")
+
+	for background in catalog.get_items_for_category("background"):
+		_assert(MainScript.thumbnail_preview_mode_for_item(background) == "cover", "Every background item must use cover preview mode")
+		_assert(not Dictionary(background.get("placeholder", {})).is_empty(), "Background preview needs placeholder color metadata")
+
+
+func _assert_layer_has_cropped_bounds(item: Dictionary, message: String) -> void:
+	var path := _first_layer_path(item)
+	var used_rect := MainScript.thumbnail_used_rect_for_path(path)
+	_assert(used_rect.size.x > 0 and used_rect.size.y > 0, "%s: visible alpha bounds must be detected" % message)
+	_assert(used_rect.size.x < 948 or used_rect.size.y < 1920, "%s: bounds must be smaller than the production canvas" % message)
+
+
+func _first_layer_path(item: Dictionary) -> String:
+	var layers: Dictionary = item.get("layers", {})
+	for path in layers.values():
+		return str(path)
+	return ""
+
+
+func _layer_paths_exist(catalog: RefCounted) -> bool:
+	var character_layers: Dictionary = catalog.character.get("layers", {})
+	for path in character_layers.values():
+		if not ResourceLoader.exists(str(path), "Texture2D"):
+			return false
+	for item in catalog.items:
+		var layers: Dictionary = item.get("layers", {})
+		for path in layers.values():
+			if not ResourceLoader.exists(str(path), "Texture2D"):
+				return false
+	return true
+
+
+func _array_equals_ints(left: Variant, right: Array) -> bool:
+	if typeof(left) != TYPE_ARRAY or left.size() != right.size():
+		return false
+	for index in range(right.size()):
+		if int(left[index]) != int(right[index]):
+			return false
+	return true
+
+
+func _assert_png_layers(catalog: RefCounted, state: RefCounted, fallback_top: bool, fallback_bottom: bool, selected_top: bool, selected_bottom: bool, selected_dress: bool, message: String) -> void:
+	var layers: Dictionary = DollViewScript.get_png_layer_paths(catalog, state)
+	_assert(layers.has("body_core"), "%s: body_core must be visible" % message)
+	_assert(layers.has("fallback_top") == fallback_top, "%s: fallback_top visibility mismatch" % message)
+	_assert(layers.has("fallback_bottom") == fallback_bottom, "%s: fallback_bottom visibility mismatch" % message)
+	_assert(layers.has("top") == selected_top, "%s: selected top visibility mismatch" % message)
+	_assert(layers.has("bottom") == selected_bottom, "%s: selected bottom visibility mismatch" % message)
+	_assert((layers.has("dress_back") or layers.has("dress_main")) == selected_dress, "%s: selected dress visibility mismatch" % message)
+
+
+func _assert_png_has_coverage(catalog: RefCounted, state: RefCounted, message: String) -> void:
+	var layers: Dictionary = DollViewScript.get_png_layer_paths(catalog, state)
+	var has_dress := layers.has("dress_back") or layers.has("dress_main")
+	var has_top := layers.has("top") or layers.has("fallback_top")
+	var has_bottom := layers.has("bottom") or layers.has("fallback_bottom")
+	_assert(layers.has("body_core"), "%s: missing body_core" % message)
+	_assert(has_dress or (has_top and has_bottom), "%s: body_core must have valid coverage" % message)
+
+
 func _assert_state_compatible(catalog: RefCounted, state: RefCounted, message: String) -> void:
 	var selected_items: Array = []
 	for category_id in catalog.get_category_ids():
 		var item: Dictionary = state.get_selected_item(str(category_id))
-		_assert(not item.is_empty(), "%s: thiếu item cho category %s" % [message, category_id])
+		_assert(not item.is_empty(), "%s: missing item for category %s" % [message, category_id])
 		selected_items.append(item)
 
 	for left_index in range(selected_items.size()):
@@ -163,7 +280,7 @@ func _assert_state_compatible(catalog: RefCounted, state: RefCounted, message: S
 				_intersects(left.get("conflicts_with_tags", []), right.get("tags", []))
 				or _intersects(right.get("conflicts_with_tags", []), left.get("tags", []))
 			)
-			_assert(not slot_conflict and not tag_conflict, "%s: %s xung đột với %s" % [message, left.get("id", ""), right.get("id", "")])
+			_assert(not slot_conflict and not tag_conflict, "%s: %s conflicts with %s" % [message, left.get("id", ""), right.get("id", "")])
 
 
 func _intersects(left: Variant, right: Variant) -> bool:

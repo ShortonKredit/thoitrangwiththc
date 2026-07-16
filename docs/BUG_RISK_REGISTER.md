@@ -29,3 +29,5 @@
 | Old save contains deferred category/item | High | Sanitize saves against current catalog and disabled categories; smoke-test legacy save migration |
 | Random selects unsupported item | High | Filter random candidates by enabled MVP categories/items; smoke-test random with locks |
 | Roadmap drift reopens full-body work | Medium | Start phases from `PHASE_STATUS.md`, `ROADMAP.md`, and `MVP_SCOPE_DECISION.md`; diff-review prompts/docs |
+| Phase 2B PNG proof passes automation but fails visual QA | High | Manual Godot/browser inspection before marking final acceptance; verify crop, layer alignment, and UI category visibility |
+| Phase 2B thumbnail-first UI regresses usability | Medium | Manual QA the two-column grid, selected/hover/focus states, none tile, and text removal before marking Phase 2B complete |

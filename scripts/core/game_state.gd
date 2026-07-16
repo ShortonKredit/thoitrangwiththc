@@ -58,6 +58,8 @@ func randomize() -> void:
 
 	for category_id in category_ids:
 		var category: Dictionary = catalog.get_category(category_id)
+		if bool(category.get("hidden", false)):
+			continue
 		if bool(locks.get(category_id, false)) or not bool(category.get("random_default", true)):
 			continue
 

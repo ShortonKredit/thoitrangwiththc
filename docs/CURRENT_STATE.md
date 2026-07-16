@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete. A later MVP-scope decision superseded the full-body leg-extension proof path; the next proof phase is three-quarter-body Keri integration.
+Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete. Phase 2B three-quarter-body Keri integration has been implemented and passes automated checks; final acceptance still requires manual Godot/browser visual QA.
 
 ## Current Architecture
 
@@ -30,7 +30,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 
 ## Working Features
 
-- Catalog validation passes with 9 categories and 45 items.
+- Catalog validation passes with 10 categories and 51 items.
 - Godot 4.7 import, parse, startup smoke, and logic smoke tests pass locally.
 - Main scene runs locally in Godot.
 - Category and item selection are data-driven.
@@ -42,6 +42,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - PNG capture exists for the doll view.
 - Header text has been simplified to the player-facing title.
 - Optional `thumbnail_path` and `accessible_name` metadata exist with text fallback.
+- Phase 2B selector thumbnails are generated in memory from preview modes: alpha visible bounds for PNG layers, body+face crop for face items, procedural cover previews for backgrounds, and a drawn X for none items.
 
 ## Mandatory Invariants
 
@@ -57,16 +58,17 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 
 ## Placeholder Features
 
-- Character, clothing, hair, accessories, and backgrounds are still procedural placeholders.
-- `thumbnail_path` support exists, but the current catalog does not depend on real thumbnail assets.
+- The active character and tiny Keri proof pack render through PNG layers.
+- The legacy placeholder catalog remains for migration/procedural reference, but non-proof fashion items are hidden from the Phase 2B UI where needed.
+- `thumbnail_path` support exists, but the current catalog does not depend on real thumbnail asset files.
 - Future PNG layer paths are scaffolded but not production art.
 - Web export foundation exists, but browser QA is deferred until a web-focused phase.
 
 ## Not Yet Fully Visually Verified
 
-- Final layer alignment and body coverage with real PNG assets.
+- Final visual acceptance of the Keri PNG proof pack.
 - Three-quarter-body crop intent, lower-edge cleanliness, face style, hair front/back separation, and face mask quality.
-- Thumbnail readability and crop quality.
+- Thumbnail readability and crop quality after the in-memory preview pass.
 - Browser rendering across Chrome, Edge, and Firefox after export.
 - Small viewport behavior beyond the captured Phase 1 screenshots.
 
@@ -77,9 +79,9 @@ The asset direction is not locked. Keri is a candidate for a three-quarter-body 
 ## Phase Boundary
 
 - Phase 2A is complete as a documentation-only Keri asset/license audit.
-- Phase 2B has not started and is now scoped as a three-quarter-body integration proof.
+- Phase 2B three-quarter-body integration proof has been implemented with a tiny Keri proof pack.
 - Full-body leg extension is deferred/post-MVP.
-- No Keri asset has been imported into Godot.
+- Keri proof PNG assets have been imported into Godot under `assets/**/keri/proof/`.
 - No AI asset generation has been performed in this phase.
 - No backend, database, login, API, or CI work has been added.
 

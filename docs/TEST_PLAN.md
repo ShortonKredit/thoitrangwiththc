@@ -11,9 +11,9 @@ python tools/validate_catalog.py
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.ps1"
 ```
 
-Expected:
+Expected after Phase 2B:
 
-- catalog validation prints `Catalog valid: 9 categories, 45 items`;
+- catalog validation prints `Catalog valid: 10 categories, 51 items`;
 - Godot 4.7 import and script parse exit 0;
 - main scene startup smoke exits 0;
 - logic smoke test prints `SMOKE TEST PASSED`;
@@ -38,6 +38,16 @@ Current checks cover:
 - missing thumbnail/text fallback behavior;
 - `accessible_name` fallback to `display_name`;
 - main scene startup without parse/runtime failure.
+- Phase 2B Keri proof layer paths exist.
+- Keri proof PNG layers use the `948x1920` canvas and RGBA color type.
+- Hidden/deferred categories such as shoes do not appear in the visible MVP proof category list.
+- Random does not change hidden categories.
+- Phase 2B UI constants keep the item grid at two columns.
+- Phase 2B item tiles are configured as textless thumbnail tiles.
+- Phase 2B category display names include required Vietnamese accents.
+- Phase 2B thumbnail preview modes select `none`, `cover`, `face_preview`, or `visible_bounds` as appropriate.
+- Phase 2B visible-bounds thumbnail helpers detect cropped alpha regions for Keri hair, top, and bottom proof PNGs.
+- Phase 2B face thumbnail crop stays inside the 948x1920 Keri canvas.
 
 ## Automated Gaps
 
@@ -85,7 +95,14 @@ Check these by eye after UI or asset work:
 - wardrobe/category alignment and spacing;
 - active, selected, disabled, hover, pressed, and locked states;
 - status text readability and placement;
+- no bottom status bar in the Phase 2B proof UI;
+- no explanatory help line under the selected category in the Phase 2B proof UI;
 - item area behavior when a category has few items;
+- thumbnail-first item grid shows two large square-ish tiles per row at the desktop proof viewport;
+- item cards do not show item names, IDs, categories, or file paths;
+- none options use an icon-style tile, not visible text;
+- background tiles show a distinguishable cover preview instead of a blank white card;
+- hair, face, top, and bottom thumbnails are centered and readable at final tile size;
 - base outfit coverage at all valid clothing states;
 - outfit overlap and layer order;
 - shared canvas and origin for all imported proof layers;

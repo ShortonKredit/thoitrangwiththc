@@ -76,19 +76,33 @@ This path was superseded after follow-up experiments showed that full-body leg e
 
 ### Phase 2B - Three-Quarter-Body Integration Proof
 
-Status: Next.
+Status: Automated checks passed / manual QA pending.
 
 Goal: integrate a tiny Keri proof pack into Godot using the existing three-quarter-body canvas without rewriting the catalog.
 
 Proof pack:
 
-- 1 clothed base body;
+- 1 body core;
+- 1 internal fallback top;
+- 1 internal fallback bottom;
 - 1 hair;
 - 1 face or facial-feature configuration;
 - 2 tops;
 - 2 short bottoms;
-- 1 short dress;
-- 1 accessory.
+- 1 short dress, if available in audited source;
+- 1 accessory, if available in audited source.
+
+Implemented proof pack:
+
+- 1 body core;
+- 1 internal fallback top;
+- 1 internal fallback bottom;
+- 1 combined hair layer;
+- 1 fixed face configuration;
+- 2 tops;
+- 2 short bottoms.
+
+Short dress and accessory were not available in the current proof source.
 
 Acceptance criteria:
 

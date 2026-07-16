@@ -42,6 +42,7 @@ func load_catalog(path: String = DEFAULT_CATALOG_PATH, report_errors: bool = tru
 		category["display_name"] = str(category.get("display_name", category_id))
 		category["allow_none"] = bool(category.get("allow_none", false))
 		category["random_default"] = bool(category.get("random_default", true))
+		category["hidden"] = bool(category.get("hidden", false))
 		category["order"] = int(category.get("order", categories.size()))
 		categories.append(category)
 		_categories_by_id[category_id] = category
@@ -140,6 +141,17 @@ func validate() -> PackedStringArray:
 func get_category_ids() -> Array:
 	var result: Array = []
 	for category in categories:
+		result.append(str(category.get("id", "")))
+	return result
+
+
+func get_visible_category_ids() -> Array:
+	var result: Array = []
+	for category in categories:
+		if bool(category.get("hidden", false)):
+			continue
+		if get_items_for_category(str(category.get("id", ""))).is_empty():
+			continue
 		result.append(str(category.get("id", "")))
 	return result
 

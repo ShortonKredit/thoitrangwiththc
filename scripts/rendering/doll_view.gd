@@ -34,7 +34,42 @@ func get_capture_rect() -> Rect2i:
 
 
 static func get_base_outfit_layer_order() -> PackedStringArray:
-	return PackedStringArray(["body", "base_outfit", "fashion"])
+	return PackedStringArray(["body_core", "fallback_top", "fallback_bottom", "fashion"])
+
+
+static func get_png_layer_paths(item_catalog: RefCounted, state: RefCounted) -> Dictionary:
+	var layers: Dictionary = {}
+	var character_layers: Dictionary = item_catalog.character.get("layers", {})
+
+	var dress: Dictionary = state.get_selected_item("dress")
+	var top: Dictionary = state.get_selected_item("top")
+	var bottom: Dictionary = state.get_selected_item("bottom")
+	var has_dress := _is_selected_item(dress)
+	var has_top := _is_selected_item(top)
+	var has_bottom := _is_selected_item(bottom)
+
+	if character_layers.has("body_core"):
+		layers["body_core"] = str(character_layers["body_core"])
+
+	if not has_dress:
+		if not has_bottom and character_layers.has("fallback_bottom"):
+			layers["fallback_bottom"] = str(character_layers["fallback_bottom"])
+		if not has_top and character_layers.has("fallback_top"):
+			layers["fallback_top"] = str(character_layers["fallback_top"])
+
+	for category_id in item_catalog.get_category_ids():
+		var item: Dictionary = state.get_selected_item(str(category_id))
+		if str(category_id) == "top" and (has_dress or not has_top):
+			continue
+		if str(category_id) == "bottom" and (has_dress or not has_bottom):
+			continue
+		if str(category_id) == "dress" and not has_dress:
+			continue
+		var item_layers: Dictionary = item.get("layers", {})
+		for layer_name in item_layers.keys():
+			layers[str(layer_name)] = str(item_layers[layer_name])
+
+	return layers
 
 
 func _on_state_changed(_reason: String) -> void:
@@ -46,14 +81,16 @@ func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color("#f4edf6"))
 		return
 
-	var target_rect := _fit_rect(LOGICAL_SIZE, Rect2(Vector2.ZERO, size))
 	var background: Dictionary = game_state.get_selected_item("background")
 	_draw_background(background)
 
 	var character_mode := str(catalog.character.get("mode", "procedural"))
 	if character_mode == "png":
+		var source_rect := _get_png_source_rect()
+		var target_rect := _fit_rect(source_rect.size, Rect2(Vector2.ZERO, size))
 		_draw_png_character(target_rect)
 	else:
+		var target_rect := _fit_rect(LOGICAL_SIZE, Rect2(Vector2.ZERO, size))
 		_draw_procedural_character(target_rect)
 
 
@@ -135,25 +172,27 @@ func _draw_procedural_character(target_rect: Rect2) -> void:
 
 
 func _draw_png_character(target_rect: Rect2) -> void:
-	var layers: Dictionary = {}
-	var character_layers: Dictionary = catalog.character.get("layers", {})
-	for layer_name in character_layers.keys():
-		layers[str(layer_name)] = str(character_layers[layer_name])
-
-	for category_id in catalog.get_category_ids():
-		var item: Dictionary = game_state.get_selected_item(str(category_id))
-		var item_layers: Dictionary = item.get("layers", {})
-		for layer_name in item_layers.keys():
-			layers[str(layer_name)] = str(item_layers[layer_name])
-
+	var layers := get_png_layer_paths(catalog, game_state)
 	var layer_order: Array = catalog.character.get("layer_order", [])
+	var source_rect := _get_png_source_rect()
 	for layer_name in layer_order:
 		var path := str(layers.get(str(layer_name), ""))
 		if path.is_empty():
 			continue
 		var texture := _load_texture(path)
 		if texture != null:
-			draw_texture_rect(texture, target_rect, false)
+			draw_texture_rect_region(texture, target_rect, source_rect)
+
+
+func _get_png_source_rect() -> Rect2:
+	var canvas_size := _vector2_from_array(catalog.character.get("canvas_size", []), LOGICAL_SIZE)
+	var visible_rect: Array = catalog.character.get("visible_canvas_rect", [])
+	if visible_rect.size() == 4:
+		return Rect2(
+			Vector2(float(visible_rect[0]), float(visible_rect[1])),
+			Vector2(float(visible_rect[2]), float(visible_rect[3]))
+		)
+	return Rect2(Vector2.ZERO, canvas_size)
 
 
 func _load_texture(path: String) -> Texture2D:
@@ -459,3 +498,13 @@ func _color(value: Variant, fallback: Color) -> Color:
 
 func _dictionary(value: Variant) -> Dictionary:
 	return value if typeof(value) == TYPE_DICTIONARY else {}
+
+
+static func _is_selected_item(item: Dictionary) -> bool:
+	return not item.is_empty() and str(item.get("render_key", "none")) != "none"
+
+
+func _vector2_from_array(value: Variant, fallback: Vector2) -> Vector2:
+	if typeof(value) != TYPE_ARRAY or value.size() < 2:
+		return fallback
+	return Vector2(float(value[0]), float(value[1]))
