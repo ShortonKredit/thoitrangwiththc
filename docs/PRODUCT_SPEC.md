@@ -43,18 +43,20 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 - Web export foundation.
 - Renderer-invariant base outfit so the character is never shown without modest base clothing, even when top, bottom and dress are all set to none.
 - Optional thumbnail metadata with text fallback until real thumbnails exist.
-- Appearance customization with five skin tones, selectable combined hair, and independent eyes, eyebrows, mouth, and makeup layers.
+- Appearance customization with five skin tones, selectable combined hair, and independent eyes, eyebrows, mouth, makeup, and face-effect layers.
 - A `Khuôn mặt` main category with non-empty subcategory navigation and thumbnail-first, two-column item selection.
 - Clean/reset appearance starts with base skin 01 and no optional hair, eyes, eyebrows, mouth, makeup, or legacy face preset.
 - Skin choices read as large color swatches; facial-feature cards show only the relevant feature crop; hair cards show centered hair-only previews.
 - The action bar shows only three monochrome icon buttons: Undo, Redo, and Reset. Random, Save PNG, Fullscreen, and Clear saved data are absent from product UI.
 - Reset is undoable, redoable, saves immediately, and restores skin 01, optional appearance none, fallback clothing, accessory none, and `background_none`/default studio.
 - Product garment tiles are textless two-column previews generated from catalog alpha bounds; style/color grouping metadata is retained for future presentation work.
+- `Quần / Váy` exposes non-empty, data-driven `Quần short`, `Quần dài`, and `Chân váy` groups over one mutually exclusive bottom slot.
+- `Khuôn mặt -> Hiệu ứng` exposes 13 unique sweat/tears layers plus `effect_none`; effects never appear in the default state.
 
 ## Deferred
 
 - Full-body leg extension.
-- Shoes, socks, full-length trousers, full-length dresses, and foot-dependent items.
+- Shoes, socks, full-body/foot presentation, full-length dresses, and other foot-dependent items. Accepted trousers are shown only in the existing three-quarter viewport.
 - Face photo editor.
 - Local face import/file picker and any face recognition or biometric analysis.
 - Privacy copy for the future face-photo flow; it is not shown persistently in the main header.

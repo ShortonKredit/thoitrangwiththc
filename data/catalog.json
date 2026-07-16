@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "character": {
     "id": "keri_three_quarter_proof",
     "display_name": "Keri three-quarter-body proof",
@@ -30,6 +30,7 @@
       "eyelashes",
       "mouth",
       "makeup",
+      "face_effect",
       "hair_front",
       "glasses",
       "face_accessory",
@@ -52,7 +53,8 @@
       "eyes",
       "eyebrows",
       "mouth",
-      "makeup"
+      "makeup",
+      "face_effect"
     ],
     "face_import_metadata": {
       "face_rect": [
@@ -109,6 +111,7 @@
         "eyelashes",
         "mouth",
         "makeup",
+        "face_effect",
         "hair_front",
         "glasses",
         "face_accessory",
@@ -140,7 +143,8 @@
         "eyes",
         "eyebrows",
         "mouth",
-        "makeup"
+        "makeup",
+        "face_effect"
       ]
     },
     {
@@ -159,7 +163,24 @@
       "allow_none": true,
       "random_default": true,
       "order": 30,
-      "hidden": false
+      "hidden": false,
+      "item_groups": [
+        {
+          "id": "shorts",
+          "display_name": "Quần short",
+          "order": 10
+        },
+        {
+          "id": "trousers",
+          "display_name": "Quần dài",
+          "order": 20
+        },
+        {
+          "id": "skirt",
+          "display_name": "Chân váy",
+          "order": 30
+        }
+      ]
     },
     {
       "id": "dress",
@@ -264,6 +285,16 @@
       "order": 20,
       "hidden": false,
       "parent_category": "face"
+    },
+    {
+      "id": "face_effect",
+      "display_name": "Hiệu ứng",
+      "description": "Nước mắt và mồ hôi độc lập trên vùng mặt.",
+      "allow_none": true,
+      "random_default": false,
+      "order": 21,
+      "hidden": false,
+      "parent_category": "face"
     }
   ],
   "initial_state": {
@@ -281,7 +312,8 @@
     "eyes": "eyes_none",
     "eyebrows": "eyebrows_none",
     "mouth": "mouth_none",
-    "makeup": "makeup_none"
+    "makeup": "makeup_none",
+    "face_effect": "effect_none"
   },
   "items": [
     {
@@ -528,7 +560,8 @@
       ],
       "conflicts_with_tags": [],
       "layers": {},
-      "placeholder": {}
+      "placeholder": {},
+      "show_in_all_groups": true
     },
     {
       "id": "bottom_pleated_skirt",
@@ -1282,7 +1315,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 01",
       "accessible_name": "Áo quây dáng dài - màu 01",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 301,
@@ -1308,7 +1341,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_01",
       "variant_group": "keri_top_style_03",
       "source_sha256": "272d3f7e3e94ab8220faccd1361f7fd6de2ad7c68f5184ae1bbd5326450141bb",
@@ -1319,7 +1352,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 01",
       "accessible_name": "Áo phối lớp - màu 01",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 201,
@@ -1345,7 +1378,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_01",
       "variant_group": "keri_top_style_02",
       "source_sha256": "d2189583a0cecff18c2ba93073fb5032e0cadda96424bbe3861c3917773b3b22",
@@ -1356,7 +1389,7 @@
       "category": "bottom",
       "display_name": "Quần short - màu 03",
       "accessible_name": "Quần short - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 103,
@@ -1382,18 +1415,19 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "shorts_style_01",
+      "style_id": "style_02",
       "color_id": "color_03",
       "variant_group": "keri_shorts_style_01",
       "source_sha256": "19133e526c754acc4eade9e062e64aac607a0e8d3dc9172af0968e64c0aafb20",
-      "source_file": "Bottoms/bottom2_3.png"
+      "source_file": "Bottoms/bottom2_3.png",
+      "ui_group": "shorts"
     },
     {
       "id": "bottom_keri_shorts_02",
       "category": "bottom",
       "display_name": "Quần short - màu 02",
       "accessible_name": "Quần short - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 102,
@@ -1419,11 +1453,12 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "shorts_style_01",
+      "style_id": "style_02",
       "color_id": "color_02",
       "variant_group": "keri_shorts_style_01",
       "source_sha256": "7b3225252edd03ad9203f646a8ce1a27c72b6ccf6745d42dad75125c4587b23b",
-      "source_file": "Bottoms/bottom2_2.png"
+      "source_file": "Bottoms/bottom2_2.png",
+      "ui_group": "shorts"
     },
     {
       "id": "hair_none",
@@ -5166,7 +5201,7 @@
       "category": "bottom",
       "display_name": "Quần short - màu 04",
       "accessible_name": "Quần short - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 104,
@@ -5192,18 +5227,19 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "shorts_style_01",
+      "style_id": "style_02",
       "color_id": "color_04",
       "variant_group": "keri_shorts_style_01",
       "source_sha256": "7f4bae4006ad75b97c40e89f82055d534bca728e0d76b6f973e0d94a464be148",
-      "source_file": "Bottoms/bottom2_4.png"
+      "source_file": "Bottoms/bottom2_4.png",
+      "ui_group": "shorts"
     },
     {
       "id": "bottom_keri_shorts_color_05",
       "category": "bottom",
       "display_name": "Quần short - màu 05",
       "accessible_name": "Quần short - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 105,
@@ -5229,18 +5265,19 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "shorts_style_01",
+      "style_id": "style_02",
       "color_id": "color_05",
       "variant_group": "keri_shorts_style_01",
       "source_sha256": "1412db7f75bb3aa3198706e1b2ea4481378a56faace76cf7a2f7d7fa92ec236f",
-      "source_file": "Bottoms/bottom2_5.png"
+      "source_file": "Bottoms/bottom2_5.png",
+      "ui_group": "shorts"
     },
     {
       "id": "bottom_keri_shorts_color_06",
       "category": "bottom",
       "display_name": "Quần short - màu 06",
       "accessible_name": "Quần short - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 106,
@@ -5266,18 +5303,19 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "shorts_style_01",
+      "style_id": "style_02",
       "color_id": "color_06",
       "variant_group": "keri_shorts_style_01",
       "source_sha256": "ee54f0659b43e4504c8841c5561cafce1ee32a9c21ac8b629fef2f7a559f8506",
-      "source_file": "Bottoms/bottom2_6.png"
+      "source_file": "Bottoms/bottom2_6.png",
+      "ui_group": "shorts"
     },
     {
       "id": "top_keri_style_01_color_02",
       "category": "top",
       "display_name": "Áo dáng dài - màu 02",
       "accessible_name": "Áo dáng dài - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 102,
@@ -5303,7 +5341,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_01",
+      "style_id": "style_01",
       "color_id": "color_02",
       "variant_group": "keri_top_style_01",
       "source_sha256": "20f2c3bb369d71834515d94fb62d1132fa2cde4cff646ff7858f1ab1b5d3890e",
@@ -5314,7 +5352,7 @@
       "category": "top",
       "display_name": "Áo dáng dài - màu 03",
       "accessible_name": "Áo dáng dài - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 103,
@@ -5340,7 +5378,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_01",
+      "style_id": "style_01",
       "color_id": "color_03",
       "variant_group": "keri_top_style_01",
       "source_sha256": "dfb5481f55d21c2761f754ed6414e23c68c48b10a813ace5abedc8a392e50f2e",
@@ -5351,7 +5389,7 @@
       "category": "top",
       "display_name": "Áo dáng dài - màu 04",
       "accessible_name": "Áo dáng dài - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 104,
@@ -5377,7 +5415,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_01",
+      "style_id": "style_01",
       "color_id": "color_04",
       "variant_group": "keri_top_style_01",
       "source_sha256": "d13bf383fb358cd29f84b4e400c502118aa895f093ab5915d79269318856d2fe",
@@ -5388,7 +5426,7 @@
       "category": "top",
       "display_name": "Áo dáng dài - màu 05",
       "accessible_name": "Áo dáng dài - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 105,
@@ -5414,7 +5452,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_01",
+      "style_id": "style_01",
       "color_id": "color_05",
       "variant_group": "keri_top_style_01",
       "source_sha256": "e75f27feb25fac997b3a571d5ce529837d67e493118afe06988f948b57e7f0cc",
@@ -5425,7 +5463,7 @@
       "category": "top",
       "display_name": "Áo dáng dài - màu 06",
       "accessible_name": "Áo dáng dài - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 106,
@@ -5451,7 +5489,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_01",
+      "style_id": "style_01",
       "color_id": "color_06",
       "variant_group": "keri_top_style_01",
       "source_sha256": "30809fd74e49a3504a96707024774e934c6f9572e4194c17bbe2da74baf06ef1",
@@ -5462,7 +5500,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 02",
       "accessible_name": "Áo phối lớp - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 202,
@@ -5488,7 +5526,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_02",
       "variant_group": "keri_top_style_02",
       "source_sha256": "7e0a4372597eabaf4e57315a4ba6c420c089a1d66669a1727a0b188be02795fa",
@@ -5499,7 +5537,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 03",
       "accessible_name": "Áo phối lớp - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 203,
@@ -5525,7 +5563,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_03",
       "variant_group": "keri_top_style_02",
       "source_sha256": "835a15e9f14259e84926737a3ae56b7ea3409343c3c79868aedf84783a945f26",
@@ -5536,7 +5574,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 04",
       "accessible_name": "Áo phối lớp - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 204,
@@ -5562,7 +5600,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_04",
       "variant_group": "keri_top_style_02",
       "source_sha256": "f0099e110c2393d4cb0397435966f0a958f55a9528c6ab6809b56f6bb344d47f",
@@ -5573,7 +5611,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 05",
       "accessible_name": "Áo phối lớp - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 205,
@@ -5599,7 +5637,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_05",
       "variant_group": "keri_top_style_02",
       "source_sha256": "20a4aec7e1aac5460266d2f18645c629d43fe3d88601c3d126eef62d101d42be",
@@ -5610,7 +5648,7 @@
       "category": "top",
       "display_name": "Áo phối lớp - màu 06",
       "accessible_name": "Áo phối lớp - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 206,
@@ -5636,7 +5674,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_02",
+      "style_id": "style_02",
       "color_id": "color_06",
       "variant_group": "keri_top_style_02",
       "source_sha256": "9f37e3db04a2354efca02a4fc7fd5c7353d1618e11365db546847f0f2716b96f",
@@ -5647,7 +5685,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 02",
       "accessible_name": "Áo quây dáng dài - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 302,
@@ -5673,7 +5711,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_02",
       "variant_group": "keri_top_style_03",
       "source_sha256": "619019961e76bf55c5832a9badd9a63d4404ba4f7e7a52bce8a31b646a14be1b",
@@ -5684,7 +5722,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 03",
       "accessible_name": "Áo quây dáng dài - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 303,
@@ -5710,7 +5748,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_03",
       "variant_group": "keri_top_style_03",
       "source_sha256": "b2ac0cb88902010ecf0a373a498388969ef8e1d37540351b933f9c77ef99b532",
@@ -5721,7 +5759,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 04",
       "accessible_name": "Áo quây dáng dài - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 304,
@@ -5747,7 +5785,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_04",
       "variant_group": "keri_top_style_03",
       "source_sha256": "5dcefc7b2b568e2c0e4686f8ec1151ec633aa03efbbdab48cdc006bb82fbf28a",
@@ -5758,7 +5796,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 05",
       "accessible_name": "Áo quây dáng dài - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 305,
@@ -5784,7 +5822,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_05",
       "variant_group": "keri_top_style_03",
       "source_sha256": "f3d4a05b0db73c16b53ea560f2241d7c7dfc77a6520a61a87a879956722c72fd",
@@ -5795,7 +5833,7 @@
       "category": "top",
       "display_name": "Áo quây dáng dài - màu 06",
       "accessible_name": "Áo quây dáng dài - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 306,
@@ -5821,7 +5859,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_03",
+      "style_id": "style_03",
       "color_id": "color_06",
       "variant_group": "keri_top_style_03",
       "source_sha256": "cc98c26770392ce8df85aa95036b0b79e01c387788ab9f1d8c5754ea9db3eadb",
@@ -5832,7 +5870,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 01",
       "accessible_name": "Áo lệch tà tay ngắn - màu 01",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 401,
@@ -5858,7 +5896,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_01",
       "variant_group": "keri_top_style_04",
       "source_sha256": "8a928ddcf05251add41ba7d082597271016760ab3621987d50ca5c14a73e6320",
@@ -5869,7 +5907,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 02",
       "accessible_name": "Áo lệch tà tay ngắn - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 402,
@@ -5895,7 +5933,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_02",
       "variant_group": "keri_top_style_04",
       "source_sha256": "c44d14d1f1bafb5afcc718088d91c7c98b3c5295d025a05b1efbdfd9d1a2812c",
@@ -5906,7 +5944,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 03",
       "accessible_name": "Áo lệch tà tay ngắn - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 403,
@@ -5932,7 +5970,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_03",
       "variant_group": "keri_top_style_04",
       "source_sha256": "75348a9d5eae5acc8ab7fb5ff997daaa8b0abd38a68ee19f7873bf278a9ba654",
@@ -5943,7 +5981,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 04",
       "accessible_name": "Áo lệch tà tay ngắn - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 404,
@@ -5969,7 +6007,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_04",
       "variant_group": "keri_top_style_04",
       "source_sha256": "fb78eddbd807668c348e7807647ae860a19925d0cc47004271c186dfc3a44b1d",
@@ -5980,7 +6018,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 05",
       "accessible_name": "Áo lệch tà tay ngắn - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 405,
@@ -6006,7 +6044,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_05",
       "variant_group": "keri_top_style_04",
       "source_sha256": "cd3431ebeb1982d6fadd1348d30f89abfdb9c3a0f3ff15e7bde38b6f7109a2bf",
@@ -6017,7 +6055,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay ngắn - màu 06",
       "accessible_name": "Áo lệch tà tay ngắn - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 406,
@@ -6043,7 +6081,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_04",
+      "style_id": "style_04",
       "color_id": "color_06",
       "variant_group": "keri_top_style_04",
       "source_sha256": "29a138e4c619eb1122818bb4c72f262524f90e96b52f677eb28a11c85ba8f24e",
@@ -6054,7 +6092,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 01",
       "accessible_name": "Áo lệch tà tay dài - màu 01",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 501,
@@ -6080,7 +6118,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_01",
       "variant_group": "keri_top_style_05",
       "source_sha256": "77e158882dd8889d362422bec934d080d3730b6619a8a0d5efa16536e0040886",
@@ -6091,7 +6129,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 02",
       "accessible_name": "Áo lệch tà tay dài - màu 02",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 502,
@@ -6117,7 +6155,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_02",
       "variant_group": "keri_top_style_05",
       "source_sha256": "6cdf264e2fa12deae9ea055a37f5c4ced67bf81046730b65b06d3efba4439a14",
@@ -6128,7 +6166,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 03",
       "accessible_name": "Áo lệch tà tay dài - màu 03",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 503,
@@ -6154,7 +6192,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_03",
       "variant_group": "keri_top_style_05",
       "source_sha256": "6fc56c0ca5d5505d3fc948b88bcd8f5975139d457f01ccfa490cd5bd59812029",
@@ -6165,7 +6203,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 04",
       "accessible_name": "Áo lệch tà tay dài - màu 04",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 504,
@@ -6191,7 +6229,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_04",
       "variant_group": "keri_top_style_05",
       "source_sha256": "841f6046850db61f73564d41a0b77b2148827650d51910d945ad6e54c6a7da0b",
@@ -6202,7 +6240,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 05",
       "accessible_name": "Áo lệch tà tay dài - màu 05",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 505,
@@ -6228,7 +6266,7 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_05",
       "variant_group": "keri_top_style_05",
       "source_sha256": "1ec10cf22fdb272f5ec13afee51b5e770edd71578a349d719c8583d35399952e",
@@ -6239,7 +6277,7 @@
       "category": "top",
       "display_name": "Áo lệch tà tay dài - màu 06",
       "accessible_name": "Áo lệch tà tay dài - màu 06",
-      "description": "Trang phục Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
       "render_key": "png",
       "random_enabled": true,
       "order": 506,
@@ -6265,11 +6303,965 @@
       ],
       "preview_padding_ratio": 0.08,
       "preview_background": "#f7f1f5",
-      "style_id": "top_style_05",
+      "style_id": "style_05",
       "color_id": "color_06",
       "variant_group": "keri_top_style_05",
       "source_sha256": "0ee29d4f208fe1bc88144e0b735b5b5caca5dac617970393b5ec303689c24337",
       "source_file": "Tops/top5_6.png"
+    },
+    {
+      "id": "effect_none",
+      "category": "face_effect",
+      "display_name": "Không hiệu ứng",
+      "accessible_name": "Không hiệu ứng khuôn mặt",
+      "description": "Tắt nước mắt và mồ hôi.",
+      "render_key": "none",
+      "random_enabled": true,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {}
+    },
+    {
+      "id": "bottom_keri_trousers_color_01",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 01",
+      "accessible_name": "Quần dài - màu 01",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 301,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_01",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "0265b571bafa549d64a86cf20dff698edf3d9592ea3377275a10ba7b5dec4876",
+      "source_file": "Bottoms/bottom1_1.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_trousers_color_02",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 02",
+      "accessible_name": "Quần dài - màu 02",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 302,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_02",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "25bbe73fccd271dd0b3745d83503e160bd2564a8446b1fc068bc8e4c758e7131",
+      "source_file": "Bottoms/bottom1_2.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_trousers_color_03",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 03",
+      "accessible_name": "Quần dài - màu 03",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 303,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_03",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "d7dcebf45b220c6cd0dc65b90e78478ae3881bb1f831ce15ec67cb9ae91e054d",
+      "source_file": "Bottoms/bottom1_3.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_trousers_color_04",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 04",
+      "accessible_name": "Quần dài - màu 04",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 304,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_04",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "c025b3b2f54b92da8c6c36e9c1c47b336468aa2be9ff4373faccfd0b3ab72645",
+      "source_file": "Bottoms/bottom1_4.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_trousers_color_05",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 05",
+      "accessible_name": "Quần dài - màu 05",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 305,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_05",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "63e964a78b0086f0e8fb35942dde982227c278a929f1d32cd3984ca46fc3d2e4",
+      "source_file": "Bottoms/bottom1_5.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_trousers_color_06",
+      "category": "bottom",
+      "display_name": "Quần dài - màu 06",
+      "accessible_name": "Quần dài - màu 06",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 306,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/trousers_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        125,
+        1132,
+        521,
+        788
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_01",
+      "color_id": "color_06",
+      "variant_group": "keri_long_trousers_style_01",
+      "source_sha256": "ce76d7dbb388e698446554d60930454dc6f69af05dbd6f5e5797c186b28e1e46",
+      "source_file": "Bottoms/bottom1_6.png",
+      "ui_group": "trousers"
+    },
+    {
+      "id": "bottom_keri_skirt_color_01",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 01",
+      "accessible_name": "Chân váy - màu 01",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 401,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        48,
+        1130,
+        641,
+        748
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_01",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "20aa47d6e7e856db8d45ef62569e03afcbbe23435eace64384466fac05454858",
+      "source_file": "Bottoms/bottom3_1.png",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "bottom_keri_skirt_color_02",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 02",
+      "accessible_name": "Chân váy - màu 02",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 402,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        48,
+        1130,
+        641,
+        748
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_02",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "34e76984e83c75915637dc75489319cddb0712a77059826702ac377694009409",
+      "source_file": "Bottoms/bottom3_2.PNG",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "bottom_keri_skirt_color_03",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 03",
+      "accessible_name": "Chân váy - màu 03",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 403,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        48,
+        1130,
+        641,
+        748
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_03",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "2c7c16d9c4f620a53ec9a7fa1dcb74c237afaa444a69614e302f7fba784f9fb6",
+      "source_file": "Bottoms/bottom3_3.png",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "bottom_keri_skirt_color_04",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 04",
+      "accessible_name": "Chân váy - màu 04",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 404,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        48,
+        1130,
+        641,
+        748
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_04",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "91a5a11f68982cb189811ccb900a1ebb5ef336a26ee06b9cc5bdf68e209b1eaf",
+      "source_file": "Bottoms/bottom3_4.png",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "bottom_keri_skirt_color_05",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 05",
+      "accessible_name": "Chân váy - màu 05",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 405,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        48,
+        1130,
+        641,
+        748
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_05",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "f615c6038477f72d90a937ccbfeab9e4ee96788e2a6e30a6fa13a1ae2fc210a1",
+      "source_file": "Bottoms/bottom3_5.png",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "bottom_keri_skirt_color_06",
+      "category": "bottom",
+      "display_name": "Chân váy - màu 06",
+      "accessible_name": "Chân váy - màu 06",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": true,
+      "order": 406,
+      "occupies": [
+        "bottom"
+      ],
+      "tags": [
+        "keri_product",
+        "bottom",
+        "style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "bottom": "res://assets/clothing/keri/bottoms/skirt_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "bottom_crop",
+      "preview_rect": [
+        50,
+        1136,
+        635,
+        740
+      ],
+      "preview_padding_ratio": 0.08,
+      "preview_background": "#f7f1f5",
+      "style_id": "style_03",
+      "color_id": "color_06",
+      "variant_group": "keri_skirt_style_01",
+      "source_sha256": "433bbaa5857574cdd813a3da2f99496d8554f6f0be7e3cf87bd8574e4a60a4d9",
+      "source_file": "Bottoms/bottom3_6.png",
+      "ui_group": "skirt"
+    },
+    {
+      "id": "face_effect_sweat_01",
+      "category": "face_effect",
+      "display_name": "Mồ hôi",
+      "accessible_name": "Mồ hôi",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 654,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "sweat"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/sweat_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        483,
+        391,
+        31,
+        34
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "sweat",
+      "color_id": "variant_01",
+      "variant_group": "keri_face_effect_sweat",
+      "source_sha256": "c51dda2dd530fae0c9ecfbf0d8776410260907a0411bd5eae0885c8024933cd9",
+      "source_file": "Misc/sweat.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_base",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - base",
+      "accessible_name": "Nước mắt 01 - base",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 654,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_base.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        330,
+        288,
+        192,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "base",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "368818da704afebf7054699887e23e7674963d7bb9c59f0ad0b9cd0285270627",
+      "source_file": "Misc/tears.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_variant_01",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - variant_01",
+      "accessible_name": "Nước mắt 01 - variant_01",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_variant_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        328,
+        288,
+        196,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "variant_01",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "1073c829ef850d1df8f6344ea82fcf7b7a9e351b161f64321466ab2c3930149f",
+      "source_file": "Misc/tears1_1.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_variant_02",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - variant_02",
+      "accessible_name": "Nước mắt 01 - variant_02",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_variant_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        328,
+        288,
+        196,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "variant_02",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "7a4be711e20f3ec317c41042aea30bae999a89a3fbb4257f2b8aa2867ef3d94c",
+      "source_file": "Misc/tears1_2.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_variant_03",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - variant_03",
+      "accessible_name": "Nước mắt 01 - variant_03",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_variant_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        328,
+        288,
+        196,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "variant_03",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "82913c002cd0f1d42f530d02d348f9413e6cb7bea3e450704f2e54aef26e3d1b",
+      "source_file": "Misc/tears1_3.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_variant_04",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - variant_04",
+      "accessible_name": "Nước mắt 01 - variant_04",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_variant_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        328,
+        288,
+        196,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "variant_04",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "0eb114e223e9ac996e9a6447a43c6550a3ddee7aa34c92e27d98388c2489693a",
+      "source_file": "Misc/tears1_4.png"
+    },
+    {
+      "id": "face_effect_tears_style_01_variant_05",
+      "category": "face_effect",
+      "display_name": "Nước mắt 01 - variant_05",
+      "accessible_name": "Nước mắt 01 - variant_05",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_01_variant_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        328,
+        288,
+        196,
+        171
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_01",
+      "color_id": "variant_05",
+      "variant_group": "keri_face_effect_tears_style_01",
+      "source_sha256": "5d0ad5b371fc7dede5f195516d8cd04822912919956a18d79cfbf1844ee9df56",
+      "source_file": "Misc/tears1_5.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_base",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - base",
+      "accessible_name": "Nước mắt 02 - base",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 655,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_base.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        329,
+        302,
+        194,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "base",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "cd30195c4aa5e274a2aa9819404b68cb26da72b9ca4a7343ba8ff69bfa616f07",
+      "source_file": "Misc/tears2.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_variant_01",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - variant_01",
+      "accessible_name": "Nước mắt 02 - variant_01",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_variant_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        326,
+        302,
+        197,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "variant_01",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "3ef65289ce215f6261e938888bb42001fbf2ab99e31f25b9e2d2beaa4108221a",
+      "source_file": "Misc/tears2_1.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_variant_02",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - variant_02",
+      "accessible_name": "Nước mắt 02 - variant_02",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_variant_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        326,
+        302,
+        197,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "variant_02",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "58d10dbd4759b35b8dbde429b67b45a33651e5c3040782925ff931524804b774",
+      "source_file": "Misc/tears2_2.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_variant_03",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - variant_03",
+      "accessible_name": "Nước mắt 02 - variant_03",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_variant_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        326,
+        302,
+        197,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "variant_03",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "9ac20750dcfd5f1ea5a4f73e958fb0e301b07a37a9e7188b74c9459ad874c8ce",
+      "source_file": "Misc/tears2_3.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_variant_04",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - variant_04",
+      "accessible_name": "Nước mắt 02 - variant_04",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_variant_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        326,
+        302,
+        197,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "variant_04",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "bff4af6a286f0c818e2d0516258d44b24bbcc4949531497c81a3c22f084b775e",
+      "source_file": "Misc/tears2_4.png"
+    },
+    {
+      "id": "face_effect_tears_style_02_variant_05",
+      "category": "face_effect",
+      "display_name": "Nước mắt 02 - variant_05",
+      "accessible_name": "Nước mắt 02 - variant_05",
+      "description": "Layer Keri dùng canvas gốc 948x1920, không scale/crop/warp.",
+      "render_key": "png",
+      "random_enabled": false,
+      "order": 657,
+      "occupies": [
+        "face_effect"
+      ],
+      "tags": [
+        "keri_product",
+        "face_effect",
+        "tears_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "face_effect": "res://assets/face/keri/effects/tears_style_02_variant_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "effect_crop",
+      "preview_rect": [
+        326,
+        302,
+        197,
+        157
+      ],
+      "preview_padding_ratio": 0.16,
+      "preview_background": "#f1dfd4",
+      "style_id": "tears_style_02",
+      "color_id": "variant_05",
+      "variant_group": "keri_face_effect_tears_style_02",
+      "source_sha256": "79926cb8b9a4832fc6aece454b0446bf99363c72d748cd643aacfff3de2f265c",
+      "source_file": "Misc/tears2_5.png"
     }
   ]
 }

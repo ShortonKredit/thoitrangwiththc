@@ -45,7 +45,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Phase 2B selector thumbnails are generated in memory from preview modes: alpha visible bounds for PNG layers, body+face crop for face items, procedural cover previews for backgrounds, and a drawn X for none items.
 - Phase 2C adds five silhouette-identical skin variants, 75 combined-hair variants, 30 eye variants, five eyebrow variants, five mouth variants, and two blush layers from the local extracted PNG source/template set.
 - The `Khuôn mặt` main category exposes only non-empty, data-driven subcategories: `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`. No eyelash subcategory is shown because the audited source contains no eyelash PNG.
-- Save schema version 2 restores all Phase 2C slots and sanitizes the legacy Phase 2B composite face to separate defaults.
+- Save schema version 3 adds the independent `face_effect` slot; version-1/version-2 saves sanitize missing effects to `effect_none` and the legacy composite face to separate defaults.
 - The polished clean/reset default is `skin_tone_01` with hair, legacy face, eyes, eyebrows, mouth, and makeup all set to their `none` items. Existing valid saves still restore their saved appearance until the player resets.
 - Skin selector thumbnails are opaque representative color swatches; they no longer render a miniature character.
 - Eyes, eyebrows, mouth, and makeup thumbnails crop only their own visible feature bounds on a consistent neutral background.
@@ -83,7 +83,8 @@ Phase 2C is complete per the Phase 3A start gate. Its skin/face/hair defaults, l
 ## Phase 3A Manual Visual QA Pending
 
 - Readability and states of the three action icons at target viewports.
-- Alignment, fallback coverage, and crop quality for every one of the 29 tops and five shorts.
+- Alignment, fallback coverage, and crop quality for 29 tops, five shorts, six trousers, and six skirts.
+- Face alignment and focused thumbnails for 13 unique sweat/tears effects.
 - Focused garment thumbnails, two-column vertical scrolling, none tiles, and selected borders.
 - Reset persistence plus Undo/Redo Reset through the visible product UI.
 - Phase 2C appearance and three-quarter-body crop regression checks.
@@ -97,7 +98,7 @@ Keri remains a conditional three-quarter-body proof candidate, not a final art a
 - Phase 2A is complete as a documentation-only Keri asset/license audit.
 - Phase 2B three-quarter-body integration proof is complete after owner-confirmed manual visual QA.
 - Phase 2C appearance layering is complete.
-- Phase 3A product integration is implemented and remains `MANUAL VISUAL QA PENDING`.
+- Phase 3A content completion is implemented with data-driven bottom groups and Face -> Effect; it remains `MANUAL VISUAL QA PENDING`.
 - Phase 3B Local Face Import and Phase 3C Web Release are not started.
 - Full-body leg extension is deferred/post-MVP.
 - Keri proof PNG assets have been imported into Godot under `assets/**/keri/proof/`.

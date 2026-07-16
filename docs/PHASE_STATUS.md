@@ -13,7 +13,7 @@ Date: 2026-07-16
 | Phase 2B - Three-Quarter-Body Integration Proof | Complete | Owner-confirmed manual QA: usable thumbnail previews, stable body/fallback architecture, two-column grid, visible background previews, accepted three-quarter crop, textless item cards, and hidden empty categories. |
 | Phase 2C - Skin, Face and Hair Layering | Complete | Phase 3A start gate records the appearance proof as accepted; five skins and separate hair/face features remain the product baseline. |
 | Phase 2D - MVP wardrobe proof pack | Superseded / incorporated | The explicit Phase 3A product-integration milestone audits and integrates the compatible local wardrobe set directly. |
-| Phase 3A - Product Integration | Manual visual QA pending | Three-button action bar plus 29 tops and five shorts are integrated; catalog/Godot automated checks pass. |
+| Phase 3A - Product Integration | Manual visual QA pending | Three-button action bar, 29 tops, five shorts, six trousers, six skirts, and 13 unique face effects are integrated; catalog/Godot automated checks pass. |
 | Phase 3B - Local Face Import | Not started | No file picker, real-person image handling, recognition, biometric analysis, upload, or API was added. |
 | Phase 3C - Web Release | Not started | No web export, browser QA, or release work was performed in Phase 3A. |
 
@@ -22,7 +22,8 @@ Date: 2026-07-16
 Phase 2C is complete. The current gate is Phase 3A manual visual QA. Verify:
 
 - only Undo, Redo, and Reset appear in the action bar, with clear icon and disabled/focus states;
-- every imported top/short aligns, covers correctly, and stays inside the accepted crop;
+- every imported top/short/trouser/skirt aligns, covers correctly, and reads naturally in the accepted crop;
+- all retained tears/sweat effects align to the face and their none/thumbnail behavior is correct;
 - garment thumbnails, two-column scrolling, selected borders, and none tiles remain readable;
 - Reset persists and its Undo/Redo contract works through the visible UI;
 - Phase 2C skin/face/hair and Phase 2B fallback/crop behavior do not regress;

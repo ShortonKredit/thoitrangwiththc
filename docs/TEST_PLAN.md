@@ -13,7 +13,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.p
 
 Expected after Phase 3A:
 
-- catalog validation prints `Catalog valid: 15 categories, 210 items`;
+- catalog validation prints `Catalog valid: 16 categories, 236 items`;
 - Godot 4.7 import and script parse exit 0;
 - main scene startup smoke exits 0;
 - logic smoke test prints `SMOKE TEST PASSED`;
@@ -55,7 +55,7 @@ Current checks cover:
 - Face feature slots render independently and follow the catalog layer order.
 - Empty face subcategories, including absent eyelashes, remain hidden.
 - Face/head/skin preview rectangles, safe clipping bounds, face center, and mask bounds stay inside the canvas.
-- Save schema v2 restores Phase 2C state and version-1 Phase 2B saves sanitize the legacy face composite safely.
+- Save schema v3 restores `face_effect`; version-1/version-2 saves default missing effects to `effect_none` and sanitize the legacy face composite safely.
 - Clean initialization and reset return to skin 01 with hair, eyes, eyebrows, mouth, and makeup set to none.
 - Skin items use distinct opaque `skin_swatch` metadata instead of character previews.
 - Eyes, eyebrows, mouth, and makeup use validated per-item `feature_crop` rectangles inside the Keri canvas.
@@ -64,9 +64,11 @@ Current checks cover:
 - Undo/Redo disabled state follows history; Reset stays enabled.
 - Reset persists the catalog default, can be undone/redone as one full-state action, and a new selection after Undo clears Redo.
 - The 184-entry Phase 3A inventory includes every source PNG and every required audit field.
-- All 34 selectable production garments map to audited source hashes; 30 new runtime PNGs are byte-identical copies and four proof paths are reused.
-- Long trousers, crop-risk skirts, effects, fallback duplicates, PSDs, and archives are absent from selectable/runtime content.
-- Product tops and shorts include style/color/variant grouping and focused thumbnail metadata.
+- All 46 selectable production garments map to audited source hashes: 29 tops, five shorts, six trousers, and six skirts.
+- All 13 unique effects map to audited source hashes; `tears1.png` is verified as the exact duplicate of retained `tears.png`.
+- Bottom groups are data-driven, non-empty, and filter one mutually exclusive bottom slot; `bottom_none` appears in all three.
+- Product garments and effects include style/color/variant grouping and focused thumbnail metadata.
+- Fallback duplicates, PSDs, and archives are absent from selectable/runtime content.
 
 ## Automated Gaps
 
@@ -90,7 +92,7 @@ Run in Godot and verify:
 
 1. Game opens without red errors.
 2. Header text is visible and not clipped.
-3. All nine category buttons appear.
+3. Only supported non-empty main categories appear.
 4. Active category is easy to identify.
 5. Selecting an item updates the character immediately.
 6. Selected item remains visibly highlighted.
@@ -103,6 +105,8 @@ Run in Godot and verify:
 13. Undo immediately after Reset restores the complete prior look; Redo reapplies Reset.
 14. Close and reopen; the reset or selected outfit is restored or safely sanitized.
 15. Confirm Random, Save PNG, Fullscreen, and Clear saved data are absent from UI.
+16. Confirm `Quần short`, `Quần dài`, and `Chân váy` show the expected items and replace one another.
+17. Confirm `Khuôn mặt -> Hiệu ứng` shows sweat/tears plus the X none tile and aligns on the face.
 
 For the three-quarter-body MVP proof, adjust the category expectation to the supported MVP categories only. Shoes and other deferred categories must not appear as empty UI categories.
 
@@ -174,11 +178,13 @@ After Phase 2B/2D asset work, verify:
 3. No removed action leaves a button, keyboard focus target, tooltip, or empty grid cell.
 4. Reset returns to skin 01, optional appearance none, top/bottom/dress/accessory none, both fallbacks, and the default studio via `background_none`.
 5. Reset persists across close/reopen; Undo/Redo Reset and redo-branch clearing behave as documented.
-6. Inspect all 29 tops and five shorts for body alignment, coverage, overlap, and accepted crop.
-7. Confirm no long trousers, crop-broken skirt, shoes, socks, dress, effect, or empty accessory category appears.
-8. Every garment preview is centered, large, textless, distinct, and selected clearly in the two-column vertical grid.
-9. Skin, face features, hair, fallback layers, save/load, and legacy migration do not regress.
-10. Do not mark Phase 3A complete until these checks are owner-confirmed.
+6. Inspect all 29 tops, five shorts, six trousers, and six skirts for alignment, coverage, overlap, and natural viewport continuation.
+7. Confirm shorts/trousers/skirts replace one another, `bottom_none` restores fallback coverage, and no empty group appears.
+8. Inspect all 13 sweat/tears effects for alignment and verify `effect_none` plus focused effect-only thumbnails.
+9. Every content preview is centered, large, textless, distinct, and selected clearly in the two-column vertical grid.
+10. Skin, face features, hair, fallback layers, save/load, and version-1/version-2 migration do not regress.
+11. Confirm no shoes, socks, production dress, empty accessory category, local face import, or removed action appears.
+12. Do not mark Phase 3A complete until these checks are owner-confirmed.
 
 ## Web Local Test
 

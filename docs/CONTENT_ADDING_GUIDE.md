@@ -49,9 +49,10 @@ Requirements:
 - Use front/back layers when needed.
 - Record an audited source hash and source-to-destination mapping for production content.
 - Store style/color grouping metadata when the source is organized as style × color.
-- Use `top_crop` or `bottom_crop` with an audited alpha-derived rectangle; do not rewrite the production PNG to create a thumbnail.
-- Keep MVP items inside the supported three-quarter-body crop.
-- Do not add shoes, socks, full-length trousers, full-length dresses, or foot-dependent items for MVP.
+- Use `top_crop`, `bottom_crop`, or `effect_crop` with an audited alpha-derived rectangle; do not rewrite the production PNG to create a thumbnail.
+- Judge viewport compatibility from the rendered visible content. Alpha continuing below y=1660 is not, by itself, a rejection reason.
+- Keep shorts, trousers, and skirts in the single `bottom` state slot and use `item_groups`/`ui_group` metadata for navigation.
+- Do not add shoes, socks, full-length dresses, reconstructed feet, or other foot-dependent presentation for MVP.
 
 ## Do not
 

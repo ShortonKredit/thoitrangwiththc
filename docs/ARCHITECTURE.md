@@ -85,7 +85,9 @@ Randomization, PNG capture, fullscreen switching, and save clearing may remain r
 
 ## Phase 3A content seam
 
-The audited source provides five top styles × six color positions and one compatible shorts style. Catalog items remain flat selectable records but carry grouping metadata for later UI grouping. No item-specific renderer branch is required: accepted tops map to `top`, shorts map to `bottom`, and the existing `occupies` contract handles dress conflicts.
+The audited source provides five top styles, one shorts style, one trousers style, and one skirt style. Shorts, trousers, and skirts remain flat items in one `bottom` state slot. `bottom.item_groups` plus per-item `ui_group` metadata drives non-empty navigation without creating simultaneous bottom selections or item-specific renderer branches.
+
+Thirteen unique sweat/tears layers use the independent `face_effect` slot. It renders after makeup and before front hair; `effect_none` is the default. The byte-identical `tears1.png`/`tears.png` pair maps to one runtime item.
 
 Focused garment thumbnails are generated in memory from catalog `preview_rect` metadata. Production PNG bytes remain full-canvas and unchanged.
 
@@ -106,6 +108,6 @@ When a complete body and test content pack exists:
 
 ## Persistence
 
-Only selected item IDs and lock flags are saved. Save version 2 includes all Phase 2C/3A category IDs; Phase 3A adds items but no slots, so no schema bump is required. Saves are sanitized against the current catalog, so removed, renamed, wrong-category, or migration-only IDs fall back to defaults. Phase 2B version-1 saves remain loadable. Reset records one history snapshot, emits the normal state change, and therefore overwrites local save with the default state; Undo and Redo apply complete snapshots.
+Only selected item IDs and lock flags are saved. Save version 3 adds `face_effect`; missing slots in version-1/version-2 saves fall back to catalog defaults. Saves are sanitized against the current catalog, so removed, renamed, wrong-category, or migration-only IDs fall back safely. Reset records one history snapshot, emits the normal state change, and therefore overwrites local save with the default state; Undo and Redo apply complete snapshots.
 
 No database or account is required.

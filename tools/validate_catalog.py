@@ -113,8 +113,8 @@ def main() -> int:
         elif str(by_id[selected_id].get("category")) != category_id:
             errors.append(f"Initial item {selected_id} is not in category {category_id}.")
 
-    if int(data.get("schema_version", 0)) < 2:
-        errors.append("Phase 2C catalog schema_version must be at least 2.")
+    if int(data.get("schema_version", 0)) < 3:
+        errors.append("Phase 3A content-completion catalog schema_version must be at least 3.")
     _validate_phase_2c_categories(errors, by_category, by_category_metadata, by_id, initial)
 
     character = data.get("character", {})
@@ -173,7 +173,7 @@ def _validate_phase_2c_categories(
             errors.append(f"Optional category {category_id} must contain a none item.")
 
     face = category_metadata.get("face", {})
-    expected_subcategories = ["skin", "eyes", "eyebrows", "mouth", "makeup"]
+    expected_subcategories = ["skin", "eyes", "eyebrows", "mouth", "makeup", "face_effect"]
     if not bool(face.get("ui_container", False)) or face.get("subcategory_ids") != expected_subcategories:
         errors.append("Face UI container must declare the non-empty Phase 2C subcategory order.")
     for category_id in expected_subcategories:
@@ -194,6 +194,7 @@ def _validate_phase_2c_categories(
         "eyebrows": "eyebrows_none",
         "mouth": "mouth_none",
         "makeup": "makeup_none",
+        "face_effect": "effect_none",
     }
     for category_id, item_id in expected_defaults.items():
         if str(initial.get(category_id, "")) != item_id:
@@ -266,6 +267,7 @@ def _validate_phase_3a_content(
         "eyebrows": "eyebrows_none",
         "mouth": "mouth_none",
         "makeup": "makeup_none",
+        "face_effect": "effect_none",
         "top": "top_none",
         "bottom": "bottom_none",
         "dress": "dress_none",
@@ -277,6 +279,31 @@ def _validate_phase_3a_content(
     for category_id, item_id in expected_defaults.items():
         if str(initial.get(category_id, "")) != item_id:
             errors.append(f"Phase 3A default {category_id} must be {item_id}.")
+
+    visible_bottoms = [item for item in by_category.get("bottom", []) if not item.get("hidden") and item.get("render_key") != "none"]
+    visible_effects = [item for item in by_category.get("face_effect", []) if not item.get("hidden") and item.get("render_key") != "none"]
+    for group_id in ("shorts", "trousers", "skirt"):
+        if not any(str(item.get("ui_group", "")) == group_id for item in visible_bottoms):
+            errors.append(f"Bottom UI group {group_id} must not be empty.")
+    if not visible_effects:
+        errors.append("Face effects must expose at least one audited PNG choice.")
+    effect_metadata = next((category for category in data.get("categories", []) if category.get("id") == "face_effect"), {})
+    if bool(effect_metadata.get("random_default", True)) or any(bool(item.get("random_enabled", True)) for item in visible_effects):
+        errors.append("Face effects must not enter backend randomization after the product Random action was removed.")
+    if str(initial.get("face_effect", "")) != "effect_none":
+        errors.append("Face effect default must be effect_none.")
+
+    bottom_metadata = next((category for category in data.get("categories", []) if category.get("id") == "bottom"), {})
+    group_ids = [str(group.get("id", "")) for group in bottom_metadata.get("item_groups", [])]
+    if group_ids != ["shorts", "trousers", "skirt"]:
+        errors.append("Bottom item groups must be data-driven in shorts/trousers/skirt order.")
+    none_bottom = next((item for item in by_category.get("bottom", []) if item.get("id") == "bottom_none"), {})
+    if not bool(none_bottom.get("show_in_all_groups", False)):
+        errors.append("bottom_none must be visible in every bottom item group.")
+
+    order = data.get("character", {}).get("layer_order", [])
+    if "face_effect" not in order or "makeup" not in order or "hair_front" not in order or not (order.index("makeup") < order.index("face_effect") < order.index("hair_front")):
+        errors.append("face_effect must render after makeup and before hair_front.")
 
     for category_id in ("top", "bottom", "dress", "glasses", "headwear", "accessory", "background"):
         none_items = [item for item in by_category.get(category_id, []) if item.get("render_key") == "none"]
@@ -301,9 +328,10 @@ def _validate_phase_3a_content(
 
     required_fields = {
         "source_path", "file_name", "sha256", "width", "height", "mode", "alpha",
-        "visible_bounds", "source_group", "inferred_runtime_category", "inferred_layer_role",
-        "style_group", "color_variant", "compatible", "compatibility_reason",
-        "phase_3a_include_exclude", "destination_path", "provenance_note", "crop_risk",
+        "visible_bounds", "source_group", "inferred_content_type", "inferred_runtime_category",
+        "inferred_layer_role", "style_id", "color_id", "variant_group",
+        "existing_runtime_mapping", "compatible", "compatibility_reason", "include_phase_3a",
+        "phase_3a_decision", "destination_path", "provenance_note", "crop_risk",
         "manual_QA_required",
     }
     included_destinations: dict[str, dict] = {}
@@ -315,7 +343,7 @@ def _validate_phase_3a_content(
         if missing:
             errors.append(f"Inventory entry {entry.get('file_name', '<unknown>')} is missing fields: {missing}.")
             continue
-        decision = str(entry.get("phase_3a_include_exclude", ""))
+        decision = str(entry.get("phase_3a_decision", ""))
         digest = str(entry.get("sha256", ""))
         destination = str(entry.get("destination_path", ""))
         if decision in {"include_existing_runtime", "include_new_runtime"}:
@@ -345,7 +373,8 @@ def _validate_phase_3a_content(
             continue
         if str(item.get("source_sha256", "")) != str(inventory_entry.get("sha256", "")):
             errors.append(f"Phase 3A product item {item_id} source hash does not match inventory.")
-        expected_mode = "top_crop" if str(item.get("category", "")) == "top" else "bottom_crop"
+        category_id = str(item.get("category", ""))
+        expected_mode = "top_crop" if category_id == "top" else ("effect_crop" if category_id == "face_effect" else "bottom_crop")
         if str(item.get("preview_mode", "")) != expected_mode:
             errors.append(f"Phase 3A product item {item_id} must use {expected_mode}.")
         _validate_canvas_rect(errors, f"Phase 3A item {item_id} preview_rect", item.get("preview_rect"), [948, 1920])
@@ -366,7 +395,7 @@ def _validate_phase_3a_content(
     forbidden_selectable_hashes = {
         str(entry.get("sha256", ""))
         for entry in entries
-        if entry.get("phase_3a_include_exclude") == "exclude_duplicate_renderer_fallback"
+        if entry.get("phase_3a_decision") == "exclude_duplicate_renderer_fallback"
     }
     if forbidden_selectable_hashes.intersection(item_layer_hashes):
         errors.append("Renderer fallback source bytes must not be reused as selectable catalog garments.")

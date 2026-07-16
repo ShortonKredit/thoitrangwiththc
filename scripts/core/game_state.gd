@@ -4,7 +4,7 @@ signal changed(reason: String)
 signal history_changed(can_undo: bool, can_redo: bool)
 
 const HistoryManagerScript = preload("res://scripts/core/history_manager.gd")
-const SAVE_VERSION := 2
+const SAVE_VERSION := 3
 
 var catalog: RefCounted
 var selected: Dictionary = {}

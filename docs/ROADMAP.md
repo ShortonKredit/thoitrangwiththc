@@ -170,10 +170,12 @@ Status: Implemented; manual visual QA pending.
 - reduced the action bar to Undo, Redo, and Reset icon buttons;
 - removed Random, Save PNG, Fullscreen, and Clear saved data from product UI;
 - audited all 184 PNGs in the local extracted PNG source/template set;
-- retained/reused four proof garments and copied 30 additional compatible PNGs unchanged;
-- exposed 29 tops and five shorts with style/color metadata and focused thumbnails;
-- excluded long trousers, crop-broken skirts, face effects, and duplicate fallback sources;
-- retained save v2, compatibility, backend random/locks, history, reset, and migration tests.
+- retained/reused four proof garments and copied 55 additional compatible PNGs unchanged;
+- exposed 29 tops, five shorts, six trousers, and six skirts with focused thumbnails;
+- added a `face_effect` slot with 13 unique sweat/tears layers and `effect_none`;
+- added data-driven Shorts/Trousers/Skirts navigation over the single bottom slot;
+- moved persistence to save v3 while retaining version-1/version-2 migration, history, reset, and regression tests;
+- excluded only one exact duplicate effect and two redundant selectable copies of renderer fallbacks.
 
 ### Phase 3B - Local Face Import
 
@@ -185,4 +187,4 @@ Status: Not started. Web export, browser smoke/visual QA, and release are deferr
 
 ## Post-MVP
 
-Full-body support, shoes, socks, full-length trousers, and full-length dresses are post-MVP. They should return only after the body/source quality problem is solved without breaking Keri layer compatibility.
+Full-body support, shoes, socks, foot-level presentation, and full-length dresses are post-MVP. Accepted trousers remain three-quarter-viewport content and do not add feet or shoes.

@@ -62,7 +62,7 @@ The actual Phase 2C catalog order is:
 background -> hair_back -> accessory_back -> body_core/selected skin
 -> fallback_bottom -> fallback_top -> base_outfit -> shoes -> bottom -> top
 -> dress_back -> dress_main -> body_foreground -> imported_face (metadata only)
--> legacy face -> eyes -> eyebrows -> eyelashes (reserved) -> mouth -> makeup
+-> legacy face -> eyes -> eyebrows -> eyelashes (reserved) -> mouth -> makeup -> face_effect
 -> hair_front/combined hair -> glasses -> face_accessory -> headwear
 -> accessory_front -> effect_front
 ```
@@ -77,12 +77,14 @@ Face metadata lives in `character.face_import_metadata` in `data/catalog.json`. 
 
 - Source: local extracted PNG source/template set under `game/Create_Character`.
 - Full audit: 184 RGBA PNGs at 948×1920 with alpha-derived visible bounds and SHA256 mapping.
-- Accepted selectable garments: 29 tops and five shorts; 30 new PNG files were copied unchanged and four proof paths were reused.
-- Excluded: long trousers reaching y=1920, skirts whose hem falls below the y=1660 product crop, expression effects, and byte-identical selectable copies of renderer fallbacks.
+- Accepted selectable garments: 29 tops, five shorts, six trousers, and six skirts; four proof paths are reused.
+- Accepted appearance effects: 13 unique sweat/tears layers plus `effect_none`; one exact duplicate source maps to the retained effect item.
+- The y=1660 viewport is a presentation boundary, not an automatic compatibility rejection; visible alignment and crop quality determine acceptance.
+- Two byte-identical garment sources remain represented through immutable renderer fallbacks rather than redundant selectable copies.
 - Runtime paths: `assets/clothing/keri/tops/` and `assets/clothing/keri/bottoms/`, plus retained Phase 2B proof paths.
 - Production files are never resized, cropped, warped, recompressed, or edited to fit.
 
-Catalog garment metadata includes `style_id`, `color_id`, `variant_group`, `source_sha256`, and a focused preview definition. `top_crop` and `bottom_crop` use the audited `[x, y, width, height]` alpha rectangle, neutral background, and padding to create an in-memory 192×192 preview. None tiles remain drawn X controls and never reference a PNG.
+Catalog content metadata includes `style_id`, `color_id`, `variant_group`, `source_sha256`, and a focused preview definition. `top_crop`/`bottom_crop` focus garments; `effect_crop` focuses only effect alpha on a neutral background. All create in-memory 192×192 previews. None tiles remain drawn X controls and never reference a PNG.
 
 ## File naming
 

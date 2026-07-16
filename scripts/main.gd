@@ -44,6 +44,7 @@ var doll_view: Control
 
 var current_category_id: String = ""
 var current_main_category_id: String = ""
+var current_item_group_id: String = ""
 var category_button_group: ButtonGroup
 var subcategory_button_group: ButtonGroup
 var item_button_group: ButtonGroup
@@ -295,8 +296,18 @@ func _select_category(category_id: String) -> void:
 		category_buttons[id].button_pressed = id == category_id
 	_rebuild_subcategory_navigation()
 	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(category_id)
-	current_category_id = str(subcategory_ids[0]) if not subcategory_ids.is_empty() else category_id
-	_select_subcategory(current_category_id)
+	if not subcategory_ids.is_empty():
+		current_item_group_id = ""
+		current_category_id = str(subcategory_ids[0])
+		_select_subcategory(current_category_id)
+		return
+	current_category_id = category_id
+	var item_groups: Array = catalog.get_visible_item_groups(category_id)
+	current_item_group_id = str(item_groups[0].get("id", "")) if not item_groups.is_empty() else ""
+	if current_item_group_id.is_empty():
+		_select_subcategory(current_category_id)
+	else:
+		_select_item_group(current_item_group_id)
 
 
 func _rebuild_subcategory_navigation() -> void:
@@ -305,7 +316,8 @@ func _rebuild_subcategory_navigation() -> void:
 	subcategory_buttons.clear()
 	subcategory_button_group = ButtonGroup.new()
 	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(current_main_category_id)
-	subcategory_flow.visible = not subcategory_ids.is_empty()
+	var item_groups: Array = catalog.get_visible_item_groups(current_main_category_id) if subcategory_ids.is_empty() else []
+	subcategory_flow.visible = not subcategory_ids.is_empty() or not item_groups.is_empty()
 	for category_id in subcategory_ids:
 		var category: Dictionary = catalog.get_category(str(category_id))
 		var button := Button.new()
@@ -318,6 +330,18 @@ func _rebuild_subcategory_navigation() -> void:
 		button.pressed.connect(_select_subcategory.bind(str(category_id)))
 		subcategory_flow.add_child(button)
 		subcategory_buttons[str(category_id)] = button
+	for group in item_groups:
+		var group_id := str(group.get("id", ""))
+		var button := Button.new()
+		button.text = str(group.get("display_name", group_id))
+		button.toggle_mode = true
+		button.button_group = subcategory_button_group
+		button.focus_mode = Control.FOCUS_NONE
+		button.custom_minimum_size = Vector2(92, 32)
+		_apply_button_style(button, "category")
+		button.pressed.connect(_select_item_group.bind(group_id))
+		subcategory_flow.add_child(button)
+		subcategory_buttons[group_id] = button
 
 
 func _select_subcategory(category_id: String) -> void:
@@ -325,12 +349,31 @@ func _select_subcategory(category_id: String) -> void:
 	if not subcategory_ids.is_empty() and not subcategory_ids.has(category_id):
 		return
 	current_category_id = category_id
+	current_item_group_id = ""
 	for id in subcategory_buttons.keys():
 		subcategory_buttons[id].button_pressed = id == category_id
 
 	var category: Dictionary = catalog.get_category(category_id)
 	category_title.text = str(category.get("display_name", category_id))
 	lock_toggle.set_pressed_no_signal(bool(game_state.locks.get(category_id, false)))
+	_rebuild_item_grid()
+
+
+func _select_item_group(group_id: String) -> void:
+	var groups: Array = catalog.get_visible_item_groups(current_main_category_id)
+	if not groups.any(func(group: Dictionary) -> bool: return str(group.get("id", "")) == group_id):
+		return
+	current_category_id = current_main_category_id
+	current_item_group_id = group_id
+	for id in subcategory_buttons.keys():
+		subcategory_buttons[id].button_pressed = id == group_id
+	var group_name := group_id
+	for group in groups:
+		if str(group.get("id", "")) == group_id:
+			group_name = str(group.get("display_name", group_id))
+			break
+	category_title.text = group_name
+	lock_toggle.set_pressed_no_signal(bool(game_state.locks.get(current_category_id, false)))
 	_rebuild_item_grid()
 
 
@@ -341,7 +384,8 @@ func _rebuild_item_grid() -> void:
 	item_button_group = ButtonGroup.new()
 
 	var selected_id := str(game_state.selected.get(current_category_id, ""))
-	for item in catalog.get_items_for_category(current_category_id):
+	var visible_items: Array = catalog.get_items_for_category_group(current_category_id, current_item_group_id) if not current_item_group_id.is_empty() else catalog.get_items_for_category(current_category_id)
+	for item in visible_items:
 		var item_id := str(item.get("id", ""))
 		var button := _build_item_tile(item)
 		button.button_pressed = item_id == selected_id
@@ -416,6 +460,8 @@ func _tile_preview_image(item: Dictionary) -> Image:
 		"skin_swatch":
 			return _make_skin_swatch_preview(item)
 		"feature_crop":
+			return _make_feature_crop_preview(item)
+		"effect_crop":
 			return _make_feature_crop_preview(item)
 		"hair_preview":
 			return _make_hair_preview(item)

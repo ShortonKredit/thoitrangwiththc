@@ -51,7 +51,10 @@
 | New selection after Undo leaves stale Redo history | High | `HistoryManager.record` truncates the forward slice; smoke-test branching after Undo Reset |
 | Audited garment bytes drift from source mapping | Critical | 184-entry inventory plus validator SHA256 checks for every included destination/catalog item |
 | Renderer fallback bytes become redundant selectable garments | High | Inventory marks the two duplicate sources excluded; validator rejects their hashes in item layers |
-| Long trousers or skirt hems are visibly cut by the three-quarter crop | Critical | Exclude bottom style 1 and style 3; record crop risk/bounds; manual inspect every accepted short bottom |
+| Long trousers or skirt continuation looks unnaturally cut at the three-quarter viewport | Critical | Keep source PNGs intact; audit actual viewport composites, record `viewport_continuation`, and manual-inspect all 12 accepted variants |
+| Bottom UI groups accidentally create multiple simultaneous bottom slots | Critical | Keep every short/trouser/skirt item in category `bottom`; use navigation-only `item_groups`/`ui_group`; smoke-test replacement and fallback coverage |
+| Face effect is baked into defaults or misaligned with facial features | High | Independent `face_effect` slot defaults to `effect_none`; alpha-focused thumbnails, render-order checks, migration tests, and manual alignment QA |
+| Duplicate tears source becomes two indistinguishable runtime choices | Medium | Inventory records the shared SHA256 and maps `tears1.png` to the single retained `tears.png` runtime item |
 | Huge flat garment list loses style/color relationships | Medium | Store `style_id`, `color_id`, and `variant_group`; defer complex picker UI without losing grouping metadata |
 | Garment thumbnail shows full transparent canvas or unreadable item | High | `top_crop`/`bottom_crop` metadata with audited bounds, neutral background, padding, and manual final-size review |
 | Archive or PSD enters runtime assets | High | Validator recursively rejects `.psd`, `.zip`, `.rar`, and `.7z` under `assets/` |

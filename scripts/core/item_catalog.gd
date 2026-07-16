@@ -204,6 +204,36 @@ func get_random_items_for_category(category_id: String) -> Array:
 	return result
 
 
+func get_visible_item_groups(category_id: String) -> Array:
+	var category := get_category(category_id)
+	var raw_groups: Variant = category.get("item_groups", [])
+	if typeof(raw_groups) != TYPE_ARRAY:
+		return []
+	var result: Array = []
+	for raw_group in raw_groups:
+		if typeof(raw_group) != TYPE_DICTIONARY:
+			continue
+		var group: Dictionary = raw_group.duplicate(true)
+		var group_id := str(group.get("id", "")).strip_edges()
+		if group_id.is_empty() or get_items_for_category_group(category_id, group_id).is_empty():
+			continue
+		group["id"] = group_id
+		group["display_name"] = str(group.get("display_name", group_id))
+		result.append(group)
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.get("order", 0)) < int(b.get("order", 0))
+	)
+	return result
+
+
+func get_items_for_category_group(category_id: String, group_id: String) -> Array:
+	var result: Array = []
+	for item in get_items_for_category(category_id):
+		if bool(item.get("show_in_all_groups", false)) or str(item.get("ui_group", "")) == group_id:
+			result.append(item)
+	return result
+
+
 func get_none_item_id(category_id: String) -> String:
 	for item in _items_by_category.get(category_id, []):
 		if str(item.get("render_key", "")) == "none":
