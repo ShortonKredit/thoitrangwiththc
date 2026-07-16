@@ -45,6 +45,8 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 - Optional thumbnail metadata with text fallback until real thumbnails exist.
 - Appearance customization with five skin tones, selectable combined hair, and independent eyes, eyebrows, mouth, and makeup layers.
 - A `Khuôn mặt` main category with non-empty subcategory navigation and thumbnail-first, two-column item selection.
+- Clean/reset appearance starts with base skin 01 and no optional hair, eyes, eyebrows, mouth, makeup, or legacy face preset.
+- Skin choices read as large color swatches; facial-feature cards show only the relevant feature crop; hair cards show centered hair-only previews.
 
 ## Deferred
 

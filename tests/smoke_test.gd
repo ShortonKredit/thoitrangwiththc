@@ -59,26 +59,34 @@ func _run() -> void:
 	_assert(DollViewScript.get_base_outfit_layer_order().has("fallback_bottom"), "Renderer must declare fallback bottom invariant")
 	_assert(not state.selected.has("base_outfit"), "Base outfit must not be saved in selected state")
 	_assert_state_compatible(catalog, state, "Initial state must be compatible")
-	_assert(state.selected["hair"] == "hair_style_01_color_01", "Default hair must use the Phase 2C combined-hair catalog")
+	_assert(state.selected["hair"] == "hair_none", "Default hair must be none")
 	_assert(state.selected["skin"] == "skin_tone_01", "Default skin must be mandatory skin tone 01")
 	_assert(state.selected["face"] == "face_none", "Legacy face composite must be disabled by default")
-	_assert(state.selected["eyes"] == "eyes_style_01_color_01", "Default eyes must be a separate face layer")
+	_assert(state.selected["eyes"] == "eyes_none", "Default eyes must be none")
+	_assert(state.selected["eyebrows"] == "eyebrows_none", "Default eyebrows must be none")
+	_assert(state.selected["mouth"] == "mouth_none", "Default mouth must be none")
+	_assert(state.selected["makeup"] == "makeup_none", "Default makeup must be none")
 	_assert(state.selected["top"] == "top_none", "Default top must use fallback top coverage")
 	_assert(state.selected["bottom"] == "bottom_none", "Default bottom must use fallback bottom coverage")
 	_assert(state.selected["dress"] == "dress_none", "Default dress must be none")
 	_assert_png_layers(catalog, state, true, true, false, false, false, "Initial no-selection state must show both fallbacks")
-	_assert(DollViewScript.get_png_layer_paths(catalog, state).has("eyes"), "Default separate eyes layer must render")
+	var default_layers: Dictionary = DollViewScript.get_png_layer_paths(catalog, state)
+	for optional_layer in ["hair_front", "hair_back", "eyes", "eyebrows", "mouth", "makeup", "face"]:
+		_assert(not default_layers.has(optional_layer), "Default appearance must not render optional layer %s" % optional_layer)
 
 	state.select_item("skin_tone_05")
 	_assert(str(DollViewScript.get_png_layer_paths(catalog, state).get("body_core", "")).ends_with("skin_tone_05.png"), "Skin selection must replace body_core without changing geometry")
 	_assert_png_has_coverage(catalog, state, "Skin swap must preserve fallback coverage")
+	state.select_item("hair_style_02_color_03")
+	_assert(DollViewScript.get_png_layer_paths(catalog, state).has("hair_front"), "Selecting combined hair must render hair_front")
 	state.select_item("hair_none")
 	_assert(not DollViewScript.get_png_layer_paths(catalog, state).has("hair_front"), "Hair none must render no combined hair")
 	state.undo()
 	_assert(DollViewScript.get_png_layer_paths(catalog, state).has("hair_front"), "Undo must restore combined hair")
 	state.redo()
 	_assert(not DollViewScript.get_png_layer_paths(catalog, state).has("hair_front"), "Redo must restore hair none")
-	state.select_item("hair_style_02_color_03")
+	state.select_item("eyebrows_tone_01")
+	state.select_item("eyes_style_03_color_10")
 	state.select_item("eyes_none")
 	_assert(not DollViewScript.get_png_layer_paths(catalog, state).has("eyes"), "Eyes none must suppress only the eyes layer")
 	_assert(DollViewScript.get_png_layer_paths(catalog, state).has("eyebrows"), "Eyes none must keep eyebrows")
@@ -150,6 +158,9 @@ func _run() -> void:
 
 	state.reset_to_default(true)
 	_assert(state.selected == catalog.get_default_state(), "Reset must restore default selected state")
+	for optional_category in ["hair", "eyes", "eyebrows", "mouth", "makeup"]:
+		_assert(str(state.selected[optional_category]).ends_with("_none"), "Reset must restore %s none" % optional_category)
+	_assert(state.selected["skin"] == "skin_tone_01", "Reset must restore base01 skin")
 	_assert_png_layers(catalog, state, true, true, false, false, false, "Reset must restore fallback outfit")
 	_assert(bool(state.locks["hair"]), "Reset keep_locks must retain locks")
 	state.undo()
@@ -168,11 +179,17 @@ func _run() -> void:
 	_assert(bool(restored_state.locks["hair"]), "Restore must keep valid lock")
 	_assert_png_has_coverage(catalog, restored_state, "Save/load restore must keep coverage")
 
+	var default_save := GameStateScript.new()
+	default_save.initialize(catalog)
+	var default_restored := GameStateScript.new()
+	default_restored.initialize(catalog, default_save.export_save_data())
+	_assert(default_restored.selected == catalog.get_default_state(), "Save/load must preserve the new all-none appearance default")
+
 	var legacy_state = GameStateScript.new()
 	legacy_state.initialize(catalog, {"version": 1, "selected": {"hair": "hair_keri_long_brown_01", "face": "face_keri_default_01", "top": "top_none", "bottom": "bottom_none", "dress": "dress_none"}, "locks": {"hair": true}})
 	_assert(legacy_state.selected["face"] == "face_none", "Legacy composite face must sanitize to separate Phase 2C defaults")
 	_assert(legacy_state.selected["skin"] == "skin_tone_01", "Legacy save missing skin must fall back safely")
-	_assert(legacy_state.selected["eyes"] == "eyes_style_01_color_01", "Legacy save missing eyes must fall back safely")
+	_assert(legacy_state.selected["eyes"] == "eyes_none", "Legacy save missing eyes must fall back to the new safe default")
 	_assert(bool(legacy_state.locks["hair"]), "Legacy save must retain valid locks")
 
 	if failures.is_empty():
@@ -236,9 +253,28 @@ func _assert_thumbnail_pipeline(catalog: RefCounted) -> void:
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("top_none")) == "none", "None items must use the none preview mode")
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("background_studio")) == "cover", "Backgrounds must use cover previews")
 	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("face_keri_default_01")) == "face_preview", "Face items must use face previews")
-	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("skin_tone_02")) == "skin_preview", "Skin items must use upper-body previews")
-	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("eyes_style_01_color_01")) == "face_preview", "Face features must use head-reference previews")
-	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("hair_style_01_color_01")) == "visible_bounds", "Hair must use visible-bounds previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("skin_tone_02")) == "skin_swatch", "Skin items must use color-swatch previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("eyes_style_01_color_01")) == "feature_crop", "Face features must use focused crop previews")
+	_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item("hair_style_01_color_01")) == "hair_preview", "Hair must use hair-focused previews")
+	var swatch_colors: Dictionary = {}
+	for skin_item in catalog.get_items_for_category("skin"):
+		var swatch := MainScript.skin_swatch_color_for_item(skin_item)
+		_assert(swatch.a == 1.0, "Skin swatches must be opaque")
+		swatch_colors[swatch.to_html(false)] = true
+	_assert(swatch_colors.size() == catalog.get_items_for_category("skin").size(), "Every skin variant must have a distinct swatch color")
+	var swatch_preview: Image = MainScript._make_skin_swatch_preview(catalog.get_item("skin_tone_01"))
+	var expected_swatch := MainScript.skin_swatch_color_for_item(catalog.get_item("skin_tone_01"))
+	_assert(swatch_preview.get_size() == MainScript.THUMBNAIL_SIZE, "Skin swatch must fill the thumbnail render target")
+	_assert(swatch_preview.get_pixel(0, 0) == expected_swatch and swatch_preview.get_pixel(96, 96) == expected_swatch and swatch_preview.get_pixel(191, 191) == expected_swatch, "Skin swatch must contain only the representative color")
+	for feature_category in ["eyes", "eyebrows", "mouth", "makeup"]:
+		for feature_item in catalog.get_items_for_category(feature_category):
+			if str(feature_item.get("render_key", "")) == "none":
+				_assert(MainScript.thumbnail_preview_mode_for_item(feature_item) == "none", "Feature none items must keep the X tile mode")
+				continue
+			_assert(MainScript.thumbnail_preview_mode_for_item(feature_item) == "feature_crop", "%s items must use feature crops" % feature_category)
+			_assert(_item_preview_rect_is_valid(feature_item, catalog.character), "%s preview crop must stay inside the canvas" % feature_item.get("id", ""))
+	for none_category in ["hair", "eyes", "eyebrows", "mouth", "makeup", "background"]:
+		_assert(MainScript.thumbnail_preview_mode_for_item(catalog.get_item(catalog.get_none_item_id(none_category))) == "none", "%s none must keep the X tile" % none_category)
 	_assert_layer_has_cropped_bounds(catalog.get_item("hair_style_01_color_01"), "Hair thumbnail preview must crop transparent canvas")
 	_assert_layer_has_cropped_bounds(catalog.get_item("top_keri_casual_01"), "Top thumbnail preview must crop transparent canvas")
 	_assert_layer_has_cropped_bounds(catalog.get_item("bottom_keri_shorts_01"), "Bottom thumbnail preview must crop transparent canvas")
@@ -260,6 +296,12 @@ func _assert_thumbnail_pipeline(catalog: RefCounted) -> void:
 func _layer_before(catalog: RefCounted, first: String, second: String) -> bool:
 	var order: Array = catalog.character.get("layer_order", [])
 	return order.find(first) >= 0 and order.find(second) > order.find(first)
+
+
+func _item_preview_rect_is_valid(item: Dictionary, character: Dictionary) -> bool:
+	var rect := MainScript.thumbnail_preview_rect_for_item(item)
+	var canvas: Array = character.get("canvas_size", [])
+	return canvas.size() == 2 and rect.size.x > 0 and rect.size.y > 0 and rect.position.x >= 0 and rect.position.y >= 0 and rect.end.x <= int(canvas[0]) and rect.end.y <= int(canvas[1])
 
 
 func _face_metadata_is_valid(catalog: RefCounted) -> bool:

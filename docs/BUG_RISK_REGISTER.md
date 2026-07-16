@@ -39,4 +39,8 @@
 | Combined hair is mistaken for a true front/back split | Medium | Tag/document combined mode; map only to `hair_front`; do not edit or AI-split production PNGs |
 | Face anchor/mask magic numbers drift across files | High | Store authoritative rectangles/transforms in `character.face_import_metadata`; validate canvas bounds |
 | Legacy Phase 2B composite face double-renders with separate features | High | Mark composite migration-only; save sanitization falls back to `face_none`; version-1 migration smoke test |
-| Face thumbnails are too small or show isolated pixels | Medium | Composite features on the selected skin reference and crop using centralized head metadata; manual QA |
+| Face thumbnails are too small or show isolated pixels | Medium | Crop each feature's alpha bounds, apply category-appropriate padding on a neutral background, and manually QA final tile size |
+| Skin swatches accidentally render character imagery or nearly identical colors | Medium | Dedicated `skin_swatch` mode with validated opaque representative colors; manual comparison at tile size |
+| Feature thumbnails show the whole face/body instead of the selected feature | Medium | Per-item alpha-bound `feature_crop` metadata, neutral background, canvas-bound validation, and mode smoke tests |
+| Hair thumbnails are tiny or off-center | Medium | Hair-only visible bounds, reduced metadata padding, square centered fitting, and manual review across all five shapes |
+| Reset or clean launch restores old preset hair/face features | High | Catalog default explicitly uses skin 01 and none IDs; smoke-test initialization, reset, save/load fallback, and legacy migration |

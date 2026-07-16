@@ -56,6 +56,10 @@ Current checks cover:
 - Empty face subcategories, including absent eyelashes, remain hidden.
 - Face/head/skin preview rectangles, safe clipping bounds, face center, and mask bounds stay inside the canvas.
 - Save schema v2 restores Phase 2C state and version-1 Phase 2B saves sanitize the legacy face composite safely.
+- Clean initialization and reset return to skin 01 with hair, eyes, eyebrows, mouth, and makeup set to none.
+- Skin items use distinct opaque `skin_swatch` metadata instead of character previews.
+- Eyes, eyebrows, mouth, and makeup use validated per-item `feature_crop` rectangles inside the Keri canvas.
+- Visible hair items use `hair_preview`; all optional none items still resolve to the X-tile mode.
 
 ## Automated Gaps
 
@@ -145,13 +149,13 @@ After Phase 2B/2D asset work, verify:
 
 1. `Khuôn mặt` shows only `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`.
 2. Every subcategory uses two columns, vertical scrolling, no horizontal overflow, no visible item names, and a clear selected border.
-3. Skin previews show enough head/upper body to distinguish tone; all five choices retain identical placement and fallback coverage.
-4. Hair previews are centered/readable; `none` removes all hair; sample all five shapes and several colors.
-5. Eyes, eyebrows, mouth, and makeup change independently without shifting or scaling.
+3. Skin previews are large, opaque color swatches with no head/body imagery; all five tones remain distinguishable and retain identical runtime placement/coverage.
+4. Hair previews contain only centered hair on the same neutral background, read large enough at tile size, and `none` removes all hair; sample all five shapes and several colors.
+5. Eyes, eyebrows, mouth, and makeup cards show only their relevant feature crop on a consistent neutral background; runtime selections change independently without shifting or scaling.
 6. Optional none tiles use the X visual and are distinguishable from missing/failed thumbnails.
-7. Face feature thumbnails composite cleanly over the current skin reference.
+7. Face feature thumbnails remain isolated to their own crop and readable on the shared neutral background.
 8. Random respects locks, never removes mandatory skin, and only chooses metadata-eligible none items.
-9. Reset restores valid skin/face/hair defaults; undo/redo covers skin, features, none, random, and reset.
+9. Clean launch and reset show skin 01 with hair, eyes, eyebrows, mouth, makeup, and legacy face all none; undo/redo covers skin, features, none, random, and reset.
 10. Save/load restores every Phase 2C slot without errors and the fallback outfit remains correct.
 11. Combined-hair ordering is acceptable for the actual source; no false front/back split is implied.
 12. The face anchor/mask bounds are only metadata and no local face import UI appears.

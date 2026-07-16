@@ -114,7 +114,7 @@ def main() -> int:
 
     if int(data.get("schema_version", 0)) < 2:
         errors.append("Phase 2C catalog schema_version must be at least 2.")
-    _validate_phase_2c_categories(errors, by_category, by_category_metadata, by_id)
+    _validate_phase_2c_categories(errors, by_category, by_category_metadata, by_id, initial)
 
     character = data.get("character", {})
     if character.get("mode") not in {"procedural", "png"}:
@@ -156,6 +156,7 @@ def _validate_phase_2c_categories(
     by_category: dict[str, list[dict]],
     category_metadata: dict[str, dict],
     by_id: dict[str, dict],
+    initial: dict[str, object],
 ) -> None:
     required = {"skin", "hair", "eyes", "eyebrows", "mouth", "makeup", "face"}
     missing = sorted(required.difference(by_category))
@@ -182,6 +183,42 @@ def _validate_phase_2c_categories(
     legacy_face = by_id.get("face_keri_default_01", {})
     if not bool(legacy_face.get("hidden", False)) or not bool(legacy_face.get("legacy_migration_only", False)):
         errors.append("Phase 2B face composite must be hidden and migration-only in Phase 2C.")
+
+    expected_defaults = {
+        "skin": "skin_tone_01",
+        "hair": "hair_none",
+        "face": "face_none",
+        "eyes": "eyes_none",
+        "eyebrows": "eyebrows_none",
+        "mouth": "mouth_none",
+        "makeup": "makeup_none",
+    }
+    for category_id, item_id in expected_defaults.items():
+        if str(initial.get(category_id, "")) != item_id:
+            errors.append(f"Phase 2C polish default {category_id} must be {item_id}.")
+
+    for item in by_category["skin"]:
+        if str(item.get("preview_mode", "")) != "skin_swatch":
+            errors.append(f"Skin item {item.get('id')} must use skin_swatch preview mode.")
+        if not _is_hex_color(item.get("swatch_color")):
+            errors.append(f"Skin item {item.get('id')} must declare a valid opaque swatch_color.")
+
+    for category_id in ("eyes", "eyebrows", "mouth", "makeup"):
+        for item in by_category[category_id]:
+            if str(item.get("render_key", "")) == "none":
+                continue
+            if str(item.get("preview_mode", "")) != "feature_crop":
+                errors.append(f"Feature item {item.get('id')} must use feature_crop preview mode.")
+            _validate_canvas_rect(errors, f"Feature item {item.get('id')} preview_rect", item.get("preview_rect"), [948, 1920])
+            if not _is_hex_color(item.get("preview_background")):
+                errors.append(f"Feature item {item.get('id')} must declare a valid preview_background.")
+
+    for item in by_category["hair"]:
+        if str(item.get("render_key", "")) == "none" or bool(item.get("hidden", False)):
+            continue
+        if str(item.get("preview_mode", "")) != "hair_preview":
+            errors.append(f"Visible hair item {item.get('id')} must use hair_preview mode.")
+        _validate_canvas_rect(errors, f"Hair item {item.get('id')} preview_rect", item.get("preview_rect"), [948, 1920])
 
 
 def _validate_phase_2c_character(errors: list[str], data: dict, by_id: dict[str, dict]) -> None:
@@ -225,6 +262,17 @@ def _validate_canvas_rect(errors: list[str], label: str, value: object, canvas: 
         return
     if x < 0 or y < 0 or width <= 0 or height <= 0 or x + width > canvas_width or y + height > canvas_height:
         errors.append(f"{label} must stay inside the character canvas.")
+
+
+def _is_hex_color(value: object) -> bool:
+    text = str(value)
+    if len(text) != 7 or not text.startswith("#"):
+        return False
+    try:
+        int(text[1:], 16)
+        return True
+    except ValueError:
+        return False
 
 
 def _validate_layer_png(errors: list[str], label: str, res_path: str, catalog_data: dict) -> None:

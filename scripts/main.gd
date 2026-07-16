@@ -407,7 +407,7 @@ func _thumbnail_cache_key(item: Dictionary) -> String:
 	var item_id := str(item.get("id", ""))
 	var mode := thumbnail_preview_mode_for_item(item)
 	var source_path := _preview_source_path(item)
-	var skin_id := str(game_state.selected.get("skin", ""))
+	var skin_id := str(game_state.selected.get("skin", "")) if mode == "face_preview" else ""
 	return "%s|%s|%s|%s" % [mode, item_id, source_path, skin_id]
 
 
@@ -420,8 +420,12 @@ func _tile_preview_image(item: Dictionary) -> Image:
 			return _make_background_preview(item)
 		"face_preview":
 			return _make_face_preview(item)
-		"skin_preview":
-			return _make_skin_preview(item)
+		"skin_swatch":
+			return _make_skin_swatch_preview(item)
+		"feature_crop":
+			return _make_feature_crop_preview(item)
+		"hair_preview":
+			return _make_hair_preview(item)
 		_:
 			var source_path := _preview_source_path(item)
 			if source_path.is_empty():
@@ -479,8 +483,36 @@ func _make_face_preview(item: Dictionary) -> Image:
 	return _make_head_composite_preview(item, "head_preview_rect")
 
 
-func _make_skin_preview(item: Dictionary) -> Image:
-	return _make_head_composite_preview(item, "skin_preview_rect")
+static func _make_skin_swatch_preview(item: Dictionary) -> Image:
+	var image := Image.create(THUMBNAIL_SIZE.x, THUMBNAIL_SIZE.y, false, Image.FORMAT_RGBA8)
+	image.fill(skin_swatch_color_for_item(item))
+	return image
+
+
+func _make_feature_crop_preview(item: Dictionary) -> Image:
+	return _make_layer_focused_preview(item, Color("#f1dfd4"), 0.16)
+
+
+func _make_hair_preview(item: Dictionary) -> Image:
+	return _make_layer_focused_preview(item, Color("#f7f1f5"), 0.06)
+
+
+func _make_layer_focused_preview(item: Dictionary, default_background: Color, default_padding: float) -> Image:
+	var source_path := _preview_source_path(item)
+	if source_path.is_empty():
+		return null
+	var source := _load_preview_image(source_path)
+	if source == null:
+		return null
+	var used_rect := thumbnail_preview_rect_for_item(item)
+	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
+		used_rect = _alpha_used_rect(source, THUMBNAIL_ALPHA_THRESHOLD)
+	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
+		return null
+	var padding_ratio := float(item.get("preview_padding_ratio", default_padding))
+	var crop_rect := _padded_rect(used_rect, source.get_size(), padding_ratio)
+	var background := _metadata_color(item, "preview_background", default_background)
+	return _fit_crop_to_thumbnail(source, crop_rect, background)
 
 
 func _make_head_composite_preview(item: Dictionary, rect_key: String) -> Image:
@@ -522,6 +554,19 @@ static func face_metadata_rect(character: Dictionary, key: String) -> Rect2i:
 	if values.size() != 4:
 		return Rect2i()
 	return Rect2i(int(values[0]), int(values[1]), int(values[2]), int(values[3]))
+
+
+static func thumbnail_preview_rect_for_item(item: Dictionary) -> Rect2i:
+	return _rect_from_array(item.get("preview_rect", []))
+
+
+static func skin_swatch_color_for_item(item: Dictionary) -> Color:
+	return _metadata_color(item, "swatch_color", Color("#d9b99f"))
+
+
+static func _metadata_color(item: Dictionary, key: String, fallback: Color) -> Color:
+	var value := str(item.get(key, ""))
+	return Color(value) if Color.html_is_valid(value) else fallback
 
 
 func _make_background_preview(item: Dictionary) -> Image:
@@ -633,10 +678,10 @@ static func _padded_rect(rect: Rect2i, image_size: Vector2i, padding_ratio: floa
 	return Rect2i(x, y, right - x, bottom - y)
 
 
-func _fit_crop_to_thumbnail(source: Image, crop_rect: Rect2i) -> Image:
+func _fit_crop_to_thumbnail(source: Image, crop_rect: Rect2i, background: Color = Color(1, 1, 1, 0)) -> Image:
 	var crop := source.get_region(crop_rect)
 	var target := Image.create(THUMBNAIL_SIZE.x, THUMBNAIL_SIZE.y, false, Image.FORMAT_RGBA8)
-	target.fill(Color(1, 1, 1, 0))
+	target.fill(background)
 	var scale := minf(float(THUMBNAIL_SIZE.x) / float(crop.get_width()), float(THUMBNAIL_SIZE.y) / float(crop.get_height()))
 	var fitted_size := Vector2i(
 		maxi(1, int(round(float(crop.get_width()) * scale))),

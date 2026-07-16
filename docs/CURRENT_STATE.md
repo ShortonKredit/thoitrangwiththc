@@ -46,6 +46,10 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Phase 2C adds five silhouette-identical skin variants, 75 combined-hair variants, 30 eye variants, five eyebrow variants, five mouth variants, and two blush layers from the local extracted PNG source/template set.
 - The `Khuôn mặt` main category exposes only non-empty, data-driven subcategories: `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`. No eyelash subcategory is shown because the audited source contains no eyelash PNG.
 - Save schema version 2 restores all Phase 2C slots and sanitizes the legacy Phase 2B composite face to separate defaults.
+- The polished clean/reset default is `skin_tone_01` with hair, legacy face, eyes, eyebrows, mouth, and makeup all set to their `none` items. Existing valid saves still restore their saved appearance until the player resets.
+- Skin selector thumbnails are opaque representative color swatches; they no longer render a miniature character.
+- Eyes, eyebrows, mouth, and makeup thumbnails crop only their own visible feature bounds on a consistent neutral background.
+- Hair thumbnails use hair-only visible bounds, reduced padding, a neutral background, and centered fitting.
 
 ## Mandatory Invariants
 
@@ -72,7 +76,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Skin swaps preserve visible alignment and fallback outfit coverage.
 - Independent eyes, eyebrows, mouth, and makeup layers align with the head.
 - All five hair shapes and their color variants remain readable; hair `none` removes hair completely.
-- Face and skin thumbnails are readable at final tile size.
+- Skin swatches and focused face/hair thumbnails are readable and sufficiently distinct at final tile size.
 - Combined-hair front-only ordering is acceptable for the available source.
 - Face anchor and mask-bound metadata is suitable as a future local-import seam without implementing import.
 - Browser rendering across Chrome, Edge, and Firefox after export.

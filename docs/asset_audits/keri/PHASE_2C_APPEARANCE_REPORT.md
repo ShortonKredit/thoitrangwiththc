@@ -4,6 +4,18 @@ Date: 2026-07-16
 
 Status: **MANUAL VISUAL QA PENDING**
 
+## Default and thumbnail UX polish
+
+The Phase 2C polish pass changes no item/category counts and imports no additional assets.
+
+- Clean initialization and reset now use `skin_tone_01`, `hair_none`, `face_none`, `eyes_none`, `eyebrows_none`, `mouth_none`, and `makeup_none`.
+- Valid saved selections still restore normally. Missing or legacy slots sanitize against the new safe defaults, while reset always returns to the new default state.
+- Skin thumbnails use dedicated `skin_swatch` mode with one opaque representative color per audited skin variant. No head, face, or body is rendered in these tiles.
+- Eyes, eyebrows, mouth, and makeup use `feature_crop` mode. Each item stores its own alpha-derived visible rectangle, padding ratio, and common neutral background, so only the relevant feature is enlarged and centered.
+- Hair uses `hair_preview` mode with existing hair-only visible bounds, reduced padding, a consistent neutral background, and centered square fitting.
+- None choices remain textless X tiles and continue to override any configured preview metadata.
+- The two-column grid, vertical scrolling, category/subcategory structure, selected border styling, clothing proof pack, and fallback outfit logic are unchanged.
+
 ## Scope and baseline
 
 Phase 2C closes the accepted Phase 2B proof in documentation, audits the available local appearance PNGs, integrates skin/hair/face-feature state, and prepares a metadata-only seam for a future local face-import phase. It does not implement local face import, face recognition, biometric analysis, full-body work, foot-dependent content, bulk wardrobe integration, Phase 3, commit, or push.
@@ -110,11 +122,11 @@ The 121 copied files retain their original bytes. `base1.png` is not duplicated 
 
 Main categories remain `Tóc` and `Khuôn mặt` alongside the existing supported fashion/background categories. `Khuôn mặt` exposes data-driven subcategory buttons for `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`; empty groups are omitted.
 
-The existing two-column, textless, vertically scrolling item grid and selected styles are retained. Thumbnail preview modes are metadata-driven:
+The existing two-column, textless, vertically scrolling item grid and selected styles are retained. Thumbnail preview modes are metadata-driven after the polish pass:
 
-- skin: selected base plus default face features, cropped to the centralized upper-body rectangle;
-- eyes/eyebrows/mouth/makeup: selected feature plus the other default features composited on the currently selected skin, cropped to the centralized head rectangle;
-- hair: padded visible-alpha bounds;
+- skin: opaque representative color swatch only;
+- eyes/eyebrows/mouth/makeup: the selected layer's own visible feature bounds on a neutral background;
+- hair: hair-only visible-alpha bounds with reduced padding and a neutral background;
 - none: existing X tile;
 - background: procedural cover preview.
 
@@ -211,14 +223,18 @@ Godot dummy-renderer cleanup/leak warnings remain informational and do not produ
 ## Required manual visual QA
 
 - Confirm all five skin choices keep identical pose/scale/alignment and fallback coverage.
+- Confirm all five skin tiles contain only color, fill nearly the whole card, and are distinguishable without character imagery.
 - Confirm hair none removes all hair; sample all five silhouettes and multiple colors.
+- Confirm hair thumbnails are centered, large, hair-only, and consistently backed.
 - Confirm eyes, eyebrows, mouth, and makeup change independently and optional none tiles work.
+- Confirm each face-feature thumbnail shows only the relevant eyes/eyebrows/mouth/blush region rather than a full head/body.
 - Confirm face features align on every skin tone without unwanted outlines or double-rendered legacy face.
 - Confirm skin/face/hair previews are readable, centered, textless, and selected borders are clear.
 - Confirm `Khuôn mặt` subcategories show only non-empty groups and the grid remains two columns with vertical-only scrolling.
 - Exercise locks, random, reset, undo, redo, save/load, and a legacy save through the visible UI.
 - Confirm fallback top/bottom behavior and the accepted three-quarter crop remain unchanged.
 - Confirm no local face-import UI, real-person image, foot-dependent content, or Phase 3 feature appears.
+- Confirm clean launch/reset uses skin 01 with hair, eyes, eyebrows, mouth, makeup, and legacy face all none; valid pre-existing saves may still restore their saved appearance before reset.
 
 ## Explicit boundary confirmation
 
