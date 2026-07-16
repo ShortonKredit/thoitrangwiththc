@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "character": {
     "id": "keri_three_quarter_proof",
     "display_name": "Keri three-quarter-body proof",
@@ -14,7 +14,6 @@
       "hair_back",
       "accessory_back",
       "body_core",
-      "face",
       "fallback_bottom",
       "fallback_top",
       "base_outfit",
@@ -24,6 +23,13 @@
       "dress_back",
       "dress_main",
       "body_foreground",
+      "imported_face",
+      "face",
+      "eyes",
+      "eyebrows",
+      "eyelashes",
+      "mouth",
+      "makeup",
       "hair_front",
       "glasses",
       "face_accessory",
@@ -41,14 +47,81 @@
       0,
       948,
       1660
-    ]
+    ],
+    "face_feature_categories": [
+      "eyes",
+      "eyebrows",
+      "mouth",
+      "makeup"
+    ],
+    "face_import_metadata": {
+      "face_rect": [
+        270,
+        210,
+        320,
+        270
+      ],
+      "face_center": [
+        430,
+        345
+      ],
+      "default_scale": 1.0,
+      "default_rotation_degrees": 0.0,
+      "safe_clipping_bounds": [
+        270,
+        210,
+        320,
+        270
+      ],
+      "face_mask_bounds": [
+        286,
+        220,
+        288,
+        250
+      ],
+      "head_preview_rect": [
+        190,
+        40,
+        560,
+        540
+      ],
+      "skin_preview_rect": [
+        120,
+        20,
+        700,
+        900
+      ],
+      "layers_before_imported_face": [
+        "body_core",
+        "fallback_bottom",
+        "fallback_top",
+        "base_outfit",
+        "bottom",
+        "top",
+        "dress_back",
+        "dress_main",
+        "body_foreground"
+      ],
+      "layers_after_imported_face": [
+        "face",
+        "eyes",
+        "eyebrows",
+        "eyelashes",
+        "mouth",
+        "makeup",
+        "hair_front",
+        "glasses",
+        "face_accessory",
+        "headwear"
+      ]
+    }
   },
   "categories": [
     {
       "id": "hair",
       "display_name": "Tóc",
       "description": "Kiểu tóc đời thường, cùng một form đầu và tư thế.",
-      "allow_none": false,
+      "allow_none": true,
       "random_default": true,
       "order": 10,
       "hidden": false
@@ -56,11 +129,19 @@
     {
       "id": "face",
       "display_name": "Khuôn mặt",
-      "description": "Cấu hình mặt proof từ các lớp eyebrows, eyes và mouth đã audit.",
-      "allow_none": false,
+      "description": "Navigation group for skin and separate facial layers; the Phase 2B composite remains only for save migration.",
+      "allow_none": true,
       "random_default": false,
       "order": 15,
-      "hidden": false
+      "hidden": true,
+      "ui_container": true,
+      "subcategory_ids": [
+        "skin",
+        "eyes",
+        "eyebrows",
+        "mouth",
+        "makeup"
+      ]
     },
     {
       "id": "top",
@@ -129,14 +210,64 @@
       "id": "background",
       "display_name": "Phông nền",
       "description": "Không gian đời thường để chụp outfit.",
-      "allow_none": false,
+      "allow_none": true,
       "random_default": true,
       "order": 90,
       "hidden": false
+    },
+    {
+      "id": "skin",
+      "display_name": "Màu da",
+      "description": "Skin-tone variants with the same silhouette and anatomy.",
+      "allow_none": false,
+      "random_default": true,
+      "order": 16,
+      "hidden": false,
+      "parent_category": "face"
+    },
+    {
+      "id": "eyes",
+      "display_name": "Mắt",
+      "description": "Independent eye layers on the shared Keri canvas.",
+      "allow_none": true,
+      "random_default": true,
+      "order": 17,
+      "hidden": false,
+      "parent_category": "face"
+    },
+    {
+      "id": "eyebrows",
+      "display_name": "Lông mày",
+      "description": "Independent eyebrow layers on the shared Keri canvas.",
+      "allow_none": true,
+      "random_default": true,
+      "order": 18,
+      "hidden": false,
+      "parent_category": "face"
+    },
+    {
+      "id": "mouth",
+      "display_name": "Miệng",
+      "description": "Independent mouth layers on the shared Keri canvas.",
+      "allow_none": true,
+      "random_default": true,
+      "order": 19,
+      "hidden": false,
+      "parent_category": "face"
+    },
+    {
+      "id": "makeup",
+      "display_name": "Trang điểm",
+      "description": "Blush and makeup layers available in the local source.",
+      "allow_none": true,
+      "random_default": true,
+      "order": 20,
+      "hidden": false,
+      "parent_category": "face"
     }
   ],
   "initial_state": {
-    "hair": "hair_keri_long_brown_01",
+    "hair": "hair_style_01_color_01",
     "top": "top_none",
     "bottom": "bottom_none",
     "dress": "dress_none",
@@ -145,7 +276,12 @@
     "headwear": "headwear_none",
     "accessory": "accessory_none",
     "background": "background_studio",
-    "face": "face_keri_default_01"
+    "face": "face_none",
+    "skin": "skin_tone_01",
+    "eyes": "eyes_style_01_color_01",
+    "eyebrows": "eyebrows_tone_01",
+    "mouth": "mouth_tone_01",
+    "makeup": "makeup_none"
   },
   "items": [
     {
@@ -1113,7 +1249,8 @@
       "layers": {
         "hair_front": "res://assets/hair/keri/proof/hair_long_brown_01.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "hidden": true
     },
     {
       "id": "face_keri_default_01",
@@ -1135,7 +1272,10 @@
       "layers": {
         "face": "res://assets/face/keri/proof/face_default_01.png"
       },
-      "placeholder": {}
+      "placeholder": {},
+      "hidden": true,
+      "legacy_migration_only": true,
+      "preview_mode": "face_preview"
     },
     {
       "id": "top_keri_casual_01",
@@ -1226,6 +1366,3176 @@
         "bottom": "res://assets/bottoms/keri/proof/bottom_shorts_02.png"
       },
       "placeholder": {}
+    },
+    {
+      "id": "hair_none",
+      "category": "hair",
+      "display_name": "Không dùng tóc",
+      "accessible_name": "Không dùng tóc",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
+    },
+    {
+      "id": "skin_tone_01",
+      "category": "skin",
+      "display_name": "Màu da 01",
+      "accessible_name": "Màu da 01",
+      "description": "Same Keri geometry with a different skin tone and shading.",
+      "render_key": "png",
+      "order": 10,
+      "occupies": [
+        "body_core"
+      ],
+      "tags": [
+        "skin_variant"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "body_core": "res://assets/characters/keri/proof/keri_body_core.png"
+      },
+      "placeholder": {},
+      "preview_mode": "skin_preview"
+    },
+    {
+      "id": "skin_tone_02",
+      "category": "skin",
+      "display_name": "Màu da 02",
+      "accessible_name": "Màu da 02",
+      "description": "Same Keri geometry with a different skin tone and shading.",
+      "render_key": "png",
+      "order": 20,
+      "occupies": [
+        "body_core"
+      ],
+      "tags": [
+        "skin_variant"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "body_core": "res://assets/characters/keri/skins/skin_tone_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "skin_preview"
+    },
+    {
+      "id": "skin_tone_03",
+      "category": "skin",
+      "display_name": "Màu da 03",
+      "accessible_name": "Màu da 03",
+      "description": "Same Keri geometry with a different skin tone and shading.",
+      "render_key": "png",
+      "order": 30,
+      "occupies": [
+        "body_core"
+      ],
+      "tags": [
+        "skin_variant"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "body_core": "res://assets/characters/keri/skins/skin_tone_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "skin_preview"
+    },
+    {
+      "id": "skin_tone_04",
+      "category": "skin",
+      "display_name": "Màu da 04",
+      "accessible_name": "Màu da 04",
+      "description": "Same Keri geometry with a different skin tone and shading.",
+      "render_key": "png",
+      "order": 40,
+      "occupies": [
+        "body_core"
+      ],
+      "tags": [
+        "skin_variant"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "body_core": "res://assets/characters/keri/skins/skin_tone_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "skin_preview"
+    },
+    {
+      "id": "skin_tone_05",
+      "category": "skin",
+      "display_name": "Màu da 05",
+      "accessible_name": "Màu da 05",
+      "description": "Same Keri geometry with a different skin tone and shading.",
+      "render_key": "png",
+      "order": 50,
+      "occupies": [
+        "body_core"
+      ],
+      "tags": [
+        "skin_variant"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "body_core": "res://assets/characters/keri/skins/skin_tone_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "skin_preview"
+    },
+    {
+      "id": "hair_style_01_color_01",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 01",
+      "accessible_name": "Tóc kiểu 01, màu 01",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1101,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_01.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_02",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 02",
+      "accessible_name": "Tóc kiểu 01, màu 02",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1102,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_02.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_03",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 03",
+      "accessible_name": "Tóc kiểu 01, màu 03",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1103,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_03.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_04",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 04",
+      "accessible_name": "Tóc kiểu 01, màu 04",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1104,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_05",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 05",
+      "accessible_name": "Tóc kiểu 01, màu 05",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1105,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_06",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 06",
+      "accessible_name": "Tóc kiểu 01, màu 06",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1106,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_07",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 07",
+      "accessible_name": "Tóc kiểu 01, màu 07",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1107,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_07.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_08",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 08",
+      "accessible_name": "Tóc kiểu 01, màu 08",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1108,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_08.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_09",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 09",
+      "accessible_name": "Tóc kiểu 01, màu 09",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1109,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_09.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_10",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 10",
+      "accessible_name": "Tóc kiểu 01, màu 10",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1110,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_10.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_11",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 11",
+      "accessible_name": "Tóc kiểu 01, màu 11",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1111,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_11.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_12",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 12",
+      "accessible_name": "Tóc kiểu 01, màu 12",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1112,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_12.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_13",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 13",
+      "accessible_name": "Tóc kiểu 01, màu 13",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1113,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_13.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_14",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 14",
+      "accessible_name": "Tóc kiểu 01, màu 14",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1114,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_14.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_01_color_15",
+      "category": "hair",
+      "display_name": "Tóc kiểu 01, màu 15",
+      "accessible_name": "Tóc kiểu 01, màu 15",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1115,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_01_color_15.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        198,
+        44,
+        529,
+        805
+      ]
+    },
+    {
+      "id": "hair_style_02_color_01",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 01",
+      "accessible_name": "Tóc kiểu 02, màu 01",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1201,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_01.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_02",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 02",
+      "accessible_name": "Tóc kiểu 02, màu 02",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1202,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_02.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_03",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 03",
+      "accessible_name": "Tóc kiểu 02, màu 03",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1203,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_03.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_04",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 04",
+      "accessible_name": "Tóc kiểu 02, màu 04",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1204,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_04.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_05",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 05",
+      "accessible_name": "Tóc kiểu 02, màu 05",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1205,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_05.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_06",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 06",
+      "accessible_name": "Tóc kiểu 02, màu 06",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1206,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_06.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_07",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 07",
+      "accessible_name": "Tóc kiểu 02, màu 07",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1207,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_07.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_08",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 08",
+      "accessible_name": "Tóc kiểu 02, màu 08",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1208,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_08.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_09",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 09",
+      "accessible_name": "Tóc kiểu 02, màu 09",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1209,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_09.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_10",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 10",
+      "accessible_name": "Tóc kiểu 02, màu 10",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1210,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_10.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_11",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 11",
+      "accessible_name": "Tóc kiểu 02, màu 11",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1211,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_11.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_12",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 12",
+      "accessible_name": "Tóc kiểu 02, màu 12",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1212,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_12.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_13",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 13",
+      "accessible_name": "Tóc kiểu 02, màu 13",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1213,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_13.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_14",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 14",
+      "accessible_name": "Tóc kiểu 02, màu 14",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1214,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_14.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_02_color_15",
+      "category": "hair",
+      "display_name": "Tóc kiểu 02, màu 15",
+      "accessible_name": "Tóc kiểu 02, màu 15",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1215,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_02_color_15.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        251,
+        52,
+        442,
+        718
+      ]
+    },
+    {
+      "id": "hair_style_03_color_01",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 01",
+      "accessible_name": "Tóc kiểu 03, màu 01",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1301,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_01.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_02",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 02",
+      "accessible_name": "Tóc kiểu 03, màu 02",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1302,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_02.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_03",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 03",
+      "accessible_name": "Tóc kiểu 03, màu 03",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1303,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_03.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_04",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 04",
+      "accessible_name": "Tóc kiểu 03, màu 04",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1304,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_04.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_05",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 05",
+      "accessible_name": "Tóc kiểu 03, màu 05",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1305,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_05.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_06",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 06",
+      "accessible_name": "Tóc kiểu 03, màu 06",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1306,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_06.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_07",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 07",
+      "accessible_name": "Tóc kiểu 03, màu 07",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1307,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_07.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_08",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 08",
+      "accessible_name": "Tóc kiểu 03, màu 08",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1308,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_08.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_09",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 09",
+      "accessible_name": "Tóc kiểu 03, màu 09",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1309,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_09.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_10",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 10",
+      "accessible_name": "Tóc kiểu 03, màu 10",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1310,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_10.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_11",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 11",
+      "accessible_name": "Tóc kiểu 03, màu 11",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1311,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_11.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_12",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 12",
+      "accessible_name": "Tóc kiểu 03, màu 12",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1312,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_12.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_13",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 13",
+      "accessible_name": "Tóc kiểu 03, màu 13",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1313,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_13.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_14",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 14",
+      "accessible_name": "Tóc kiểu 03, màu 14",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1314,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_14.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_03_color_15",
+      "category": "hair",
+      "display_name": "Tóc kiểu 03, màu 15",
+      "accessible_name": "Tóc kiểu 03, màu 15",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1315,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_03_color_15.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        272,
+        50,
+        435,
+        432
+      ]
+    },
+    {
+      "id": "hair_style_04_color_01",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 01",
+      "accessible_name": "Tóc kiểu 04, màu 01",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1401,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_01.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_02",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 02",
+      "accessible_name": "Tóc kiểu 04, màu 02",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1402,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_02.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_03",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 03",
+      "accessible_name": "Tóc kiểu 04, màu 03",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1403,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_03.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_04",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 04",
+      "accessible_name": "Tóc kiểu 04, màu 04",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1404,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_04.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_05",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 05",
+      "accessible_name": "Tóc kiểu 04, màu 05",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1405,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_05.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_06",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 06",
+      "accessible_name": "Tóc kiểu 04, màu 06",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1406,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_06.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_07",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 07",
+      "accessible_name": "Tóc kiểu 04, màu 07",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1407,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_07.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_08",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 08",
+      "accessible_name": "Tóc kiểu 04, màu 08",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1408,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_08.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_09",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 09",
+      "accessible_name": "Tóc kiểu 04, màu 09",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1409,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_09.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_10",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 10",
+      "accessible_name": "Tóc kiểu 04, màu 10",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1410,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_10.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_11",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 11",
+      "accessible_name": "Tóc kiểu 04, màu 11",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1411,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_11.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_12",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 12",
+      "accessible_name": "Tóc kiểu 04, màu 12",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1412,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_12.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_13",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 13",
+      "accessible_name": "Tóc kiểu 04, màu 13",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1413,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_13.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_14",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 14",
+      "accessible_name": "Tóc kiểu 04, màu 14",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1414,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_14.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_04_color_15",
+      "category": "hair",
+      "display_name": "Tóc kiểu 04, màu 15",
+      "accessible_name": "Tóc kiểu 04, màu 15",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1415,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_04"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_04_color_15.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        282,
+        6,
+        445,
+        476
+      ]
+    },
+    {
+      "id": "hair_style_05_color_01",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 01",
+      "accessible_name": "Tóc kiểu 05, màu 01",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1501,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_01.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_02",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 02",
+      "accessible_name": "Tóc kiểu 05, màu 02",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1502,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_02.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_03",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 03",
+      "accessible_name": "Tóc kiểu 05, màu 03",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1503,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_03.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_04",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 04",
+      "accessible_name": "Tóc kiểu 05, màu 04",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1504,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_04.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_05",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 05",
+      "accessible_name": "Tóc kiểu 05, màu 05",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1505,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_05.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_06",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 06",
+      "accessible_name": "Tóc kiểu 05, màu 06",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1506,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_06.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_07",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 07",
+      "accessible_name": "Tóc kiểu 05, màu 07",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1507,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_07.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_08",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 08",
+      "accessible_name": "Tóc kiểu 05, màu 08",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1508,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_08.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_09",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 09",
+      "accessible_name": "Tóc kiểu 05, màu 09",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1509,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_09.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_10",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 10",
+      "accessible_name": "Tóc kiểu 05, màu 10",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1510,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_10.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_11",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 11",
+      "accessible_name": "Tóc kiểu 05, màu 11",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1511,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_11.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_12",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 12",
+      "accessible_name": "Tóc kiểu 05, màu 12",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1512,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_12.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_13",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 13",
+      "accessible_name": "Tóc kiểu 05, màu 13",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1513,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_13.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_14",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 14",
+      "accessible_name": "Tóc kiểu 05, màu 14",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1514,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_14.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "hair_style_05_color_15",
+      "category": "hair",
+      "display_name": "Tóc kiểu 05, màu 15",
+      "accessible_name": "Tóc kiểu 05, màu 15",
+      "description": "Combined hair layer from the local extracted PNG source/template set.",
+      "render_key": "png",
+      "order": 1515,
+      "occupies": [
+        "hair"
+      ],
+      "tags": [
+        "combined_hair",
+        "hair_style_05"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "hair_front": "res://assets/hair/keri/phase_2c/hair_style_05_color_15.png"
+      },
+      "placeholder": {},
+      "preview_rect": [
+        203,
+        10,
+        539,
+        786
+      ]
+    },
+    {
+      "id": "eyes_none",
+      "category": "eyes",
+      "display_name": "Không dùng mắt",
+      "accessible_name": "Không dùng mắt",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
+    },
+    {
+      "id": "eyes_style_01_color_01",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 01",
+      "accessible_name": "Mắt kiểu 01, màu 01",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 101,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_02",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 02",
+      "accessible_name": "Mắt kiểu 01, màu 02",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 102,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_03",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 03",
+      "accessible_name": "Mắt kiểu 01, màu 03",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 103,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_04",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 04",
+      "accessible_name": "Mắt kiểu 01, màu 04",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 104,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_05",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 05",
+      "accessible_name": "Mắt kiểu 01, màu 05",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 105,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_06",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 06",
+      "accessible_name": "Mắt kiểu 01, màu 06",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 106,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_07",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 07",
+      "accessible_name": "Mắt kiểu 01, màu 07",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 107,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_07.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_08",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 08",
+      "accessible_name": "Mắt kiểu 01, màu 08",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 108,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_08.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_09",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 09",
+      "accessible_name": "Mắt kiểu 01, màu 09",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 109,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_09.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_01_color_10",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 01, màu 10",
+      "accessible_name": "Mắt kiểu 01, màu 10",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 110,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_01"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_01_color_10.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_01",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 01",
+      "accessible_name": "Mắt kiểu 02, màu 01",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 201,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_02",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 02",
+      "accessible_name": "Mắt kiểu 02, màu 02",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 202,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_03",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 03",
+      "accessible_name": "Mắt kiểu 02, màu 03",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 203,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_04",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 04",
+      "accessible_name": "Mắt kiểu 02, màu 04",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 204,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_05",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 05",
+      "accessible_name": "Mắt kiểu 02, màu 05",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 205,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_06",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 06",
+      "accessible_name": "Mắt kiểu 02, màu 06",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 206,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_07",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 07",
+      "accessible_name": "Mắt kiểu 02, màu 07",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 207,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_07.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_08",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 08",
+      "accessible_name": "Mắt kiểu 02, màu 08",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 208,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_08.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_09",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 09",
+      "accessible_name": "Mắt kiểu 02, màu 09",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 209,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_09.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_02_color_10",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 02, màu 10",
+      "accessible_name": "Mắt kiểu 02, màu 10",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 210,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_02"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_02_color_10.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_01",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 01",
+      "accessible_name": "Mắt kiểu 03, màu 01",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 301,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_02",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 02",
+      "accessible_name": "Mắt kiểu 03, màu 02",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 302,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_03",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 03",
+      "accessible_name": "Mắt kiểu 03, màu 03",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 303,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_04",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 04",
+      "accessible_name": "Mắt kiểu 03, màu 04",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 304,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_05",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 05",
+      "accessible_name": "Mắt kiểu 03, màu 05",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 305,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_06",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 06",
+      "accessible_name": "Mắt kiểu 03, màu 06",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 306,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_06.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_07",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 07",
+      "accessible_name": "Mắt kiểu 03, màu 07",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 307,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_07.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_08",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 08",
+      "accessible_name": "Mắt kiểu 03, màu 08",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 308,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_08.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_09",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 09",
+      "accessible_name": "Mắt kiểu 03, màu 09",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 309,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_09.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyes_style_03_color_10",
+      "category": "eyes",
+      "display_name": "Mắt kiểu 03, màu 10",
+      "accessible_name": "Mắt kiểu 03, màu 10",
+      "description": "Independent eye layer from the local source.",
+      "render_key": "png",
+      "order": 310,
+      "occupies": [
+        "eyes"
+      ],
+      "tags": [
+        "face_feature",
+        "eyes_style_03"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyes": "res://assets/face/keri/eyes/eyes_style_03_color_10.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyebrows_none",
+      "category": "eyebrows",
+      "display_name": "Không dùng lông mày",
+      "accessible_name": "Không dùng lông mày",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
+    },
+    {
+      "id": "eyebrows_tone_01",
+      "category": "eyebrows",
+      "display_name": "Lông mày 01",
+      "accessible_name": "Lông mày 01",
+      "description": "Independent eyebrow layer from the local source.",
+      "render_key": "png",
+      "order": 10,
+      "occupies": [
+        "eyebrows"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyebrows": "res://assets/face/keri/eyebrows/eyebrows_tone_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyebrows_tone_02",
+      "category": "eyebrows",
+      "display_name": "Lông mày 02",
+      "accessible_name": "Lông mày 02",
+      "description": "Independent eyebrow layer from the local source.",
+      "render_key": "png",
+      "order": 20,
+      "occupies": [
+        "eyebrows"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyebrows": "res://assets/face/keri/eyebrows/eyebrows_tone_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyebrows_tone_03",
+      "category": "eyebrows",
+      "display_name": "Lông mày 03",
+      "accessible_name": "Lông mày 03",
+      "description": "Independent eyebrow layer from the local source.",
+      "render_key": "png",
+      "order": 30,
+      "occupies": [
+        "eyebrows"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyebrows": "res://assets/face/keri/eyebrows/eyebrows_tone_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyebrows_tone_04",
+      "category": "eyebrows",
+      "display_name": "Lông mày 04",
+      "accessible_name": "Lông mày 04",
+      "description": "Independent eyebrow layer from the local source.",
+      "render_key": "png",
+      "order": 40,
+      "occupies": [
+        "eyebrows"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyebrows": "res://assets/face/keri/eyebrows/eyebrows_tone_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "eyebrows_tone_05",
+      "category": "eyebrows",
+      "display_name": "Lông mày 05",
+      "accessible_name": "Lông mày 05",
+      "description": "Independent eyebrow layer from the local source.",
+      "render_key": "png",
+      "order": 50,
+      "occupies": [
+        "eyebrows"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "eyebrows": "res://assets/face/keri/eyebrows/eyebrows_tone_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "mouth_none",
+      "category": "mouth",
+      "display_name": "Không dùng miệng",
+      "accessible_name": "Không dùng miệng",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
+    },
+    {
+      "id": "mouth_tone_01",
+      "category": "mouth",
+      "display_name": "Miệng 01",
+      "accessible_name": "Miệng 01",
+      "description": "Independent mouth layer from the local source.",
+      "render_key": "png",
+      "order": 10,
+      "occupies": [
+        "mouth"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "mouth": "res://assets/face/keri/mouths/mouth_tone_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "mouth_tone_02",
+      "category": "mouth",
+      "display_name": "Miệng 02",
+      "accessible_name": "Miệng 02",
+      "description": "Independent mouth layer from the local source.",
+      "render_key": "png",
+      "order": 20,
+      "occupies": [
+        "mouth"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "mouth": "res://assets/face/keri/mouths/mouth_tone_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "mouth_tone_03",
+      "category": "mouth",
+      "display_name": "Miệng 03",
+      "accessible_name": "Miệng 03",
+      "description": "Independent mouth layer from the local source.",
+      "render_key": "png",
+      "order": 30,
+      "occupies": [
+        "mouth"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "mouth": "res://assets/face/keri/mouths/mouth_tone_03.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "mouth_tone_04",
+      "category": "mouth",
+      "display_name": "Miệng 04",
+      "accessible_name": "Miệng 04",
+      "description": "Independent mouth layer from the local source.",
+      "render_key": "png",
+      "order": 40,
+      "occupies": [
+        "mouth"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "mouth": "res://assets/face/keri/mouths/mouth_tone_04.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "mouth_tone_05",
+      "category": "mouth",
+      "display_name": "Miệng 05",
+      "accessible_name": "Miệng 05",
+      "description": "Independent mouth layer from the local source.",
+      "render_key": "png",
+      "order": 50,
+      "occupies": [
+        "mouth"
+      ],
+      "tags": [
+        "face_feature"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "mouth": "res://assets/face/keri/mouths/mouth_tone_05.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "makeup_none",
+      "category": "makeup",
+      "display_name": "Không trang điểm",
+      "accessible_name": "Không trang điểm",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": true,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
+    },
+    {
+      "id": "makeup_blush_01",
+      "category": "makeup",
+      "display_name": "Má hồng 01",
+      "accessible_name": "Má hồng 01",
+      "description": "Blush/makeup layer from the local source.",
+      "render_key": "png",
+      "order": 10,
+      "occupies": [
+        "makeup"
+      ],
+      "tags": [
+        "face_feature",
+        "makeup"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "makeup": "res://assets/face/keri/makeup/blush_01.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "makeup_blush_02",
+      "category": "makeup",
+      "display_name": "Má hồng 02",
+      "accessible_name": "Má hồng 02",
+      "description": "Blush/makeup layer from the local source.",
+      "render_key": "png",
+      "order": 20,
+      "occupies": [
+        "makeup"
+      ],
+      "tags": [
+        "face_feature",
+        "makeup"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {
+        "makeup": "res://assets/face/keri/makeup/blush_02.png"
+      },
+      "placeholder": {},
+      "preview_mode": "face_preview"
+    },
+    {
+      "id": "face_none",
+      "category": "face",
+      "display_name": "Không dùng composite mặt cũ",
+      "accessible_name": "Không dùng composite mặt cũ",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": true
+    },
+    {
+      "id": "background_none",
+      "category": "background",
+      "display_name": "Phông nền mặc định",
+      "accessible_name": "Phông nền mặc định",
+      "description": "Do not render this optional layer.",
+      "render_key": "none",
+      "random_enabled": false,
+      "order": 0,
+      "occupies": [],
+      "tags": [
+        "none"
+      ],
+      "conflicts_with_tags": [],
+      "layers": {},
+      "placeholder": {},
+      "hidden": false
     }
   ]
 }

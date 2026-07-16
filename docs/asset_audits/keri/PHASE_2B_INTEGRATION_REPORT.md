@@ -6,7 +6,7 @@ Date: 2026-07-14
 
 Phase 2B imports a tiny Keri proof pack into the existing Godot catalog and renderer. It does not start full-body leg extension, donor-leg compositing, shoes, socks, long trousers, full-length dresses, backend work, image generation, commit, or push.
 
-Phase 2B is **MANUAL VISUAL QA PENDING**, not complete.
+Phase 2B is **COMPLETE**. The owner confirmed manual visual QA on 2026-07-16.
 
 Proof pack included:
 
@@ -143,9 +143,19 @@ After split-layer correction:
 - `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.ps1"`: import/parse passed, main scene startup smoke passed, logic smoke printed `SMOKE TEST PASSED`, project checks passed.
 - Godot headless startup currently prints dummy-renderer cleanup warnings; `tools/check_project.ps1` captures stderr and still fails on nonzero exit codes or script/load fatal patterns.
 
-## Manual QA
+## Manual QA Closure
 
-Manual Godot/browser visual QA is still required before calling art quality complete:
+The owner accepted the Phase 2B proof at a usable level, including:
+
+- thumbnail previews are usable;
+- split `body_core` / `fallback_top` / `fallback_bottom` architecture is stable;
+- the two-column selector grid works;
+- background previews display;
+- the three-quarter-body crop is acceptable;
+- item names remain hidden on cards;
+- empty categories remain hidden.
+
+The historical checklist below is retained for traceability:
 
 - Keri appears centered and intentionally cropped.
 - Lower crop does not read as a broken full-body asset.
@@ -170,4 +180,4 @@ Manual Godot/browser visual QA is still required before calling art quality comp
 
 ## Conclusion
 
-The flattened runtime body architecture blocker has been corrected by splitting Keri into `body_core`, `fallback_top`, and `fallback_bottom`. Automated checks pass. Phase 2B remains **MANUAL VISUAL QA PENDING**.
+The flattened runtime body architecture blocker was corrected by splitting Keri into `body_core`, `fallback_top`, and `fallback_bottom`. Automated checks pass and owner-confirmed manual QA is complete. Phase 2B is **COMPLETE**.

@@ -23,7 +23,6 @@ const ITEM_TILE_SHOWS_TEXT := false
 const THUMBNAIL_SIZE := Vector2i(192, 192)
 const THUMBNAIL_ALPHA_THRESHOLD := 8
 const THUMBNAIL_PADDING_RATIO := 0.12
-const FACE_PREVIEW_RECT := Rect2i(190, 40, 560, 540)
 
 class NoneTileButton:
 	extends Button
@@ -40,13 +39,17 @@ var save_service: RefCounted
 var doll_view: Control
 
 var current_category_id: String = ""
+var current_main_category_id: String = ""
 var category_button_group: ButtonGroup
+var subcategory_button_group: ButtonGroup
 var item_button_group: ButtonGroup
 var category_buttons: Dictionary = {}
+var subcategory_buttons: Dictionary = {}
 var item_buttons: Dictionary = {}
 var thumbnail_cache: Dictionary = {}
 
 var item_grid: GridContainer
+var subcategory_flow: HFlowContainer
 var category_title: Label
 var lock_toggle: CheckButton
 var status_label: Label
@@ -71,9 +74,10 @@ func _ready() -> void:
 	game_state.history_changed.connect(_on_history_changed)
 
 	var category_ids: Array = catalog.get_visible_category_ids()
-	current_category_id = str(category_ids[0]) if not category_ids.is_empty() else ""
+	current_main_category_id = str(category_ids[0]) if not category_ids.is_empty() else ""
+	current_category_id = current_main_category_id
 	_build_interface()
-	_select_category(current_category_id)
+	_select_category(current_main_category_id)
 	_on_state_changed("ready")
 	set_process_unhandled_input(true)
 
@@ -195,6 +199,11 @@ func _build_wardrobe_panel() -> Control:
 		category_flow.add_child(button)
 		category_buttons[str(category_id)] = button
 
+	subcategory_flow = HFlowContainer.new()
+	subcategory_flow.add_theme_constant_override("h_separation", 6)
+	subcategory_flow.add_theme_constant_override("v_separation", 6)
+	wardrobe.add_child(subcategory_flow)
+
 	wardrobe.add_child(HSeparator.new())
 
 	var category_header := HBoxContainer.new()
@@ -288,9 +297,43 @@ func _build_dialogs() -> void:
 func _select_category(category_id: String) -> void:
 	if not catalog.get_visible_category_ids().has(category_id):
 		return
-	current_category_id = category_id
+	current_main_category_id = category_id
 	for id in category_buttons.keys():
 		category_buttons[id].button_pressed = id == category_id
+	_rebuild_subcategory_navigation()
+	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(category_id)
+	current_category_id = str(subcategory_ids[0]) if not subcategory_ids.is_empty() else category_id
+	_select_subcategory(current_category_id)
+
+
+func _rebuild_subcategory_navigation() -> void:
+	for child in subcategory_flow.get_children():
+		child.queue_free()
+	subcategory_buttons.clear()
+	subcategory_button_group = ButtonGroup.new()
+	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(current_main_category_id)
+	subcategory_flow.visible = not subcategory_ids.is_empty()
+	for category_id in subcategory_ids:
+		var category: Dictionary = catalog.get_category(str(category_id))
+		var button := Button.new()
+		button.text = str(category.get("display_name", category_id))
+		button.toggle_mode = true
+		button.button_group = subcategory_button_group
+		button.focus_mode = Control.FOCUS_NONE
+		button.custom_minimum_size = Vector2(92, 32)
+		_apply_button_style(button, "category")
+		button.pressed.connect(_select_subcategory.bind(str(category_id)))
+		subcategory_flow.add_child(button)
+		subcategory_buttons[str(category_id)] = button
+
+
+func _select_subcategory(category_id: String) -> void:
+	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(current_main_category_id)
+	if not subcategory_ids.is_empty() and not subcategory_ids.has(category_id):
+		return
+	current_category_id = category_id
+	for id in subcategory_buttons.keys():
+		subcategory_buttons[id].button_pressed = id == category_id
 
 	var category: Dictionary = catalog.get_category(category_id)
 	category_title.text = str(category.get("display_name", category_id))
@@ -364,7 +407,8 @@ func _thumbnail_cache_key(item: Dictionary) -> String:
 	var item_id := str(item.get("id", ""))
 	var mode := thumbnail_preview_mode_for_item(item)
 	var source_path := _preview_source_path(item)
-	return "%s|%s|%s" % [mode, item_id, source_path]
+	var skin_id := str(game_state.selected.get("skin", ""))
+	return "%s|%s|%s|%s" % [mode, item_id, source_path, skin_id]
 
 
 func _tile_preview_image(item: Dictionary) -> Image:
@@ -376,16 +420,21 @@ func _tile_preview_image(item: Dictionary) -> Image:
 			return _make_background_preview(item)
 		"face_preview":
 			return _make_face_preview(item)
+		"skin_preview":
+			return _make_skin_preview(item)
 		_:
 			var source_path := _preview_source_path(item)
 			if source_path.is_empty():
 				return null
-			return _make_visible_bounds_preview(source_path)
+			return _make_visible_bounds_preview(source_path, item)
 
 
 static func thumbnail_preview_mode_for_item(item: Dictionary) -> String:
 	if str(item.get("render_key", "")) == "none":
 		return "none"
+	var configured_mode := str(item.get("preview_mode", "")).strip_edges()
+	if not configured_mode.is_empty():
+		return configured_mode
 	if str(item.get("category", "")) == "background":
 		return "cover"
 	if str(item.get("category", "")) == "face":
@@ -407,35 +456,72 @@ func _preview_source_path(item: Dictionary) -> String:
 	return ""
 
 
-func _make_visible_bounds_preview(path: String) -> Image:
+func _make_visible_bounds_preview(path: String, item: Dictionary = {}) -> Image:
 	var source := _load_preview_image(path)
 	if source == null:
 		return null
-	var used_rect := _alpha_used_rect(source, THUMBNAIL_ALPHA_THRESHOLD)
+	var used_rect := _rect_from_array(item.get("preview_rect", []))
+	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
+		used_rect = _alpha_used_rect(source, THUMBNAIL_ALPHA_THRESHOLD)
 	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
 		return null
 	var crop_rect := _padded_rect(used_rect, source.get_size(), THUMBNAIL_PADDING_RATIO)
 	return _fit_crop_to_thumbnail(source, crop_rect)
 
 
+static func _rect_from_array(value: Variant) -> Rect2i:
+	if typeof(value) != TYPE_ARRAY or value.size() != 4:
+		return Rect2i()
+	return Rect2i(int(value[0]), int(value[1]), int(value[2]), int(value[3]))
+
+
 func _make_face_preview(item: Dictionary) -> Image:
-	var character_layers: Dictionary = catalog.character.get("layers", {})
-	var body_path := str(character_layers.get("body_core", "")).strip_edges()
-	var face_path := _preview_source_path(item)
-	if body_path.is_empty() or face_path.is_empty():
+	return _make_head_composite_preview(item, "head_preview_rect")
+
+
+func _make_skin_preview(item: Dictionary) -> Image:
+	return _make_head_composite_preview(item, "skin_preview_rect")
+
+
+func _make_head_composite_preview(item: Dictionary, rect_key: String) -> Image:
+	var body_path := _skin_preview_source_path(item)
+	if body_path.is_empty():
 		return null
 
 	var body := _load_preview_image(body_path)
-	var face := _load_preview_image(face_path)
-	if body == null or face == null:
+	if body == null:
 		return null
 
 	var composite := body.duplicate()
-	composite.blend_rect(face, Rect2i(Vector2i.ZERO, face.get_size()), Vector2i.ZERO)
-	var crop_rect := FACE_PREVIEW_RECT.intersection(Rect2i(Vector2i.ZERO, composite.get_size()))
+	var feature_categories: Array = catalog.character.get("face_feature_categories", [])
+	for category_id in feature_categories:
+		var feature_item: Dictionary = item if str(item.get("category", "")) == str(category_id) else catalog.get_item(str(catalog.initial_state.get(str(category_id), "")))
+		for path in Dictionary(feature_item.get("layers", {})).values():
+			var feature := _load_preview_image(str(path))
+			if feature != null:
+				composite.blend_rect(feature, Rect2i(Vector2i.ZERO, feature.get_size()), Vector2i.ZERO)
+	var crop_rect := face_metadata_rect(catalog.character, rect_key).intersection(Rect2i(Vector2i.ZERO, composite.get_size()))
 	if crop_rect.size.x <= 0 or crop_rect.size.y <= 0:
 		return null
 	return _fit_crop_to_thumbnail(composite, crop_rect)
+
+
+func _skin_preview_source_path(item: Dictionary) -> String:
+	if str(item.get("category", "")) == "skin":
+		return str(Dictionary(item.get("layers", {})).get("body_core", ""))
+	var selected_skin: Dictionary = game_state.get_selected_item("skin")
+	var selected_path := str(Dictionary(selected_skin.get("layers", {})).get("body_core", ""))
+	if not selected_path.is_empty():
+		return selected_path
+	return str(Dictionary(catalog.character.get("layers", {})).get("body_core", ""))
+
+
+static func face_metadata_rect(character: Dictionary, key: String) -> Rect2i:
+	var metadata: Dictionary = character.get("face_import_metadata", {})
+	var values: Array = metadata.get(key, [])
+	if values.size() != 4:
+		return Rect2i()
+	return Rect2i(int(values[0]), int(values[1]), int(values[2]), int(values[3]))
 
 
 func _make_background_preview(item: Dictionary) -> Image:
@@ -696,13 +782,20 @@ func _on_state_changed(_reason: String) -> void:
 func _ensure_current_category_visible() -> void:
 	var visible_ids: Array = catalog.get_visible_category_ids()
 	if visible_ids.is_empty():
+		current_main_category_id = ""
 		current_category_id = ""
 		return
-	if visible_ids.has(current_category_id):
+	if visible_ids.has(current_main_category_id):
+		var subcategory_ids: Array = catalog.get_visible_subcategory_ids(current_main_category_id)
+		if subcategory_ids.is_empty() or subcategory_ids.has(current_category_id):
+			return
+		current_category_id = str(subcategory_ids[0])
 		return
-	current_category_id = str(visible_ids[0])
+	current_main_category_id = str(visible_ids[0])
+	var subcategory_ids: Array = catalog.get_visible_subcategory_ids(current_main_category_id)
+	current_category_id = str(subcategory_ids[0]) if not subcategory_ids.is_empty() else current_main_category_id
 	for id in category_buttons.keys():
-		category_buttons[id].button_pressed = id == current_category_id
+		category_buttons[id].button_pressed = id == current_main_category_id
 	if category_title != null:
 		var category: Dictionary = catalog.get_category(current_category_id)
 		category_title.text = str(category.get("display_name", current_category_id))

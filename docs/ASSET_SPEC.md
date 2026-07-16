@@ -54,6 +54,23 @@ Both fields are optional in the current placeholder catalog. If `thumbnail_path`
 17. accessory_front
 18. effect_front
 
+### Keri Phase 2C layer order
+
+The actual Phase 2C catalog order is:
+
+```text
+background -> hair_back -> accessory_back -> body_core/selected skin
+-> fallback_bottom -> fallback_top -> base_outfit -> shoes -> bottom -> top
+-> dress_back -> dress_main -> body_foreground -> imported_face (metadata only)
+-> legacy face -> eyes -> eyebrows -> eyelashes (reserved) -> mouth -> makeup
+-> hair_front/combined hair -> glasses -> face_accessory -> headwear
+-> accessory_front -> effect_front
+```
+
+All imported appearance PNGs remain untouched RGBA `948x1920` files at origin `(0, 0)`. `base1..base5` have identical alpha masks and geometry; they are valid skin variants. The available hair source consists of combined layers, so Phase 2C maps them to `hair_front` and documents the limitation instead of splitting the PNGs.
+
+Face metadata lives in `character.face_import_metadata` in `data/catalog.json`. Rectangles use full-canvas pixel coordinates. It is an integration seam only; no imported-face runtime asset exists in Phase 2C.
+
 `base_outfit` is a permanent modest underlayer. In procedural mode it is drawn by `DollView`; in PNG mode it should be supplied as a full-canvas transparent PNG under `character.layers`, not as a wardrobe item.
 
 ## File naming

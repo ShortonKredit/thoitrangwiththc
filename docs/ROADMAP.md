@@ -76,7 +76,7 @@ This path was superseded after follow-up experiments showed that full-body leg e
 
 ### Phase 2B - Three-Quarter-Body Integration Proof
 
-Status: Automated checks passed / manual QA pending.
+Status: Complete. Owner-confirmed manual visual QA passed on 2026-07-16.
 
 Goal: integrate a tiny Keri proof pack into Godot using the existing three-quarter-body canvas without rewriting the catalog.
 
@@ -116,6 +116,8 @@ Acceptance criteria:
 
 ### Phase 2C - Face And Hair Layering Proof
 
+Status: Implemented; manual visual QA pending.
+
 Goal: verify face/facial-feature layers and hair front/back separation where needed.
 
 Acceptance criteria:
@@ -124,6 +126,15 @@ Acceptance criteria:
 - no real-person face replacement in MVP;
 - face/facial-feature placement is documented;
 - hair front/back layering is verified if required by the selected hairstyle.
+
+Implemented scope:
+
+- five mandatory skin variants with identical alpha geometry;
+- 75 combined-hair PNG variants plus a `none` choice;
+- separate eyes, eyebrows, mouth, and makeup slots with data-driven `none` policy;
+- face subcategory navigation, preview compositing, save schema v2, legacy migration, and centralized future face-import metadata;
+- no eyelash category because the audited source has no eyelash PNG;
+- no local face import, file picker, biometric analysis, Phase 3 work, or wardrobe bulk import.
 
 ### Phase 2D - MVP Wardrobe Proof Pack
 

@@ -11,9 +11,9 @@ python tools/validate_catalog.py
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\tools\check_project.ps1"
 ```
 
-Expected after Phase 2B:
+Expected after Phase 2C:
 
-- catalog validation prints `Catalog valid: 10 categories, 51 items`;
+- catalog validation prints `Catalog valid: 15 categories, 180 items`;
 - Godot 4.7 import and script parse exit 0;
 - main scene startup smoke exits 0;
 - logic smoke test prints `SMOKE TEST PASSED`;
@@ -48,6 +48,14 @@ Current checks cover:
 - Phase 2B thumbnail preview modes select `none`, `cover`, `face_preview`, or `visible_bounds` as appropriate.
 - Phase 2B visible-bounds thumbnail helpers detect cropped alpha regions for Keri hair, top, and bottom proof PNGs.
 - Phase 2B face thumbnail crop stays inside the 948x1920 Keri canvas.
+- Phase 2C skin items have exact expected source hashes and skin has no none item.
+- Hair, eyes, eyebrows, mouth, makeup, legacy face, dress, and background none policies are validated.
+- Hair none removes the combined `hair_front` layer; undo/redo restores both hair and none states.
+- Skin swaps replace `body_core` while preserving fallback coverage.
+- Face feature slots render independently and follow the catalog layer order.
+- Empty face subcategories, including absent eyelashes, remain hidden.
+- Face/head/skin preview rectangles, safe clipping bounds, face center, and mask bounds stay inside the canvas.
+- Save schema v2 restores Phase 2C state and version-1 Phase 2B saves sanitize the legacy face composite safely.
 
 ## Automated Gaps
 
@@ -132,6 +140,21 @@ After Phase 2B/2D asset work, verify:
 10. Old saves containing shoes or deferred categories sanitize without crash.
 11. Undo, redo, reset, and local save still work after proof-pack import.
 12. Web export displays the same intentional three-quarter-body crop.
+
+## Phase 2C Native Visual Checklist
+
+1. `Khuôn mặt` shows only `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`.
+2. Every subcategory uses two columns, vertical scrolling, no horizontal overflow, no visible item names, and a clear selected border.
+3. Skin previews show enough head/upper body to distinguish tone; all five choices retain identical placement and fallback coverage.
+4. Hair previews are centered/readable; `none` removes all hair; sample all five shapes and several colors.
+5. Eyes, eyebrows, mouth, and makeup change independently without shifting or scaling.
+6. Optional none tiles use the X visual and are distinguishable from missing/failed thumbnails.
+7. Face feature thumbnails composite cleanly over the current skin reference.
+8. Random respects locks, never removes mandatory skin, and only chooses metadata-eligible none items.
+9. Reset restores valid skin/face/hair defaults; undo/redo covers skin, features, none, random, and reset.
+10. Save/load restores every Phase 2C slot without errors and the fallback outfit remains correct.
+11. Combined-hair ordering is acceptable for the actual source; no false front/back split is implied.
+12. The face anchor/mask bounds are only metadata and no local face import UI appears.
 
 ## Web Local Test
 

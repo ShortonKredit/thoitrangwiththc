@@ -4,6 +4,7 @@ signal changed(reason: String)
 signal history_changed(can_undo: bool, can_redo: bool)
 
 const HistoryManagerScript = preload("res://scripts/core/history_manager.gd")
+const SAVE_VERSION := 2
 
 var catalog: RefCounted
 var selected: Dictionary = {}
@@ -119,7 +120,7 @@ func snapshot() -> Dictionary:
 
 func export_save_data() -> Dictionary:
 	return {
-		"version": 1,
+		"version": SAVE_VERSION,
 		"selected": selected.duplicate(true),
 		"locks": locks.duplicate(true)
 	}

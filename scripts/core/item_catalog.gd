@@ -43,6 +43,8 @@ func load_catalog(path: String = DEFAULT_CATALOG_PATH, report_errors: bool = tru
 		category["allow_none"] = bool(category.get("allow_none", false))
 		category["random_default"] = bool(category.get("random_default", true))
 		category["hidden"] = bool(category.get("hidden", false))
+		category["ui_container"] = bool(category.get("ui_container", false))
+		category["parent_category"] = str(category.get("parent_category", "")).strip_edges()
 		category["order"] = int(category.get("order", categories.size()))
 		categories.append(category)
 		_categories_by_id[category_id] = category
@@ -70,6 +72,7 @@ func load_catalog(path: String = DEFAULT_CATALOG_PATH, report_errors: bool = tru
 		item["render_key"] = str(item.get("render_key", "none"))
 		item["random_enabled"] = bool(item.get("random_enabled", true))
 		item["hidden"] = bool(item.get("hidden", false))
+		item["legacy_migration_only"] = bool(item.get("legacy_migration_only", false))
 		item["order"] = int(item.get("order", items.size()))
 		item["occupies"] = _string_array(item.get("occupies", []))
 		item["tags"] = _string_array(item.get("tags", []))
@@ -148,11 +151,27 @@ func get_category_ids() -> Array:
 func get_visible_category_ids() -> Array:
 	var result: Array = []
 	for category in categories:
-		if bool(category.get("hidden", false)):
+		if not str(category.get("parent_category", "")).is_empty():
 			continue
-		if get_items_for_category(str(category.get("id", ""))).is_empty():
+		var category_id := str(category.get("id", ""))
+		if bool(category.get("ui_container", false)):
+			if get_visible_subcategory_ids(category_id).is_empty():
+				continue
+		elif bool(category.get("hidden", false)) or get_items_for_category(category_id).is_empty():
 			continue
-		result.append(str(category.get("id", "")))
+		result.append(category_id)
+	return result
+
+
+func get_visible_subcategory_ids(parent_category_id: String) -> Array:
+	var result: Array = []
+	for category in categories:
+		if str(category.get("parent_category", "")) != parent_category_id:
+			continue
+		var category_id := str(category.get("id", ""))
+		if bool(category.get("hidden", false)) or get_items_for_category(category_id).is_empty():
+			continue
+		result.append(category_id)
 	return result
 
 
@@ -214,7 +233,10 @@ func sanitize_selection(candidate: Dictionary) -> Dictionary:
 	var result := get_default_state()
 	for category_id in get_category_ids():
 		var candidate_id := str(candidate.get(category_id, ""))
-		if has_item(candidate_id) and str(get_item(candidate_id).get("category", "")) == category_id:
+		if not has_item(candidate_id):
+			continue
+		var item := get_item(candidate_id)
+		if str(item.get("category", "")) == category_id and not bool(item.get("legacy_migration_only", false)):
 			result[category_id] = candidate_id
 	return result
 

@@ -31,3 +31,12 @@
 | Roadmap drift reopens full-body work | Medium | Start phases from `PHASE_STATUS.md`, `ROADMAP.md`, and `MVP_SCOPE_DECISION.md`; diff-review prompts/docs |
 | Phase 2B PNG proof passes automation but fails visual QA | High | Manual Godot/browser inspection before marking final acceptance; verify crop, layer alignment, and UI category visibility |
 | Phase 2B thumbnail-first UI regresses usability | Medium | Manual QA the two-column grid, selected/hover/focus states, none tile, and text removal before marking Phase 2B complete |
+| Skin variant changes body geometry or breaks fallback coverage | Critical | Validate exact hashes/canvas; classify identical alpha masks; smoke-test selected skin with fallback coverage |
+| Optional appearance slot cannot be removed | High | Catalog none policy plus smoke tests for hair/eyes/eyebrows/mouth/makeup |
+| Mandatory skin becomes none through random/save migration | Critical | Skin category forbids none; sanitize saves to a valid default; test random/reset/load |
+| Separate facial features render in the wrong order | High | Central catalog layer order; smoke-test ordering; manual alignment check |
+| Empty eyelash or face subcategory appears | Medium | Build subcategory navigation from non-empty catalog categories; keep absent source groups out |
+| Combined hair is mistaken for a true front/back split | Medium | Tag/document combined mode; map only to `hair_front`; do not edit or AI-split production PNGs |
+| Face anchor/mask magic numbers drift across files | High | Store authoritative rectangles/transforms in `character.face_import_metadata`; validate canvas bounds |
+| Legacy Phase 2B composite face double-renders with separate features | High | Mark composite migration-only; save sanitization falls back to `face_none`; version-1 migration smoke test |
+| Face thumbnails are too small or show isolated pixels | Medium | Composite features on the selected skin reference and crop using centralized head metadata; manual QA |

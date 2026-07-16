@@ -26,6 +26,28 @@ KERI_INTERNAL_LAYERS = {
         "6a112916adfca3d721c6600d95b66b7f6e7be124ef1727203bb182cd73c24a3b",
     ),
 }
+KERI_SKIN_VARIANTS = {
+    "skin_tone_01": (
+        "res://assets/characters/keri/proof/keri_body_core.png",
+        "555132e38e2ec9efbdbf1e2e034f32fab36f01752e264457daed5993a578386c",
+    ),
+    "skin_tone_02": (
+        "res://assets/characters/keri/skins/skin_tone_02.png",
+        "acaf24d1ed69c6a6081c16c50f58f2451f4f65745f242dc80ca0bf45dec3f433",
+    ),
+    "skin_tone_03": (
+        "res://assets/characters/keri/skins/skin_tone_03.png",
+        "e527f14ccdd6fa9452d5a6078eed9bb8cc5341e4ddccd1e6252f72cfc7a0aaae",
+    ),
+    "skin_tone_04": (
+        "res://assets/characters/keri/skins/skin_tone_04.png",
+        "9894628e3eb2367cc644f1df525b36d6eeeb9df6063e11dcd3473c1e2b1c374a",
+    ),
+    "skin_tone_05": (
+        "res://assets/characters/keri/skins/skin_tone_05.png",
+        "a9e1847597569ec1a354058c7daaa99523ef95233927061566afc4cea7a24f04",
+    ),
+}
 
 
 def main() -> int:
@@ -53,6 +75,7 @@ def main() -> int:
         errors.append("Every item needs a non-empty ID.")
 
     by_id = {str(item.get("id")): item for item in items}
+    by_category_metadata = {str(category.get("id")): category for category in categories}
     by_category: dict[str, list[dict]] = {category_id: [] for category_id in category_ids}
     for item in items:
         category_id = str(item.get("category", ""))
@@ -73,6 +96,8 @@ def main() -> int:
         thumbnail_path = str(item.get("thumbnail_path", "")).strip()
         if thumbnail_path and not thumbnail_path.startswith("res://"):
             errors.append(f"Item {item.get('id')} thumbnail_path must start with res://: {thumbnail_path}")
+        if "preview_rect" in item:
+            _validate_canvas_rect(errors, f"Item {item.get('id')} preview_rect", item.get("preview_rect"), data.get("character", {}).get("canvas_size", []))
 
     for category in categories:
         category_id = str(category["id"])
@@ -86,6 +111,10 @@ def main() -> int:
             errors.append(f"Initial state for {category_id} points to missing item {selected_id!r}.")
         elif str(by_id[selected_id].get("category")) != category_id:
             errors.append(f"Initial item {selected_id} is not in category {category_id}.")
+
+    if int(data.get("schema_version", 0)) < 2:
+        errors.append("Phase 2C catalog schema_version must be at least 2.")
+    _validate_phase_2c_categories(errors, by_category, by_category_metadata, by_id)
 
     character = data.get("character", {})
     if character.get("mode") not in {"procedural", "png"}:
@@ -111,6 +140,8 @@ def main() -> int:
             continue
         _validate_layer_png(errors, f"Character layer {layer_name}", str(path), data)
 
+    _validate_phase_2c_character(errors, data, by_id)
+
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
@@ -118,6 +149,82 @@ def main() -> int:
 
     print(f"Catalog valid: {len(categories)} categories, {len(items)} items.")
     return 0
+
+
+def _validate_phase_2c_categories(
+    errors: list[str],
+    by_category: dict[str, list[dict]],
+    category_metadata: dict[str, dict],
+    by_id: dict[str, dict],
+) -> None:
+    required = {"skin", "hair", "eyes", "eyebrows", "mouth", "makeup", "face"}
+    missing = sorted(required.difference(by_category))
+    if missing:
+        errors.append(f"Missing Phase 2C categories: {missing}.")
+        return
+
+    if any(str(item.get("render_key", "")) == "none" for item in by_category["skin"]):
+        errors.append("Mandatory skin category must not contain a none item.")
+    for category_id in ("hair", "eyes", "eyebrows", "mouth", "makeup", "face", "background"):
+        if not any(str(item.get("render_key", "")) == "none" for item in by_category.get(category_id, [])):
+            errors.append(f"Optional category {category_id} must contain a none item.")
+
+    face = category_metadata.get("face", {})
+    expected_subcategories = ["skin", "eyes", "eyebrows", "mouth", "makeup"]
+    if not bool(face.get("ui_container", False)) or face.get("subcategory_ids") != expected_subcategories:
+        errors.append("Face UI container must declare the non-empty Phase 2C subcategory order.")
+    for category_id in expected_subcategories:
+        if str(category_metadata.get(category_id, {}).get("parent_category", "")) != "face":
+            errors.append(f"Category {category_id} must be a face subcategory.")
+    if "eyelashes" in category_metadata:
+        errors.append("Eyelashes category must stay absent because the audited local source has no eyelash PNGs.")
+
+    legacy_face = by_id.get("face_keri_default_01", {})
+    if not bool(legacy_face.get("hidden", False)) or not bool(legacy_face.get("legacy_migration_only", False)):
+        errors.append("Phase 2B face composite must be hidden and migration-only in Phase 2C.")
+
+
+def _validate_phase_2c_character(errors: list[str], data: dict, by_id: dict[str, dict]) -> None:
+    character = data.get("character", {})
+    canvas = character.get("canvas_size", [])
+    order = character.get("layer_order", [])
+    for first, second in (("body_core", "eyes"), ("eyes", "eyebrows"), ("eyebrows", "mouth"), ("mouth", "makeup"), ("makeup", "hair_front")):
+        if first not in order or second not in order or order.index(first) >= order.index(second):
+            errors.append(f"Phase 2C layer order must place {first} before {second}.")
+
+    metadata = character.get("face_import_metadata", {})
+    if not isinstance(metadata, dict):
+        errors.append("character.face_import_metadata must be an object.")
+    else:
+        for key in ("face_rect", "safe_clipping_bounds", "face_mask_bounds", "head_preview_rect", "skin_preview_rect"):
+            _validate_canvas_rect(errors, key, metadata.get(key), canvas)
+        center = metadata.get("face_center")
+        if not isinstance(center, list) or len(center) != 2:
+            errors.append("face_center must contain two coordinates.")
+        if not isinstance(metadata.get("layers_before_imported_face"), list) or not isinstance(metadata.get("layers_after_imported_face"), list):
+            errors.append("Face import metadata must declare layers before and after imported_face.")
+
+    for item_id, (expected_path, expected_hash) in KERI_SKIN_VARIANTS.items():
+        item = by_id.get(item_id, {})
+        actual_path = str(item.get("layers", {}).get("body_core", "")) if isinstance(item.get("layers"), dict) else ""
+        if actual_path != expected_path:
+            errors.append(f"{item_id} must map body_core to {expected_path}.")
+        elif _sha256(_resolve_res_path(actual_path)) != expected_hash:
+            errors.append(f"{item_id} hash must remain {expected_hash}.")
+
+
+def _validate_canvas_rect(errors: list[str], label: str, value: object, canvas: object) -> None:
+    if not isinstance(value, list) or len(value) != 4 or not isinstance(canvas, list) or len(canvas) != 2:
+        errors.append(f"{label} must be a four-number canvas rect.")
+        return
+    try:
+        x, y, width, height = (float(part) for part in value)
+        canvas_width, canvas_height = (float(part) for part in canvas)
+    except (TypeError, ValueError):
+        errors.append(f"{label} must contain numeric values.")
+        return
+    if x < 0 or y < 0 or width <= 0 or height <= 0 or x + width > canvas_width or y + height > canvas_height:
+        errors.append(f"{label} must stay inside the character canvas.")
 
 
 def _validate_layer_png(errors: list[str], label: str, res_path: str, catalog_data: dict) -> None:

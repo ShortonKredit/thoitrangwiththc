@@ -43,12 +43,15 @@ The repository/project name and deployment slug can remain `Thời Trang with TH
 - Web export foundation.
 - Renderer-invariant base outfit so the character is never shown without modest base clothing, even when top, bottom and dress are all set to none.
 - Optional thumbnail metadata with text fallback until real thumbnails exist.
+- Appearance customization with five skin tones, selectable combined hair, and independent eyes, eyebrows, mouth, and makeup layers.
+- A `Khuôn mặt` main category with non-empty subcategory navigation and thumbnail-first, two-column item selection.
 
 ## Deferred
 
 - Full-body leg extension.
 - Shoes, socks, full-length trousers, full-length dresses, and foot-dependent items.
 - Face photo editor.
+- Local face import/file picker and any face recognition or biometric analysis.
 - Privacy copy for the future face-photo flow; it is not shown persistently in the main header.
 - Real PNG base outfit and item thumbnails for the Phase 2 art proof pack.
 - Mobile-first UI.

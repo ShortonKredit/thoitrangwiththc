@@ -1,8 +1,8 @@
 # Current State
 
-Date: 2026-07-14
+Date: 2026-07-16
 
-Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, and Phase 2A are complete. Phase 2B three-quarter-body Keri integration has been implemented and passes automated checks; final acceptance still requires manual Godot/browser visual QA.
+Baseline: Phase 0, Phase 1, Phase 1.1, Phase 1.2, Phase 2A, and Phase 2B are complete. The owner accepted Phase 2B manual visual QA. Phase 2C skin, face, and hair layering is implemented and passes automated checks; Phase 2C manual visual QA is pending.
 
 ## Current Architecture
 
@@ -30,7 +30,7 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 
 ## Working Features
 
-- Catalog validation passes with 10 categories and 51 items.
+- Catalog validation passes with 15 state categories and 180 items.
 - Godot 4.7 import, parse, startup smoke, and logic smoke tests pass locally.
 - Main scene runs locally in Godot.
 - Category and item selection are data-driven.
@@ -43,6 +43,9 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Header text has been simplified to the player-facing title.
 - Optional `thumbnail_path` and `accessible_name` metadata exist with text fallback.
 - Phase 2B selector thumbnails are generated in memory from preview modes: alpha visible bounds for PNG layers, body+face crop for face items, procedural cover previews for backgrounds, and a drawn X for none items.
+- Phase 2C adds five silhouette-identical skin variants, 75 combined-hair variants, 30 eye variants, five eyebrow variants, five mouth variants, and two blush layers from the local extracted PNG source/template set.
+- The `Khuôn mặt` main category exposes only non-empty, data-driven subcategories: `Màu da`, `Mắt`, `Lông mày`, `Miệng`, and `Trang điểm`. No eyelash subcategory is shown because the audited source contains no eyelash PNG.
+- Save schema version 2 restores all Phase 2C slots and sanitizes the legacy Phase 2B composite face to separate defaults.
 
 ## Mandatory Invariants
 
@@ -64,22 +67,26 @@ catalog validation, compatibility, local save, procedural/PNG rendering
 - Future PNG layer paths are scaffolded but not production art.
 - Web export foundation exists, but browser QA is deferred until a web-focused phase.
 
-## Not Yet Fully Visually Verified
+## Phase 2C Manual Visual QA Pending
 
-- Final visual acceptance of the Keri PNG proof pack.
-- Three-quarter-body crop intent, lower-edge cleanliness, face style, hair front/back separation, and face mask quality.
-- Thumbnail readability and crop quality after the in-memory preview pass.
+- Skin swaps preserve visible alignment and fallback outfit coverage.
+- Independent eyes, eyebrows, mouth, and makeup layers align with the head.
+- All five hair shapes and their color variants remain readable; hair `none` removes hair completely.
+- Face and skin thumbnails are readable at final tile size.
+- Combined-hair front-only ordering is acceptable for the available source.
+- Face anchor and mask-bound metadata is suitable as a future local-import seam without implementing import.
 - Browser rendering across Chrome, Edge, and Firefox after export.
 - Small viewport behavior beyond the captured Phase 1 screenshots.
 
 ## Asset Direction
 
-The asset direction is not locked. Keri is a candidate for a three-quarter-body MVP integration proof, not an official dependency, not imported content, and not a final art anchor.
+Keri remains a conditional three-quarter-body proof candidate, not a final art anchor. The Phase 2B and Phase 2C runtime PNG proof assets are imported with the existing provenance caveats.
 
 ## Phase Boundary
 
 - Phase 2A is complete as a documentation-only Keri asset/license audit.
-- Phase 2B three-quarter-body integration proof has been implemented with a tiny Keri proof pack.
+- Phase 2B three-quarter-body integration proof is complete after owner-confirmed manual visual QA.
+- Phase 2C appearance layering is implemented and remains `MANUAL VISUAL QA PENDING`.
 - Full-body leg extension is deferred/post-MVP.
 - Keri proof PNG assets have been imported into Godot under `assets/**/keri/proof/`.
 - No AI asset generation has been performed in this phase.
